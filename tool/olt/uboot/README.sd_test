@@ -1,0 +1,44 @@
+(1) SD test code entry
+=> verification/uboot/SD_test/sd_test.c: main()   
+      
+
+(2) SD test code path
+=> add file in verification/uboot/SD_test/ and modify Makefile.
+
+ex: verification/uboot/SD_test/sd_test.c  (default)
+    verification/uboot/SD_test/sd_test1.c (default) 
+	verification/uboot/SD_test/sd_test2.c (add)
+	verification/uboot/SD_test/test2.c 	  (add)
+	
+Index: verification/uboot/SDtest/Makefile
+===================================================================
+--- Makefile    (revision 621496)
++++ Makefile    (working copy)
+@@ -28,6 +28,7 @@
+ # core
+ COBJS-y += sd_test.o
+ COBJS-y += sd_test1.o
++COBJS-y += sd_test2.o
++COBJS-y += test2.o
+ #COBJS-y += test3.o
+
+       
+(3) Toolchain                
+=> Please make sure verification/uboot/../toolchain exists before compiling.
+
+
+(4) How to compile? 
+=> excute script(verification/uboot/run.sh)
+
+
+(5) System default setting:
+=> i-cache /d-cache /L2 enabled.
+   mmu enabled.
+   uart enabled.
+   DDR size = CONFIG_SYS_RAM_DCU1_SIZE (defined in verification/include/configs/phoenix_test.h; default=512M-42K)
+ 
+
+(6) API:
+=> void  flush_dcache_range(unsigned long start, unsigned long stop);
+   void  invalidate_dcache_range(unsigned long start, unsigned long stop);	
+   void  _sync(void);

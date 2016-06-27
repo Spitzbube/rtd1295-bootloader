@@ -1,0 +1,3653 @@
+
+./SDtest/libSDtest.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <HDMI_480p>:
+/*==================== Functions ================== */
+
+void HDMI_480p()
+{
+	//HDMI PHY	  
+    Wreg32(0x18000194, 0x0001c044); 
+       0:	e59f2130 	ldr	r2, [pc, #304]	; 138 <HDMI_480p+0x138>
+       4:	e3a03306 	mov	r3, #402653184	; 0x18000000
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((6<<1))|HDMI_V_PARA4_vblank(44));
+       8:	e59f112c 	ldr	r1, [pc, #300]	; 13c <HDMI_480p+0x13c>
+/*==================== Functions ================== */
+
+void HDMI_480p()
+{
+	//HDMI PHY	  
+    Wreg32(0x18000194, 0x0001c044); 
+       c:	e5832194 	str	r2, [r3, #404]	; 0x194
+    Wreg32(0x1800d044, 0x5afc9014); 
+      10:	e2833a0d 	add	r3, r3, #53248	; 0xd000
+      14:	e59f2124 	ldr	r2, [pc, #292]	; 140 <HDMI_480p+0x140>
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((6<<1))|HDMI_V_PARA4_vblank(44));
+      18:	e583124c 	str	r1, [r3, #588]	; 0x24c
+
+void HDMI_480p()
+{
+	//HDMI PHY	  
+    Wreg32(0x18000194, 0x0001c044); 
+    Wreg32(0x1800d044, 0x5afc9014); 
+      1c:	e5832044 	str	r2, [r3, #68]	; 0x44
+    Wreg32(0x1800d040, 0x0dff5891); 
+      20:	e59f211c 	ldr	r2, [pc, #284]	; 144 <HDMI_480p+0x144>
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((6<<1))|HDMI_V_PARA4_vblank(44));
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(29)|HDMI_V_PARA5_vfront((9<<1)));
+      24:	e59f111c 	ldr	r1, [pc, #284]	; 148 <HDMI_480p+0x148>
+void HDMI_480p()
+{
+	//HDMI PHY	  
+    Wreg32(0x18000194, 0x0001c044); 
+    Wreg32(0x1800d044, 0x5afc9014); 
+    Wreg32(0x1800d040, 0x0dff5891); 
+      28:	e5832040 	str	r2, [r3, #64]	; 0x40
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1) | HDMI_CR_tmds_encen(1) | HDMI_CR_write_en2(1) | HDMI_CR_enablehdcp(1) | HDMI_CR_write_en1(1) | HDMI_CR_enablehdmi(1));
+    */
+    //==================ASIC=========================//
+   
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    Wreg32(HDMI_ICR ,HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+      2c:	e3a02305 	mov	r2, #335544320	; 0x14000000
+      30:	e58320bc 	str	r2, [r3, #188]	; 0xbc
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(137)|HDMI_H_PARA1_hactive(719));
+      34:	e59f2110 	ldr	r2, [pc, #272]	; 14c <HDMI_480p+0x14c>
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((6<<1))|HDMI_V_PARA4_vblank(44));
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(29)|HDMI_V_PARA5_vfront((9<<1)));
+      38:	e5831250 	str	r1, [r3, #592]	; 0x250
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+      3c:	e3001eef 	movw	r1, #3823	; 0xeef
+    */
+    //==================ASIC=========================//
+   
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    Wreg32(HDMI_ICR ,HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(137)|HDMI_H_PARA1_hactive(719));
+      40:	e5832234 	str	r2, [r3, #564]	; 0x234
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+      44:	e59f2104 	ldr	r2, [pc, #260]	; 150 <HDMI_480p+0x150>
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(29)|HDMI_V_PARA5_vfront((9<<1)));
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+      48:	e583126c 	str	r1, [r3, #620]	; 0x26c
+    //==================ASIC=========================//
+   
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    Wreg32(HDMI_ICR ,HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(137)|HDMI_H_PARA1_hactive(719));
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+      4c:	e5832238 	str	r2, [r3, #568]	; 0x238
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+      50:	e3a0203b 	mov	r2, #59	; 0x3b
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+      54:	e59f10f8 	ldr	r1, [pc, #248]	; 154 <HDMI_480p+0x154>
+   
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    Wreg32(HDMI_ICR ,HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(137)|HDMI_H_PARA1_hactive(719));
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+      58:	e583223c 	str	r2, [r3, #572]	; 0x23c
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+      5c:	e59f20f4 	ldr	r2, [pc, #244]	; 158 <HDMI_480p+0x158>
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+      60:	e5831270 	str	r1, [r3, #624]	; 0x270
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+      64:	e3001924 	movw	r1, #2340	; 0x924
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    Wreg32(HDMI_ICR ,HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(137)|HDMI_H_PARA1_hactive(719));
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+      68:	e5832240 	str	r2, [r3, #576]	; 0x240
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+      6c:	e3a02000 	mov	r2, #0
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+      70:	e5831030 	str	r1, [r3, #48]	; 0x30
+    //=====================================================================================================
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(1)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+
+        //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+        Wreg32(HDMI_CS_TRANS0, HDMI_CS_TRANS0_c1(0x04a80));
+        Wreg32(HDMI_CS_TRANS1, HDMI_CS_TRANS1_c2(0x1e700));
+      74:	e59f00e0 	ldr	r0, [pc, #224]	; 15c <HDMI_480p+0x15c>
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+                           HDMI_SYNC_DLY_write_en2(1)|HDMI_SYNC_DLY_disp_v(0)|HDMI_SYNC_DLY_write_en1(1)|HDMI_SYNC_DLY_disp_h(0));
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|HDMI_DPC_dp_swen(1)|HDMI_DPC_write_en3(1)|
+      78:	e59f10e0 	ldr	r1, [pc, #224]	; 160 <HDMI_480p+0x160>
+    Wreg32(HDMI_ICR ,HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(137)|HDMI_H_PARA1_hactive(719));
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(61)|HDMI_H_PARA2_hfront(15));
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(59));
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(479)|HDMI_V_PARA1_vactive(479));
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+      7c:	e5832244 	str	r2, [r3, #580]	; 0x244
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+      80:	e5832248 	str	r2, [r3, #584]	; 0x248
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((6<<1))|HDMI_V_PARA4_vblank(44));
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(29)|HDMI_V_PARA5_vfront((9<<1)));
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+      84:	e5832254 	str	r2, [r3, #596]	; 0x254
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+      88:	e5832258 	str	r2, [r3, #600]	; 0x258
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+      8c:	e583225c 	str	r2, [r3, #604]	; 0x25c
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+      90:	e5832260 	str	r2, [r3, #608]	; 0x260
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+      94:	e5832264 	str	r2, [r3, #612]	; 0x264
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+      98:	e5832268 	str	r2, [r3, #616]	; 0x268
+        Wreg32(HDMI_CS_TRANS0, HDMI_CS_TRANS0_c1(0x04a80));
+        Wreg32(HDMI_CS_TRANS1, HDMI_CS_TRANS1_c2(0x1e700));
+        Wreg32(HDMI_CS_TRANS2, HDMI_CS_TRANS2_c3(0x1cc40));
+        Wreg32(HDMI_CS_TRANS3, HDMI_CS_TRANS3_c4(0x04a80));
+        Wreg32(HDMI_CS_TRANS4, HDMI_CS_TRANS4_c5(0x08140));
+        Wreg32(HDMI_CS_TRANS5, HDMI_CS_TRANS5_c6(0x00000));
+      9c:	e5832208 	str	r2, [r3, #520]	; 0x208
+        Wreg32(HDMI_CS_TRANS6, HDMI_CS_TRANS6_c7(0x04a80));
+        Wreg32(HDMI_CS_TRANS7, HDMI_CS_TRANS7_c8(0x00000));
+      a0:	e5832210 	str	r2, [r3, #528]	; 0x210
+        Wreg32(HDMI_CS_TRANS8, HDMI_CS_TRANS8_c9(0x06680));
+      a4:	e3062680 	movw	r2, #26240	; 0x6680
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+                           HDMI_SYNC_DLY_write_en2(1)|HDMI_SYNC_DLY_disp_v(0)|HDMI_SYNC_DLY_write_en1(1)|HDMI_SYNC_DLY_disp_h(0));
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|HDMI_DPC_dp_swen(1)|HDMI_DPC_write_en3(1)|
+      a8:	e5831154 	str	r1, [r3, #340]	; 0x154
+           HDMI_DPC_default_phase(1)|HDMI_DPC_write_en2(1)|HDMI_DPC_color_depth(0)|HDMI_DPC_write_en1(1)|HDMI_DPC_dpc_enable(0));
+    //=====================================================================================================
+    // HDMI Control
+    //=====================================================================================================
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(1)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+      ac:	e3a01fbd 	mov	r1, #756	; 0x2f4
+
+        //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+        Wreg32(HDMI_CS_TRANS0, HDMI_CS_TRANS0_c1(0x04a80));
+        Wreg32(HDMI_CS_TRANS1, HDMI_CS_TRANS1_c2(0x1e700));
+      b0:	e5830028 	str	r0, [r3, #40]	; 0x28
+        Wreg32(HDMI_CS_TRANS2, HDMI_CS_TRANS2_c3(0x1cc40));
+      b4:	e2400d6b 	sub	r0, r0, #6848	; 0x1ac0
+        Wreg32(HDMI_CS_TRANS3, HDMI_CS_TRANS3_c4(0x04a80));
+        Wreg32(HDMI_CS_TRANS4, HDMI_CS_TRANS4_c5(0x08140));
+        Wreg32(HDMI_CS_TRANS5, HDMI_CS_TRANS5_c6(0x00000));
+        Wreg32(HDMI_CS_TRANS6, HDMI_CS_TRANS6_c7(0x04a80));
+        Wreg32(HDMI_CS_TRANS7, HDMI_CS_TRANS7_c8(0x00000));
+        Wreg32(HDMI_CS_TRANS8, HDMI_CS_TRANS8_c9(0x06680));
+      b8:	e5832214 	str	r2, [r3, #532]	; 0x214
+        Wreg32(HDMI_CS_TRANS9, HDMI_CS_TRANS9_k1(0x21b0));
+      bc:	e30221b0 	movw	r2, #8624	; 0x21b0
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|HDMI_DPC_dp_swen(1)|HDMI_DPC_write_en3(1)|
+           HDMI_DPC_default_phase(1)|HDMI_DPC_write_en2(1)|HDMI_DPC_color_depth(0)|HDMI_DPC_write_en1(1)|HDMI_DPC_dpc_enable(0));
+    //=====================================================================================================
+    // HDMI Control
+    //=====================================================================================================
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(1)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+      c0:	e5831020 	str	r1, [r3, #32]
+
+        //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+        Wreg32(HDMI_CS_TRANS0, HDMI_CS_TRANS0_c1(0x04a80));
+      c4:	e3041a80 	movw	r1, #19072	; 0x4a80
+        Wreg32(HDMI_CS_TRANS1, HDMI_CS_TRANS1_c2(0x1e700));
+        Wreg32(HDMI_CS_TRANS2, HDMI_CS_TRANS2_c3(0x1cc40));
+      c8:	e583002c 	str	r0, [r3, #44]	; 0x2c
+        Wreg32(HDMI_CS_TRANS3, HDMI_CS_TRANS3_c4(0x04a80));
+        Wreg32(HDMI_CS_TRANS4, HDMI_CS_TRANS4_c5(0x08140));
+      cc:	e3080140 	movw	r0, #33088	; 0x8140
+        Wreg32(HDMI_CS_TRANS5, HDMI_CS_TRANS5_c6(0x00000));
+        Wreg32(HDMI_CS_TRANS6, HDMI_CS_TRANS6_c7(0x04a80));
+        Wreg32(HDMI_CS_TRANS7, HDMI_CS_TRANS7_c8(0x00000));
+        Wreg32(HDMI_CS_TRANS8, HDMI_CS_TRANS8_c9(0x06680));
+        Wreg32(HDMI_CS_TRANS9, HDMI_CS_TRANS9_k1(0x21b0));
+      d0:	e5832218 	str	r2, [r3, #536]	; 0x218
+        Wreg32(HDMI_CS_TRANS10, HDMI_CS_TRANS10_k2(0xba70));
+      d4:	e30b2a70 	movw	r2, #47728	; 0xba70
+    // HDMI Control
+    //=====================================================================================================
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(1)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+
+        //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+        Wreg32(HDMI_CS_TRANS0, HDMI_CS_TRANS0_c1(0x04a80));
+      d8:	e5831024 	str	r1, [r3, #36]	; 0x24
+        Wreg32(HDMI_CS_TRANS1, HDMI_CS_TRANS1_c2(0x1e700));
+        Wreg32(HDMI_CS_TRANS2, HDMI_CS_TRANS2_c3(0x1cc40));
+        Wreg32(HDMI_CS_TRANS3, HDMI_CS_TRANS3_c4(0x04a80));
+      dc:	e5831200 	str	r1, [r3, #512]	; 0x200
+        Wreg32(HDMI_CS_TRANS4, HDMI_CS_TRANS4_c5(0x08140));
+      e0:	e5830204 	str	r0, [r3, #516]	; 0x204
+        Wreg32(HDMI_CS_TRANS5, HDMI_CS_TRANS5_c6(0x00000));
+        Wreg32(HDMI_CS_TRANS6, HDMI_CS_TRANS6_c7(0x04a80));
+      e4:	e583120c 	str	r1, [r3, #524]	; 0x20c
+        Wreg32(HDMI_CS_TRANS7, HDMI_CS_TRANS7_c8(0x00000));
+        Wreg32(HDMI_CS_TRANS8, HDMI_CS_TRANS8_c9(0x06680));
+        Wreg32(HDMI_CS_TRANS9, HDMI_CS_TRANS9_k1(0x21b0));
+        Wreg32(HDMI_CS_TRANS10, HDMI_CS_TRANS10_k2(0xba70));
+      e8:	e583221c 	str	r2, [r3, #540]	; 0x21c
+        Wreg32(HDMI_CS_TRANS11, HDMI_CS_TRANS11_k3(0xc840));
+      ec:	e2822edd 	add	r2, r2, #3536	; 0xdd0
+      f0:	e5832220 	str	r2, [r3, #544]	; 0x220
+        
+        
+        Wreg32(HDMI_SCHCR , HDMI_SCHCR_write_en10(1)|HDMI_SCHCR_422_pixel_repeat(0));
+        Wreg32(HDMI_GCPCR , HDMI_GCPCR_enablegcp(1)|HDMI_GCPCR_gcp_clearavmute(0)|HDMI_GCPCR_gcp_setavmute(0)|HDMI_GCPCR_write_data(0));
+        Wreg32(HDMI_GCPCR , HDMI_GCPCR_enablegcp(1)|HDMI_GCPCR_gcp_clearavmute(0)|HDMI_GCPCR_gcp_setavmute(0)|HDMI_GCPCR_write_data(1));
+      f4:	e3a02009 	mov	r2, #9
+      f8:	e5832078 	str	r2, [r3, #120]	; 0x78
+        Wreg32(HDMI_RPCR , HDMI_RPCR_write_en6(1)|HDMI_RPCR_prp5period(0)|HDMI_RPCR_write_en5(1)|HDMI_RPCR_prp4period(0)|HDMI_RPCR_write_en4(1)|
+      fc:	e59f2060 	ldr	r2, [pc, #96]	; 164 <HDMI_480p+0x164>
+     100:	e58320a0 	str	r2, [r3, #160]	; 0xa0
+                           HDMI_RPCR_prp3period(0)|HDMI_RPCR_write_en3(1)|HDMI_RPCR_prp2period(0)|HDMI_RPCR_write_en2(0)|HDMI_RPCR_prp1period(0)|HDMI_RPCR_write_en1(1)|HDMI_RPCR_prp0period(0));
+        Wreg32(HDMI_RPEN , HDMI_RPEN_enprpkt5(1)|HDMI_RPEN_enprpkt4(1)|HDMI_RPEN_enprpkt3(1)|HDMI_RPEN_enprpkt2(1)| HDMI_RPEN_enprpkt1(0)| HDMI_RPEN_enprpkt0(1)| HDMI_RPEN_write_data(0));
+     104:	e3a0207a 	mov	r2, #122	; 0x7a
+     108:	e58320a4 	str	r2, [r3, #164]	; 0xa4
+        Wreg32(HDMI_DIPCCR , HDMI_DIPCCR_write_en2(1)|HDMI_DIPCCR_vbidipcnt(17)|HDMI_DIPCCR_write_en1(1)|HDMI_DIPCCR_hbidipcnt(1));//hor. max 2 packets
+     10c:	e3002c61 	movw	r2, #3169	; 0xc61
+     110:	e58320b4 	str	r2, [r3, #180]	; 0xb4
+
+    //=====================================================================================================
+    // Scheduler
+    //=====================================================================================================
+        Wreg32(HDMI_SCHCR , HDMI_SCHCR_write_en12(1)|HDMI_SCHCR_color_transform_en(1)|HDMI_SCHCR_write_en11(0)|HDMI_SCHCR_ycbcr422_algo(0)|HDMI_SCHCR_write_en10(0)|HDMI_SCHCR_422_pixel_repeat(0)|
+     114:	e59f204c 	ldr	r2, [pc, #76]	; 168 <HDMI_480p+0x168>
+     118:	e58320b8 	str	r2, [r3, #184]	; 0xb8
+                            HDMI_SCHCR_write_en9(0)|HDMI_SCHCR_vsyncpolin(0)|HDMI_SCHCR_write_en8(0)|HDMI_SCHCR_hsyncpolin(0)|HDMI_SCHCR_write_en7(1)|HDMI_SCHCR_vsyncpolinv(1)|
+                            HDMI_SCHCR_write_en6(1)|HDMI_SCHCR_hsyncpolinv(1)|HDMI_SCHCR_write_en5(1)|HDMI_SCHCR_pixelencycbcr422(0)|HDMI_SCHCR_write_en4(1)|HDMI_SCHCR_hdmi_videoxs(0)|
+                            HDMI_SCHCR_write_en3(1)|HDMI_SCHCR_pixelencfmt(0)|HDMI_SCHCR_write_en2(1)|HDMI_SCHCR_pixelrepeat(0)|HDMI_SCHCR_write_en1(1)|HDMI_SCHCR_hdmi_modesel(0)); 
+
+        Wreg32(HDMI_HDCP_KOWR , HDMI_HDCP_KOWR_hdcprekeykeepoutwin(0x29));
+     11c:	e3a02029 	mov	r2, #41	; 0x29
+     120:	e58320f0 	str	r2, [r3, #240]	; 0xf0
+        Wreg32(HDMI_INTEN , HDMI_INTEN_enriupdint(1)|HDMI_INTEN_enpjupdint(1)|HDMI_INTEN_write_data(0));
+     124:	e3a02006 	mov	r2, #6
+     128:	e5832000 	str	r2, [r3]
+        Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(1)|HDMI_CR_write_en2(1)|HDMI_CR_enablehdcp(1)| HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(1));
+     12c:	e3a0203f 	mov	r2, #63	; 0x3f
+     130:	e5832034 	str	r2, [r3, #52]	; 0x34
+     134:	e12fff1e 	bx	lr
+     138:	0001c044 	.word	0x0001c044
+     13c:	000c002c 	.word	0x000c002c
+     140:	5afc9014 	.word	0x5afc9014
+     144:	0dff5891 	.word	0x0dff5891
+     148:	001d0012 	.word	0x001d0012
+     14c:	008902cf 	.word	0x008902cf
+     150:	003d000f 	.word	0x003d000f
+     154:	0eef0eef 	.word	0x0eef0eef
+     158:	01df01df 	.word	0x01df01df
+     15c:	0001e700 	.word	0x0001e700
+     160:	5280f102 	.word	0x5280f102
+     164:	21084010 	.word	0x21084010
+     168:	1807d04a 	.word	0x1807d04a
+
+0000016c <HDMI_720p60>:
+
+
+void HDMI_720p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028033); 
+     16c:	e59f2108 	ldr	r2, [pc, #264]	; 27c <HDMI_720p60+0x110>
+     170:	e3a03306 	mov	r3, #402653184	; 0x18000000
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(29));
+     174:	e59f1104 	ldr	r1, [pc, #260]	; 280 <HDMI_720p60+0x114>
+
+
+void HDMI_720p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028033); 
+     178:	e5832194 	str	r2, [r3, #404]	; 0x194
+    Wreg32(0x1800d044, 0x5abc9012); 
+     17c:	e2833a0d 	add	r3, r3, #53248	; 0xd000
+     180:	e59f20fc 	ldr	r2, [pc, #252]	; 284 <HDMI_720p60+0x118>
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(29));
+     184:	e583124c 	str	r1, [r3, #588]	; 0x24c
+
+void HDMI_720p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028033); 
+    Wreg32(0x1800d044, 0x5abc9012); 
+     188:	e5832044 	str	r2, [r3, #68]	; 0x44
+    Wreg32(0x1800d040, 0x0dff5891); 
+     18c:	e59f20f4 	ldr	r2, [pc, #244]	; 288 <HDMI_720p60+0x11c>
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(29));
+    //0xb800d250
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(19)|HDMI_V_PARA5_vfront((5<<1)));
+     190:	e59f10f4 	ldr	r1, [pc, #244]	; 28c <HDMI_720p60+0x120>
+void HDMI_720p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028033); 
+    Wreg32(0x1800d044, 0x5abc9012); 
+    Wreg32(0x1800d040, 0x0dff5891); 
+     194:	e5832040 	str	r2, [r3, #64]	; 0x40
+    
+     //0xb800d034
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0));
+    //0xb800d0bc
+    Wreg32(HDMI_ICR , HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+     198:	e3a02305 	mov	r2, #335544320	; 0x14000000
+     19c:	e58320bc 	str	r2, [r3, #188]	; 0xbc
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(369)|HDMI_H_PARA1_hactive(1279));
+     1a0:	e59f20e8 	ldr	r2, [pc, #232]	; 290 <HDMI_720p60+0x124>
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(29));
+    //0xb800d250
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(19)|HDMI_V_PARA5_vfront((5<<1)));
+     1a4:	e5831250 	str	r1, [r3, #592]	; 0x250
+    //0xb800d25c
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+     1a8:	e3001eef 	movw	r1, #3823	; 0xeef
+     //0xb800d034
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)|HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0));
+    //0xb800d0bc
+    Wreg32(HDMI_ICR , HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(369)|HDMI_H_PARA1_hactive(1279));
+     1ac:	e5832234 	str	r2, [r3, #564]	; 0x234
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(36)|HDMI_H_PARA2_hfront(109));
+     1b0:	e59f20dc 	ldr	r2, [pc, #220]	; 294 <HDMI_720p60+0x128>
+    //0xb800d25c
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+     1b4:	e583126c 	str	r1, [r3, #620]	; 0x26c
+    //0xb800d0bc
+    Wreg32(HDMI_ICR , HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)|HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(369)|HDMI_H_PARA1_hactive(1279));
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(36)|HDMI_H_PARA2_hfront(109));
+     1b8:	e5832238 	str	r2, [r3, #568]	; 0x238
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(219));
+     1bc:	e3a020db 	mov	r2, #219	; 0xdb
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    //0xb800d270
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+     1c0:	e59f10d0 	ldr	r1, [pc, #208]	; 298 <HDMI_720p60+0x12c>
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(369)|HDMI_H_PARA1_hactive(1279));
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(36)|HDMI_H_PARA2_hfront(109));
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(219));
+     1c4:	e583223c 	str	r2, [r3, #572]	; 0x23c
+    //0xb800d240
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(719)|HDMI_V_PARA1_vactive(719));
+     1c8:	e59f20cc 	ldr	r2, [pc, #204]	; 29c <HDMI_720p60+0x130>
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    //0xb800d270
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+     1cc:	e5831270 	str	r1, [r3, #624]	; 0x270
+    //0xb800d264
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    //0xb800d268
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+     1d0:	e3001924 	movw	r1, #2340	; 0x924
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(36)|HDMI_H_PARA2_hfront(109));
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(219));
+    //0xb800d240
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(719)|HDMI_V_PARA1_vactive(719));
+     1d4:	e5832240 	str	r2, [r3, #576]	; 0x240
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+     1d8:	e3a02000 	mov	r2, #0
+    //0xb800d264
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    //0xb800d268
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+     1dc:	e5831030 	str	r1, [r3, #48]	; 0x30
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|
+           HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0));
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+     1e0:	e59f00b8 	ldr	r0, [pc, #184]	; 2a0 <HDMI_720p60+0x134>
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+           HDMI_SYNC_DLY_write_en2(1)|HDMI_SYNC_DLY_disp_v(0)|HDMI_SYNC_DLY_write_en1(1)|HDMI_SYNC_DLY_disp_h(0));
+    //0xb800d154
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|
+     1e4:	e59f10b8 	ldr	r1, [pc, #184]	; 2a4 <HDMI_720p60+0x138>
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(219));
+    //0xb800d240
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(719)|HDMI_V_PARA1_vactive(719));
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+     1e8:	e5832244 	str	r2, [r3, #580]	; 0x244
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+     1ec:	e5832248 	str	r2, [r3, #584]	; 0x248
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(29));
+    //0xb800d250
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(19)|HDMI_V_PARA5_vfront((5<<1)));
+    //0xb800d254
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+     1f0:	e5832254 	str	r2, [r3, #596]	; 0x254
+    //0xb800d258
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+     1f4:	e5832258 	str	r2, [r3, #600]	; 0x258
+    //0xb800d25c
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+     1f8:	e583225c 	str	r2, [r3, #604]	; 0x25c
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+     1fc:	e5832260 	str	r2, [r3, #608]	; 0x260
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    //0xb800d270
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+    //0xb800d264
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+     200:	e5832264 	str	r2, [r3, #612]	; 0x264
+    //0xb800d268
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+     204:	e5832268 	str	r2, [r3, #616]	; 0x268
+    //0xb800d200
+    Wreg32(HDMI_CS_TRANS3 , HDMI_CS_TRANS3_c4(0x04a80));
+    //0xb800d204
+    Wreg32(HDMI_CS_TRANS4 , HDMI_CS_TRANS4_c5(0x08140));
+    //0xb800d208
+    Wreg32(HDMI_CS_TRANS5 , HDMI_CS_TRANS5_c6(0x00000));
+     208:	e5832208 	str	r2, [r3, #520]	; 0x208
+    //0xb800d20c
+    Wreg32(HDMI_CS_TRANS6 , HDMI_CS_TRANS6_c7(0x04a80));
+    //0xb800d210
+    Wreg32(HDMI_CS_TRANS7 , HDMI_CS_TRANS7_c8(0x00000));
+     20c:	e5832210 	str	r2, [r3, #528]	; 0x210
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+     210:	e3062680 	movw	r2, #26240	; 0x6680
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+           HDMI_SYNC_DLY_write_en2(1)|HDMI_SYNC_DLY_disp_v(0)|HDMI_SYNC_DLY_write_en1(1)|HDMI_SYNC_DLY_disp_h(0));
+    //0xb800d154
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|
+     214:	e5831154 	str	r1, [r3, #340]	; 0x154
+           HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|HDMI_DPC_dp_swen(1)|HDMI_DPC_write_en3(1)|HDMI_DPC_default_phase(1)|
+           HDMI_DPC_write_en2(1)|HDMI_DPC_color_depth(0)|HDMI_DPC_write_en1(1)|HDMI_DPC_dpc_enable(0));
+    //0xb800d020
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|
+     218:	e3a010f4 	mov	r1, #244	; 0xf4
+           HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0));
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+     21c:	e5830028 	str	r0, [r3, #40]	; 0x28
+    //0xb800d02c
+    Wreg32(HDMI_CS_TRANS2 , HDMI_CS_TRANS2_c3(0x1cc40));
+     220:	e2400d6b 	sub	r0, r0, #6848	; 0x1ac0
+    //0xb800d20c
+    Wreg32(HDMI_CS_TRANS6 , HDMI_CS_TRANS6_c7(0x04a80));
+    //0xb800d210
+    Wreg32(HDMI_CS_TRANS7 , HDMI_CS_TRANS7_c8(0x00000));
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+     224:	e5832214 	str	r2, [r3, #532]	; 0x214
+    //0xb800d218
+    Wreg32(HDMI_CS_TRANS9 , HDMI_CS_TRANS9_k1(0x21b0));
+     228:	e30221b0 	movw	r2, #8624	; 0x21b0
+    //0xb800d154
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|
+           HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|HDMI_DPC_dp_swen(1)|HDMI_DPC_write_en3(1)|HDMI_DPC_default_phase(1)|
+           HDMI_DPC_write_en2(1)|HDMI_DPC_color_depth(0)|HDMI_DPC_write_en1(1)|HDMI_DPC_dpc_enable(0));
+    //0xb800d020
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|
+     22c:	e5831020 	str	r1, [r3, #32]
+           HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0));
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+     230:	e3041a80 	movw	r1, #19072	; 0x4a80
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+    //0xb800d02c
+    Wreg32(HDMI_CS_TRANS2 , HDMI_CS_TRANS2_c3(0x1cc40));
+     234:	e583002c 	str	r0, [r3, #44]	; 0x2c
+    //0xb800d200
+    Wreg32(HDMI_CS_TRANS3 , HDMI_CS_TRANS3_c4(0x04a80));
+    //0xb800d204
+    Wreg32(HDMI_CS_TRANS4 , HDMI_CS_TRANS4_c5(0x08140));
+     238:	e3080140 	movw	r0, #33088	; 0x8140
+    //0xb800d210
+    Wreg32(HDMI_CS_TRANS7 , HDMI_CS_TRANS7_c8(0x00000));
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+    //0xb800d218
+    Wreg32(HDMI_CS_TRANS9 , HDMI_CS_TRANS9_k1(0x21b0));
+     23c:	e5832218 	str	r2, [r3, #536]	; 0x218
+    //0xb800d21c
+    Wreg32(HDMI_CS_TRANS10 , HDMI_CS_TRANS10_k2(0xba70));
+     240:	e30b2a70 	movw	r2, #47728	; 0xba70
+           HDMI_DPC_write_en2(1)|HDMI_DPC_color_depth(0)|HDMI_DPC_write_en1(1)|HDMI_DPC_dpc_enable(0));
+    //0xb800d020
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|
+           HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0));
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+     244:	e5831024 	str	r1, [r3, #36]	; 0x24
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+    //0xb800d02c
+    Wreg32(HDMI_CS_TRANS2 , HDMI_CS_TRANS2_c3(0x1cc40));
+    //0xb800d200
+    Wreg32(HDMI_CS_TRANS3 , HDMI_CS_TRANS3_c4(0x04a80));
+     248:	e5831200 	str	r1, [r3, #512]	; 0x200
+    //0xb800d204
+    Wreg32(HDMI_CS_TRANS4 , HDMI_CS_TRANS4_c5(0x08140));
+     24c:	e5830204 	str	r0, [r3, #516]	; 0x204
+    //0xb800d208
+    Wreg32(HDMI_CS_TRANS5 , HDMI_CS_TRANS5_c6(0x00000));
+    //0xb800d20c
+    Wreg32(HDMI_CS_TRANS6 , HDMI_CS_TRANS6_c7(0x04a80));
+     250:	e583120c 	str	r1, [r3, #524]	; 0x20c
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+    //0xb800d218
+    Wreg32(HDMI_CS_TRANS9 , HDMI_CS_TRANS9_k1(0x21b0));
+    //0xb800d21c
+    Wreg32(HDMI_CS_TRANS10 , HDMI_CS_TRANS10_k2(0xba70));
+     254:	e583221c 	str	r2, [r3, #540]	; 0x21c
+    //0xb800d220
+    Wreg32(HDMI_CS_TRANS11 , HDMI_CS_TRANS11_k3(0xc840));
+     258:	e2822edd 	add	r2, r2, #3536	; 0xdd0
+     25c:	e5832220 	str	r2, [r3, #544]	; 0x220
+    //0xb800d0b8
+    Wreg32(HDMI_SCHCR , HDMI_SCHCR_write_en10(1)|HDMI_SCHCR_422_pixel_repeat(0));
+    //0xb800d0b8
+    Wreg32(HDMI_SCHCR , HDMI_SCHCR_write_en12(1)|HDMI_SCHCR_color_transform_en(1)|HDMI_SCHCR_write_en11(0)|HDMI_SCHCR_ycbcr422_algo(0)|
+     260:	e59f2040 	ldr	r2, [pc, #64]	; 2a8 <HDMI_720p60+0x13c>
+     264:	e58320b8 	str	r2, [r3, #184]	; 0xb8
+           HDMI_SCHCR_write_en10(0)|HDMI_SCHCR_422_pixel_repeat(0)|HDMI_SCHCR_write_en9(0)|HDMI_SCHCR_vsyncpolin(0)|HDMI_SCHCR_write_en8(0)|HDMI_SCHCR_hsyncpolin(0)|
+           HDMI_SCHCR_write_en7(1)|HDMI_SCHCR_vsyncpolinv(0)|HDMI_SCHCR_write_en6(1)|HDMI_SCHCR_hsyncpolinv(0)|HDMI_SCHCR_write_en5(1)|HDMI_SCHCR_pixelencycbcr422(0)|
+           HDMI_SCHCR_write_en4(1)|HDMI_SCHCR_hdmi_videoxs(0)|HDMI_SCHCR_write_en3(1)|HDMI_SCHCR_pixelencfmt(0)|HDMI_SCHCR_write_en2(1)|HDMI_SCHCR_pixelrepeat(0)|
+           HDMI_SCHCR_write_en1(1)|HDMI_SCHCR_hdmi_modesel(0));
+    //0xb800d000
+    Wreg32(HDMI_INTEN , HDMI_INTEN_enriupdint(1)|HDMI_INTEN_enpjupdint(1)|HDMI_INTEN_write_data(0));
+     268:	e3a02006 	mov	r2, #6
+     26c:	e5832000 	str	r2, [r3]
+    //0xb800d034
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(1)|HDMI_CR_write_en2(1)|HDMI_CR_enablehdcp(1)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(1));
+     270:	e3a0203f 	mov	r2, #63	; 0x3f
+     274:	e5832034 	str	r2, [r3, #52]	; 0x34
+     278:	e12fff1e 	bx	lr
+     27c:	00028033 	.word	0x00028033
+     280:	000a001d 	.word	0x000a001d
+     284:	5abc9012 	.word	0x5abc9012
+     288:	0dff5891 	.word	0x0dff5891
+     28c:	0013000a 	.word	0x0013000a
+     290:	017104ff 	.word	0x017104ff
+     294:	0024006d 	.word	0x0024006d
+     298:	0eef0eef 	.word	0x0eef0eef
+     29c:	02cf02cf 	.word	0x02cf02cf
+     2a0:	0001e700 	.word	0x0001e700
+     2a4:	5280f102 	.word	0x5280f102
+     2a8:	1805504a 	.word	0x1805504a
+
+000002ac <HDMI_1080p60>:
+
+
+void HDMI_1080p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028022); 
+     2ac:	e59f2130 	ldr	r2, [pc, #304]	; 3e4 <HDMI_1080p60+0x138>
+     2b0:	e3a03306 	mov	r3, #402653184	; 0x18000000
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(44));
+     2b4:	e59f112c 	ldr	r1, [pc, #300]	; 3e8 <HDMI_1080p60+0x13c>
+
+
+void HDMI_1080p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028022); 
+     2b8:	e5832194 	str	r2, [r3, #404]	; 0x194
+    Wreg32(0x1800d044, 0x5afc9012); 
+     2bc:	e2833a0d 	add	r3, r3, #53248	; 0xd000
+     2c0:	e59f2124 	ldr	r2, [pc, #292]	; 3ec <HDMI_1080p60+0x140>
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(44));
+     2c4:	e583124c 	str	r1, [r3, #588]	; 0x24c
+
+void HDMI_1080p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028022); 
+    Wreg32(0x1800d044, 0x5afc9012); 
+     2c8:	e5832044 	str	r2, [r3, #68]	; 0x44
+    Wreg32(0x1800d040, 0x0dff5891); 
+     2cc:	e59f211c 	ldr	r2, [pc, #284]	; 3f0 <HDMI_1080p60+0x144>
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(44));
+    //0xb800d250
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(35)|HDMI_V_PARA5_vfront((4<<1)));
+     2d0:	e59f111c 	ldr	r1, [pc, #284]	; 3f4 <HDMI_1080p60+0x148>
+void HDMI_1080p60()
+{
+	  //HDMI PHY	  
+    Wreg32(0x18000194, 0x00028022); 
+    Wreg32(0x1800d044, 0x5afc9012); 
+    Wreg32(0x1800d040, 0x0dff5891); 
+     2d4:	e5832040 	str	r2, [r3, #64]	; 0x40
+	
+    //0xb800d034
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)| HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    //0xb800d0bc
+    Wreg32(HDMI_ICR , HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)| HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+     2d8:	e3a02305 	mov	r2, #335544320	; 0x14000000
+     2dc:	e58320bc 	str	r2, [r3, #188]	; 0xbc
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(279)|HDMI_H_PARA1_hactive(1919));
+     2e0:	e59f2110 	ldr	r2, [pc, #272]	; 3f8 <HDMI_1080p60+0x14c>
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(44));
+    //0xb800d250
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(35)|HDMI_V_PARA5_vfront((4<<1)));
+     2e4:	e5831250 	str	r1, [r3, #592]	; 0x250
+    //0xb800d25c
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+     2e8:	e3001eef 	movw	r1, #3823	; 0xeef
+    //0xb800d034
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(0)| HDMI_CR_write_en2(0)|HDMI_CR_enablehdcp(0)|HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(0)); 
+    //0xb800d0bc
+    Wreg32(HDMI_ICR , HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)| HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(279)|HDMI_H_PARA1_hactive(1919));
+     2ec:	e5832234 	str	r2, [r3, #564]	; 0x234
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(43)|HDMI_H_PARA2_hfront(87));
+     2f0:	e59f2104 	ldr	r2, [pc, #260]	; 3fc <HDMI_1080p60+0x150>
+    //0xb800d25c
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+     2f4:	e583126c 	str	r1, [r3, #620]	; 0x26c
+    //0xb800d0bc
+    Wreg32(HDMI_ICR , HDMI_ICR_write_en3(1)|HDMI_ICR_enaudio(0)| HDMI_ICR_write_en2(1)|HDMI_ICR_envitd(0)|HDMI_ICR_write_en1(0)|HDMI_ICR_vitd(0));
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(279)|HDMI_H_PARA1_hactive(1919));
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(43)|HDMI_H_PARA2_hfront(87));
+     2f8:	e5832238 	str	r2, [r3, #568]	; 0x238
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(147));
+     2fc:	e3a02093 	mov	r2, #147	; 0x93
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    //0xb800d270
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+     300:	e59f10f8 	ldr	r1, [pc, #248]	; 400 <HDMI_1080p60+0x154>
+    //0xb800d234
+    Wreg32(HDMI_H_PARA1 , HDMI_H_PARA1_hblank(279)|HDMI_H_PARA1_hactive(1919));
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(43)|HDMI_H_PARA2_hfront(87));
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(147));
+     304:	e583223c 	str	r2, [r3, #572]	; 0x23c
+    //0xb800d240
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(1079)|HDMI_V_PARA1_vactive(1079));
+     308:	e59f20f4 	ldr	r2, [pc, #244]	; 404 <HDMI_1080p60+0x158>
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    //0xb800d270
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+     30c:	e5831270 	str	r1, [r3, #624]	; 0x270
+    //0xb800d264
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    //0xb800d268
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+     310:	e3001924 	movw	r1, #2340	; 0x924
+    //0xb800d238
+    Wreg32(HDMI_H_PARA2 , HDMI_H_PARA2_hsync(43)|HDMI_H_PARA2_hfront(87));
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(147));
+    //0xb800d240
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(1079)|HDMI_V_PARA1_vactive(1079));
+     314:	e5832240 	str	r2, [r3, #576]	; 0x240
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+     318:	e3a02000 	mov	r2, #0
+    //0xb800d264
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+    //0xb800d268
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+     31c:	e5831030 	str	r1, [r3, #48]	; 0x30
+  
+    //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+     320:	e59f00e0 	ldr	r0, [pc, #224]	; 408 <HDMI_1080p60+0x15c>
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+           HDMI_SYNC_DLY_write_en2(1)|HDMI_SYNC_DLY_disp_v(0)|HDMI_SYNC_DLY_write_en1(1)|HDMI_SYNC_DLY_disp_h(0));
+    //0xb800d154
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|
+     324:	e59f10e0 	ldr	r1, [pc, #224]	; 40c <HDMI_1080p60+0x160>
+    //0xb800d23c
+    Wreg32(HDMI_H_PARA3 , HDMI_H_PARA3_hback(147));
+    //0xb800d240
+    Wreg32(HDMI_V_PARA1 , HDMI_V_PARA1_Vact_video(1079)|HDMI_V_PARA1_vactive(1079));
+    //0xb800d244
+    Wreg32(HDMI_V_PARA2 , HDMI_V_PARA2_Vact_space1(0)|HDMI_V_PARA2_Vact_space(0));
+     328:	e5832244 	str	r2, [r3, #580]	; 0x244
+    //0xb800d248
+    Wreg32(HDMI_V_PARA3 , HDMI_V_PARA3_Vblank3(0)|HDMI_V_PARA3_Vact_space2(0));
+     32c:	e5832248 	str	r2, [r3, #584]	; 0x248
+    //0xb800d24c
+    Wreg32(HDMI_V_PARA4 , HDMI_V_PARA4_vsync((5<<1))|HDMI_V_PARA4_vblank(44));
+    //0xb800d250
+    Wreg32(HDMI_V_PARA5 , HDMI_V_PARA5_vback(35)|HDMI_V_PARA5_vfront((4<<1)));
+    //0xb800d254
+    Wreg32(HDMI_V_PARA6 , HDMI_V_PARA6_Vsync1((0<<1))|HDMI_V_PARA6_Vblank1(0));
+     330:	e5832254 	str	r2, [r3, #596]	; 0x254
+    //0xb800d258
+    Wreg32(HDMI_V_PARA7 , HDMI_V_PARA7_Vback1(0)|HDMI_V_PARA7_Vfront1((0<<1)));
+     334:	e5832258 	str	r2, [r3, #600]	; 0x258
+    //0xb800d25c
+    Wreg32(HDMI_V_PARA8 , HDMI_V_PARA8_Vsync2((0<<1))|HDMI_V_PARA8_Vblank2(0));
+     338:	e583225c 	str	r2, [r3, #604]	; 0x25c
+    //0xb800d260
+    Wreg32(HDMI_V_PARA9 , HDMI_V_PARA9_Vback2(0)|HDMI_V_PARA9_Vfront2((0<<1)));
+     33c:	e5832260 	str	r2, [r3, #608]	; 0x260
+    //0xb800d26c
+    Wreg32(HDMI_V_PARA10 , HDMI_V_PARA10_G(0x00beef));
+    //0xb800d270
+    Wreg32(HDMI_V_PARA11 , HDMI_V_PARA11_B(0x00beef)|HDMI_V_PARA11_R(0x00beef));
+    //0xb800d264
+    Wreg32(HDMI_V_PARA12 , HDMI_V_PARA12_vsynci((0<<1))|HDMI_V_PARA12_vblanki(0));
+     340:	e5832264 	str	r2, [r3, #612]	; 0x264
+    //0xb800d268
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+     344:	e5832268 	str	r2, [r3, #616]	; 0x268
+    //0xb800d200
+    Wreg32(HDMI_CS_TRANS3 , HDMI_CS_TRANS3_c4(0x04a80));
+    //0xb800d204
+    Wreg32(HDMI_CS_TRANS4 , HDMI_CS_TRANS4_c5(0x08140));
+    //0xb800d208
+    Wreg32(HDMI_CS_TRANS5 , HDMI_CS_TRANS5_c6(0x00000));
+     348:	e5832208 	str	r2, [r3, #520]	; 0x208
+    //0xb800d20c
+    Wreg32(HDMI_CS_TRANS6 , HDMI_CS_TRANS6_c7(0x04a80));
+    //0xb800d210
+    Wreg32(HDMI_CS_TRANS7 , HDMI_CS_TRANS7_c8(0x00000));
+     34c:	e5832210 	str	r2, [r3, #528]	; 0x210
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+     350:	e3062680 	movw	r2, #26240	; 0x6680
+    Wreg32(HDMI_V_PARA13 , HDMI_V_PARA13_vbacki(0)|HDMI_V_PARA13_vfronti((0<<1)));
+    //0xb800d030
+    Wreg32(HDMI_SYNC_DLY , HDMI_SYNC_DLY_write_en4(1)|HDMI_SYNC_DLY_nor_v(0)|HDMI_SYNC_DLY_write_en3(1)|HDMI_SYNC_DLY_nor_h(0)|
+           HDMI_SYNC_DLY_write_en2(1)|HDMI_SYNC_DLY_disp_v(0)|HDMI_SYNC_DLY_write_en1(1)|HDMI_SYNC_DLY_disp_h(0));
+    //0xb800d154
+    Wreg32(HDMI_DPC , HDMI_DPC_write_en9(1)|HDMI_DPC_dp_vfch_num(1)|HDMI_DPC_write_en8(1)|HDMI_DPC_fp_swen(0)|HDMI_DPC_write_en7(1)|HDMI_DPC_fp(0)|HDMI_DPC_write_en4(1)|
+     354:	e5831154 	str	r1, [r3, #340]	; 0x154
+      
+    //=====================================================================================================
+    // HDMI Control
+    //=====================================================================================================  
+    //0xb800d020
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+     358:	e3a010f4 	mov	r1, #244	; 0xf4
+  
+    //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+     35c:	e5830028 	str	r0, [r3, #40]	; 0x28
+    //0xb800d02c
+    Wreg32(HDMI_CS_TRANS2 , HDMI_CS_TRANS2_c3(0x1cc40));
+     360:	e2400d6b 	sub	r0, r0, #6848	; 0x1ac0
+    //0xb800d20c
+    Wreg32(HDMI_CS_TRANS6 , HDMI_CS_TRANS6_c7(0x04a80));
+    //0xb800d210
+    Wreg32(HDMI_CS_TRANS7 , HDMI_CS_TRANS7_c8(0x00000));
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+     364:	e5832214 	str	r2, [r3, #532]	; 0x214
+    //0xb800d218
+    Wreg32(HDMI_CS_TRANS9 , HDMI_CS_TRANS9_k1(0x21b0));
+     368:	e30221b0 	movw	r2, #8624	; 0x21b0
+      
+    //=====================================================================================================
+    // HDMI Control
+    //=====================================================================================================  
+    //0xb800d020
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+     36c:	e5831020 	str	r1, [r3, #32]
+  
+    //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+     370:	e3041a80 	movw	r1, #19072	; 0x4a80
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+    //0xb800d02c
+    Wreg32(HDMI_CS_TRANS2 , HDMI_CS_TRANS2_c3(0x1cc40));
+     374:	e583002c 	str	r0, [r3, #44]	; 0x2c
+    //0xb800d200
+    Wreg32(HDMI_CS_TRANS3 , HDMI_CS_TRANS3_c4(0x04a80));
+    //0xb800d204
+    Wreg32(HDMI_CS_TRANS4 , HDMI_CS_TRANS4_c5(0x08140));
+     378:	e3080140 	movw	r0, #33088	; 0x8140
+    //0xb800d210
+    Wreg32(HDMI_CS_TRANS7 , HDMI_CS_TRANS7_c8(0x00000));
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+    //0xb800d218
+    Wreg32(HDMI_CS_TRANS9 , HDMI_CS_TRANS9_k1(0x21b0));
+     37c:	e5832218 	str	r2, [r3, #536]	; 0x218
+    //0xb800d21c
+    Wreg32(HDMI_CS_TRANS10 , HDMI_CS_TRANS10_k2(0xba70));
+     380:	e30b2a70 	movw	r2, #47728	; 0xba70
+    //0xb800d020
+    Wreg32(HDMI_CHNL_SEL , HDMI_CHNL_SEL_video_sd(0)|HDMI_CHNL_SEL_Interlaced_vfmt(0)|HDMI_CHNL_SEL_3D_video_format(0xf)|HDMI_CHNL_SEL_En_3D(0)|HDMI_CHNL_SEL_timing_gen_en(1)|HDMI_CHNL_SEL_chl_sel(0)); 
+  
+    //-- Color Transform (YCbCr 4:4:4 -> RGB 4:4:4)
+    //0xb800d024
+    Wreg32(HDMI_CS_TRANS0 , HDMI_CS_TRANS0_c1(0x04a80));
+     384:	e5831024 	str	r1, [r3, #36]	; 0x24
+    //0xb800d028
+    Wreg32(HDMI_CS_TRANS1 , HDMI_CS_TRANS1_c2(0x1e700));
+    //0xb800d02c
+    Wreg32(HDMI_CS_TRANS2 , HDMI_CS_TRANS2_c3(0x1cc40));
+    //0xb800d200
+    Wreg32(HDMI_CS_TRANS3 , HDMI_CS_TRANS3_c4(0x04a80));
+     388:	e5831200 	str	r1, [r3, #512]	; 0x200
+    //0xb800d204
+    Wreg32(HDMI_CS_TRANS4 , HDMI_CS_TRANS4_c5(0x08140));
+     38c:	e5830204 	str	r0, [r3, #516]	; 0x204
+    //0xb800d208
+    Wreg32(HDMI_CS_TRANS5 , HDMI_CS_TRANS5_c6(0x00000));
+    //0xb800d20c
+    Wreg32(HDMI_CS_TRANS6 , HDMI_CS_TRANS6_c7(0x04a80));
+     390:	e583120c 	str	r1, [r3, #524]	; 0x20c
+    //0xb800d214
+    Wreg32(HDMI_CS_TRANS8 , HDMI_CS_TRANS8_c9(0x06680));
+    //0xb800d218
+    Wreg32(HDMI_CS_TRANS9 , HDMI_CS_TRANS9_k1(0x21b0));
+    //0xb800d21c
+    Wreg32(HDMI_CS_TRANS10 , HDMI_CS_TRANS10_k2(0xba70));
+     394:	e583221c 	str	r2, [r3, #540]	; 0x21c
+    //0xb800d220
+    Wreg32(HDMI_CS_TRANS11 , HDMI_CS_TRANS11_k3(0xc840));
+     398:	e2822edd 	add	r2, r2, #3536	; 0xdd0
+     39c:	e5832220 	str	r2, [r3, #544]	; 0x220
+    //0xb800d0b8
+    Wreg32(HDMI_SCHCR , HDMI_SCHCR_write_en10(1)|HDMI_SCHCR_422_pixel_repeat(0));
+    //0xb800d078
+    Wreg32(HDMI_GCPCR , HDMI_GCPCR_enablegcp(1)|HDMI_GCPCR_gcp_clearavmute(0)|HDMI_GCPCR_gcp_setavmute(0)|HDMI_GCPCR_write_data(0));
+    //0xb800d078
+    Wreg32(HDMI_GCPCR , HDMI_GCPCR_enablegcp(1)|HDMI_GCPCR_gcp_clearavmute(0)|HDMI_GCPCR_gcp_setavmute(0)|HDMI_GCPCR_write_data(1));
+     3a0:	e3a02009 	mov	r2, #9
+     3a4:	e5832078 	str	r2, [r3, #120]	; 0x78
+    //0xb800d0a0
+    Wreg32(HDMI_RPCR , HDMI_RPCR_write_en6(1)|HDMI_RPCR_prp5period(0)|HDMI_RPCR_write_en5(1)|HDMI_RPCR_prp4period(0)|HDMI_RPCR_write_en4(1)|HDMI_RPCR_prp3period(0)|
+     3a8:	e59f2060 	ldr	r2, [pc, #96]	; 410 <HDMI_1080p60+0x164>
+     3ac:	e58320a0 	str	r2, [r3, #160]	; 0xa0
+           HDMI_RPCR_write_en3(1)|HDMI_RPCR_prp2period(0)|HDMI_RPCR_write_en2(0)|HDMI_RPCR_prp1period(0)|HDMI_RPCR_write_en1(1)|HDMI_RPCR_prp0period(0));
+    //0xb800d0a4
+    Wreg32(HDMI_RPEN , HDMI_RPEN_enprpkt5(1)|HDMI_RPEN_enprpkt4(1)|HDMI_RPEN_enprpkt3(1)|HDMI_RPEN_enprpkt2(1)| HDMI_RPEN_enprpkt1(0)| HDMI_RPEN_enprpkt0(1)| HDMI_RPEN_write_data(0));
+     3b0:	e3a0207a 	mov	r2, #122	; 0x7a
+     3b4:	e58320a4 	str	r2, [r3, #164]	; 0xa4
+    //0xb800d0b4
+    Wreg32(HDMI_DIPCCR , HDMI_DIPCCR_write_en2(1)|HDMI_DIPCCR_vbidipcnt(17)|HDMI_DIPCCR_write_en1(1)|HDMI_DIPCCR_hbidipcnt(5));
+     3b8:	e3002c65 	movw	r2, #3173	; 0xc65
+     3bc:	e58320b4 	str	r2, [r3, #180]	; 0xb4
+
+    //=====================================================================================================
+    // Scheduler
+    //=====================================================================================================  
+    //0xb800d0b8
+    Wreg32(HDMI_SCHCR , HDMI_SCHCR_write_en12(1)|HDMI_SCHCR_color_transform_en(1)|HDMI_SCHCR_write_en11(0)|HDMI_SCHCR_ycbcr422_algo(0)|HDMI_SCHCR_write_en10(0)|HDMI_SCHCR_422_pixel_repeat(0)|
+     3c0:	e59f204c 	ldr	r2, [pc, #76]	; 414 <HDMI_1080p60+0x168>
+     3c4:	e58320b8 	str	r2, [r3, #184]	; 0xb8
+           HDMI_SCHCR_write_en5(1)|HDMI_SCHCR_pixelencycbcr422(0)|HDMI_SCHCR_write_en4(1)|HDMI_SCHCR_hdmi_videoxs(0)|HDMI_SCHCR_write_en3(1)|HDMI_SCHCR_pixelencfmt(0)| HDMI_SCHCR_write_en2(1)|
+           HDMI_SCHCR_pixelrepeat(0)|HDMI_SCHCR_write_en1(1)|HDMI_SCHCR_hdmi_modesel(0)); 
+ 
+
+    //0xb800d0f0
+    Wreg32(HDMI_HDCP_KOWR , HDMI_HDCP_KOWR_hdcprekeykeepoutwin(0x2a));
+     3c8:	e3a0202a 	mov	r2, #42	; 0x2a
+     3cc:	e58320f0 	str	r2, [r3, #240]	; 0xf0
+
+    //0xb800d000
+    Wreg32(HDMI_INTEN , HDMI_INTEN_enriupdint(1)|HDMI_INTEN_enpjupdint(1)|HDMI_INTEN_write_data(0));
+     3d0:	e3a02006 	mov	r2, #6
+     3d4:	e5832000 	str	r2, [r3]
+
+    //0xb800d034
+    Wreg32(HDMI_CR , HDMI_CR_write_en3(1)|HDMI_CR_tmds_encen(1)| HDMI_CR_write_en2(1)|HDMI_CR_enablehdcp(1)| HDMI_CR_write_en1(1)|HDMI_CR_enablehdmi(1)); 
+     3d8:	e3a0203f 	mov	r2, #63	; 0x3f
+     3dc:	e5832034 	str	r2, [r3, #52]	; 0x34
+     3e0:	e12fff1e 	bx	lr
+     3e4:	00028022 	.word	0x00028022
+     3e8:	000a002c 	.word	0x000a002c
+     3ec:	5afc9012 	.word	0x5afc9012
+     3f0:	0dff5891 	.word	0x0dff5891
+     3f4:	00230008 	.word	0x00230008
+     3f8:	0117077f 	.word	0x0117077f
+     3fc:	002b0057 	.word	0x002b0057
+     400:	0eef0eef 	.word	0x0eef0eef
+     404:	04370437 	.word	0x04370437
+     408:	0001e700 	.word	0x0001e700
+     40c:	5280f102 	.word	0x5280f102
+     410:	21084010 	.word	0x21084010
+     414:	1805504a 	.word	0x1805504a
+
+00000418 <i2c_ini>:
+
+void i2c_ini()
+{
+unsigned int *addr;
+addr=(void *)0x1801ba6c;
+*addr=0x0;		//disable i2c
+     418:	e59f3038 	ldr	r3, [pc, #56]	; 458 <i2c_ini+0x40>
+     41c:	e3a02000 	mov	r2, #0
+addr=(void *)0x1801ba00;
+*addr=0x63;		//slave disabled, restart enabled, 7-bit addressing, standard mode, master enabled
+     420:	e3a01063 	mov	r1, #99	; 0x63
+     424:	e5831a00 	str	r1, [r3, #2560]	; 0xa00
+addr=(void *)0x1801ba14;
+*addr=0x36;		//
+     428:	e3a01036 	mov	r1, #54	; 0x36
+addr=(void *)0x1801ba18;
+*addr=0x40;		//
+addr=(void *)0x1801ba30;
+*addr=0x0;		//mask all interrupt
+     42c:	e5832a30 	str	r2, [r3, #2608]	; 0xa30
+addr=(void *)0x1801ba38;
+*addr=0x0;		//Rx FIFO threshold 1
+     430:	e5832a38 	str	r2, [r3, #2616]	; 0xa38
+addr=(void *)0x1801ba3c;
+*addr=0x1f;		//Tx FIFO threshold 32
+     434:	e3a0201f 	mov	r2, #31
+addr=(void *)0x1801ba6c;
+*addr=0x0;		//disable i2c
+addr=(void *)0x1801ba00;
+*addr=0x63;		//slave disabled, restart enabled, 7-bit addressing, standard mode, master enabled
+addr=(void *)0x1801ba14;
+*addr=0x36;		//
+     438:	e5831a14 	str	r1, [r3, #2580]	; 0xa14
+addr=(void *)0x1801ba18;
+*addr=0x40;		//
+     43c:	e3a01040 	mov	r1, #64	; 0x40
+addr=(void *)0x1801ba30;
+*addr=0x0;		//mask all interrupt
+addr=(void *)0x1801ba38;
+*addr=0x0;		//Rx FIFO threshold 1
+addr=(void *)0x1801ba3c;
+*addr=0x1f;		//Tx FIFO threshold 32
+     440:	e5832a3c 	str	r2, [r3, #2620]	; 0xa3c
+addr=(void *)0x1801b094;
+*addr=0x001;		//I2C4_SDA_DEL
+     444:	e3a02001 	mov	r2, #1
+addr=(void *)0x1801ba00;
+*addr=0x63;		//slave disabled, restart enabled, 7-bit addressing, standard mode, master enabled
+addr=(void *)0x1801ba14;
+*addr=0x36;		//
+addr=(void *)0x1801ba18;
+*addr=0x40;		//
+     448:	e5831a18 	str	r1, [r3, #2584]	; 0xa18
+addr=(void *)0x1801ba38;
+*addr=0x0;		//Rx FIFO threshold 1
+addr=(void *)0x1801ba3c;
+*addr=0x1f;		//Tx FIFO threshold 32
+addr=(void *)0x1801b094;
+*addr=0x001;		//I2C4_SDA_DEL
+     44c:	e5832094 	str	r2, [r3, #148]	; 0x94
+addr=(void *)0x1801ba6c;
+*addr=0x1;		//enable i2c
+     450:	e5832a6c 	str	r2, [r3, #2668]	; 0xa6c
+     454:	e12fff1e 	bx	lr
+     458:	1801b000 	.word	0x1801b000
+
+0000045c <i2c_read>:
+{
+int n;	
+unsigned int *regaddr;
+unsigned int *interrupt;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x0;
+     45c:	e59f3020 	ldr	r3, [pc, #32]	; 484 <i2c_read+0x28>
+regaddr=(void *)0x1801ba04;
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+     460:	e3a02001 	mov	r2, #1
+unsigned int *regaddr;
+unsigned int *interrupt;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x0;
+regaddr=(void *)0x1801ba04;
+*regaddr=addr;
+     464:	e5830a04 	str	r0, [r3, #2564]	; 0xa04
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= i; n++)
+	 *regaddr=0x100;
+     468:	e3a00c01 	mov	r0, #256	; 0x100
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x0;
+regaddr=(void *)0x1801ba04;
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+     46c:	e5832a6c 	str	r2, [r3, #2668]	; 0xa6c
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= i; n++)
+     470:	e1520001 	cmp	r2, r1
+	 *regaddr=0x100;
+     474:	95830a10 	strls	r0, [r3, #2576]	; 0xa10
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= i; n++)
+     478:	92822001 	addls	r2, r2, #1
+     47c:	9afffffb 	bls	470 <i2c_read+0x14>
+//{	
+//	while((*interrupt&&0x00000004)==0)	//wait for Rx ready
+//	wait();
+//	array[n]=*regaddr;
+//}
+}
+     480:	e12fff1e 	bx	lr
+     484:	1801b000 	.word	0x1801b000
+
+00000488 <i2c_write>:
+
+void i2c_write(unsigned int addr, unsigned int *array)
+{
+     488:	e92d40f8 	push	{r3, r4, r5, r6, r7, lr}
+     48c:	e1a05001 	mov	r5, r1
+int n;	
+unsigned int *regaddr;
+unsigned int *interrupt;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x0;
+     490:	e59f3044 	ldr	r3, [pc, #68]	; 4dc <i2c_write+0x54>
+regaddr=(void *)0x1801ba04;
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+     494:	e3a04001 	mov	r4, #1
+unsigned int *regaddr;
+unsigned int *interrupt;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x0;
+regaddr=(void *)0x1801ba04;
+*regaddr=addr;
+     498:	e5830a04 	str	r0, [r3, #2564]	; 0xa04
+*regaddr=0x1;
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= array[0]; n++)
+	{
+	 while((*interrupt&&0x00000010)==0)	//wait for Tx empty
+     49c:	e1a06003 	mov	r6, r3
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x0;
+regaddr=(void *)0x1801ba04;
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+     4a0:	e5834a6c 	str	r4, [r3, #2668]	; 0xa6c
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= array[0]; n++)
+	{
+	 while((*interrupt&&0x00000010)==0)	//wait for Tx empty
+     4a4:	e1a07003 	mov	r7, r3
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= array[0]; n++)
+     4a8:	e5953000 	ldr	r3, [r5]
+     4ac:	e1540003 	cmp	r4, r3
+     4b0:	8a000008 	bhi	4d8 <i2c_write+0x50>
+	{
+	 while((*interrupt&&0x00000010)==0)	//wait for Tx empty
+     4b4:	e5963a34 	ldr	r3, [r6, #2612]	; 0xa34
+     4b8:	e3530000 	cmp	r3, #0
+     4bc:	1a000001 	bne	4c8 <i2c_write+0x40>
+		wait();
+     4c0:	ebfffffe 	bl	16a8 <wait>
+     4c4:	eafffffa 	b	4b4 <i2c_write+0x2c>
+		
+	 *regaddr=array[n];	
+     4c8:	e7953104 	ldr	r3, [r5, r4, lsl #2]
+*regaddr=addr;
+regaddr=(void *)0x1801ba6c;
+*regaddr=0x1;
+regaddr=(void *)0x1801ba10;
+interrupt=(void *)0x1801ba34;
+for (n = 1; n <= array[0]; n++)
+     4cc:	e2844001 	add	r4, r4, #1
+	{
+	 while((*interrupt&&0x00000010)==0)	//wait for Tx empty
+		wait();
+		
+	 *regaddr=array[n];	
+     4d0:	e5873a10 	str	r3, [r7, #2576]	; 0xa10
+     4d4:	eafffff3 	b	4a8 <i2c_write+0x20>
+	}
+}
+     4d8:	e8bd80f8 	pop	{r3, r4, r5, r6, r7, pc}
+     4dc:	1801b000 	.word	0x1801b000
+
+000004e0 <RLE0551C_test1>:
+#define RLE0551C_patterngen_addr 0x7A
+
+/*==================== Functions ================== */
+
+void RLE0551C_test1(unsigned int addr)
+{
+     4e0:	e92d4010 	push	{r4, lr}
+     4e4:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={9, 0x04, 0x00, 0x201, 0x04, 0x67, 0x200, 0x03, 0x1a, 0x201};
+     4e8:	e59fe034 	ldr	lr, [pc, #52]	; 524 <RLE0551C_test1+0x44>
+#define RLE0551C_patterngen_addr 0x7A
+
+/*==================== Functions ================== */
+
+void RLE0551C_test1(unsigned int addr)
+{
+     4ec:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int PALBG[]={9, 0x04, 0x00, 0x201, 0x04, 0x67, 0x200, 0x03, 0x1a, 0x201};
+     4f0:	e1a0c00d 	mov	ip, sp
+     4f4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     4f8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     4fc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     500:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     504:	e89e0003 	ldm	lr, {r0, r1}
+     508:	e88c0003 	stm	ip, {r0, r1}
+	                        
+
+i2c_write(addr,PALBG);
+     50c:	e1a0100d 	mov	r1, sp
+     510:	e1a00004 	mov	r0, r4
+     514:	ebfffffe 	bl	488 <i2c_write>
+
+wait();	
+     518:	ebfffffe 	bl	16a8 <wait>
+}
+     51c:	e28dd028 	add	sp, sp, #40	; 0x28
+     520:	e8bd8010 	pop	{r4, pc}
+     524:	00000000 	.word	0x00000000
+
+00000528 <RLE0551C_test2>:
+
+void RLE0551C_test2(unsigned int addr)
+{
+     528:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+     52c:	e1a0e000 	mov	lr, r0
+unsigned int PALBG[]={3, 0x04, 0x67, 0x300};
+     530:	e59f301c 	ldr	r3, [pc, #28]	; 554 <RLE0551C_test2+0x2c>
+     534:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+     538:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+
+i2c_write(addr,PALBG);
+     53c:	e1a0000e 	mov	r0, lr
+     540:	e1a0100d 	mov	r1, sp
+     544:	ebfffffe 	bl	488 <i2c_write>
+
+wait();	
+     548:	ebfffffe 	bl	16a8 <wait>
+}
+     54c:	e28dd014 	add	sp, sp, #20
+     550:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+     554:	00000028 	.word	0x00000028
+
+00000558 <RLE0551C_patterngen_A>:
+
+
+//2048x1536/YUV2/30fps/MIPI/4Lane
+void RLE0551C_patterngen_A(unsigned int addr)
+{
+     558:	e92d4010 	push	{r4, lr}
+     55c:	e1a04000 	mov	r4, r0
+unsigned int A[]={9, 0x04, 0x2a, 0x200, 0x04, 0x10, 0x200, 0x04, 0x09, 0x201}; 	                   	                   
+     560:	e59fe034 	ldr	lr, [pc, #52]	; 59c <RLE0551C_patterngen_A+0x44>
+}
+
+
+//2048x1536/YUV2/30fps/MIPI/4Lane
+void RLE0551C_patterngen_A(unsigned int addr)
+{
+     564:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int A[]={9, 0x04, 0x2a, 0x200, 0x04, 0x10, 0x200, 0x04, 0x09, 0x201}; 	                   	                   
+     568:	e1a0c00d 	mov	ip, sp
+     56c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     570:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     574:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     578:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     57c:	e89e0003 	ldm	lr, {r0, r1}
+     580:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,A);
+     584:	e1a0100d 	mov	r1, sp
+     588:	e1a00004 	mov	r0, r4
+     58c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     590:	ebfffffe 	bl	16a8 <wait>
+}
+     594:	e28dd028 	add	sp, sp, #40	; 0x28
+     598:	e8bd8010 	pop	{r4, pc}
+     59c:	00000038 	.word	0x00000038
+
+000005a0 <RLE0551C_patterngen_B>:
+
+void RLE0551C_patterngen_B(unsigned int addr)
+{
+     5a0:	e92d4010 	push	{r4, lr}
+     5a4:	e1a04000 	mov	r4, r0
+unsigned int B[]={9, 0x04, 0x00, 0x201, 0x04, 0x67, 0x200, 0x03, 0x1a, 0x200};
+     5a8:	e59fe034 	ldr	lr, [pc, #52]	; 5e4 <RLE0551C_patterngen_B+0x44>
+i2c_write(addr,A);
+wait();	
+}
+
+void RLE0551C_patterngen_B(unsigned int addr)
+{
+     5ac:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int B[]={9, 0x04, 0x00, 0x201, 0x04, 0x67, 0x200, 0x03, 0x1a, 0x200};
+     5b0:	e1a0c00d 	mov	ip, sp
+     5b4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     5b8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     5bc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     5c0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     5c4:	e89e0003 	ldm	lr, {r0, r1}
+     5c8:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,B);
+     5cc:	e1a0100d 	mov	r1, sp
+     5d0:	e1a00004 	mov	r0, r4
+     5d4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     5d8:	ebfffffe 	bl	16a8 <wait>
+}
+     5dc:	e28dd028 	add	sp, sp, #40	; 0x28
+     5e0:	e8bd8010 	pop	{r4, pc}
+     5e4:	00000060 	.word	0x00000060
+
+000005e8 <RLE0551C_patterngen_C>:
+
+void RLE0551C_patterngen_C(unsigned int addr)
+{
+     5e8:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+     5ec:	e1a0e000 	mov	lr, r0
+unsigned int C[]={3, 0x02, 0x1a, 0x200}; 
+     5f0:	e59f301c 	ldr	r3, [pc, #28]	; 614 <RLE0551C_patterngen_C+0x2c>
+     5f4:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+     5f8:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,C);
+     5fc:	e1a0000e 	mov	r0, lr
+     600:	e1a0100d 	mov	r1, sp
+     604:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     608:	ebfffffe 	bl	16a8 <wait>
+}
+     60c:	e28dd014 	add	sp, sp, #20
+     610:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+     614:	00000088 	.word	0x00000088
+
+00000618 <RLE0551C_patterngen_C_1>:
+
+void RLE0551C_patterngen_C_1(unsigned int addr)
+{
+     618:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+     61c:	e1a0e000 	mov	lr, r0
+unsigned int C[]={3, 0x02, 0x1a, 0x202}; 
+     620:	e59f301c 	ldr	r3, [pc, #28]	; 644 <RLE0551C_patterngen_C_1+0x2c>
+     624:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+     628:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,C);
+     62c:	e1a0000e 	mov	r0, lr
+     630:	e1a0100d 	mov	r1, sp
+     634:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     638:	ebfffffe 	bl	16a8 <wait>
+}
+     63c:	e28dd014 	add	sp, sp, #20
+     640:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+     644:	00000098 	.word	0x00000098
+
+00000648 <RLE0551C_patterngen_D>:
+
+void RLE0551C_patterngen_D(unsigned int addr)
+{
+     648:	e92d4010 	push	{r4, lr}
+     64c:	e1a04000 	mov	r4, r0
+unsigned int D[]={9, 0x04, 0x26, 0x200, 0x04, 0x15, 0x200, 0x04, 0x24, 0x200}; 	                   	                   
+     650:	e59fe034 	ldr	lr, [pc, #52]	; 68c <RLE0551C_patterngen_D+0x44>
+i2c_write(addr,C);
+wait();	
+}
+
+void RLE0551C_patterngen_D(unsigned int addr)
+{
+     654:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int D[]={9, 0x04, 0x26, 0x200, 0x04, 0x15, 0x200, 0x04, 0x24, 0x200}; 	                   	                   
+     658:	e1a0c00d 	mov	ip, sp
+     65c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     660:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     664:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     668:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     66c:	e89e0003 	ldm	lr, {r0, r1}
+     670:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,D);
+     674:	e1a0100d 	mov	r1, sp
+     678:	e1a00004 	mov	r0, r4
+     67c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     680:	ebfffffe 	bl	16a8 <wait>
+}
+     684:	e28dd028 	add	sp, sp, #40	; 0x28
+     688:	e8bd8010 	pop	{r4, pc}
+     68c:	000000a8 	.word	0x000000a8
+
+00000690 <RLE0551C_patterngen_E>:
+
+void RLE0551C_patterngen_E(unsigned int addr)
+{
+     690:	e92d4010 	push	{r4, lr}
+     694:	e1a04000 	mov	r4, r0
+unsigned int E[]={9, 0x04, 0x2e, 0x200, 0x04, 0x34, 0x200, 0x04, 0x35, 0x200}; 	                   	                   
+     698:	e59fe034 	ldr	lr, [pc, #52]	; 6d4 <RLE0551C_patterngen_E+0x44>
+i2c_write(addr,D);
+wait();	
+}
+
+void RLE0551C_patterngen_E(unsigned int addr)
+{
+     69c:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int E[]={9, 0x04, 0x2e, 0x200, 0x04, 0x34, 0x200, 0x04, 0x35, 0x200}; 	                   	                   
+     6a0:	e1a0c00d 	mov	ip, sp
+     6a4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     6a8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     6ac:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     6b0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     6b4:	e89e0003 	ldm	lr, {r0, r1}
+     6b8:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,E);
+     6bc:	e1a0100d 	mov	r1, sp
+     6c0:	e1a00004 	mov	r0, r4
+     6c4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     6c8:	ebfffffe 	bl	16a8 <wait>
+}
+     6cc:	e28dd028 	add	sp, sp, #40	; 0x28
+     6d0:	e8bd8010 	pop	{r4, pc}
+     6d4:	000000d0 	.word	0x000000d0
+
+000006d8 <RLE0551C_patterngen_F>:
+
+void RLE0551C_patterngen_F(unsigned int addr)
+{
+     6d8:	e92d4010 	push	{r4, lr}
+     6dc:	e1a04000 	mov	r4, r0
+unsigned int F[]={6, 0x04, 0x36, 0x21f, 0x04, 0x37, 0x200}; 	                   	                   
+     6e0:	e59fe02c 	ldr	lr, [pc, #44]	; 714 <RLE0551C_patterngen_F+0x3c>
+i2c_write(addr,E);
+wait();	
+}
+
+void RLE0551C_patterngen_F(unsigned int addr)
+{
+     6e4:	e24dd020 	sub	sp, sp, #32
+unsigned int F[]={6, 0x04, 0x36, 0x21f, 0x04, 0x37, 0x200}; 	                   	                   
+     6e8:	e28dc004 	add	ip, sp, #4
+     6ec:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     6f0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     6f4:	e89e0007 	ldm	lr, {r0, r1, r2}
+     6f8:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,F);
+     6fc:	e28d1004 	add	r1, sp, #4
+     700:	e1a00004 	mov	r0, r4
+     704:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     708:	ebfffffe 	bl	16a8 <wait>
+}
+     70c:	e28dd020 	add	sp, sp, #32
+     710:	e8bd8010 	pop	{r4, pc}
+     714:	000000f8 	.word	0x000000f8
+
+00000718 <RLE0551C_patterngen_F_1>:
+
+void RLE0551C_patterngen_F_1(unsigned int addr)
+{
+     718:	e92d4010 	push	{r4, lr}
+     71c:	e1a04000 	mov	r4, r0
+unsigned int F[]={6, 0x04, 0x36, 0x219, 0x04, 0x37, 0x200}; 	                   	                   
+     720:	e59fe02c 	ldr	lr, [pc, #44]	; 754 <RLE0551C_patterngen_F_1+0x3c>
+i2c_write(addr,F);
+wait();	
+}
+
+void RLE0551C_patterngen_F_1(unsigned int addr)
+{
+     724:	e24dd020 	sub	sp, sp, #32
+unsigned int F[]={6, 0x04, 0x36, 0x219, 0x04, 0x37, 0x200}; 	                   	                   
+     728:	e28dc004 	add	ip, sp, #4
+     72c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     730:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     734:	e89e0007 	ldm	lr, {r0, r1, r2}
+     738:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,F);
+     73c:	e28d1004 	add	r1, sp, #4
+     740:	e1a00004 	mov	r0, r4
+     744:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     748:	ebfffffe 	bl	16a8 <wait>
+}
+     74c:	e28dd020 	add	sp, sp, #32
+     750:	e8bd8010 	pop	{r4, pc}
+     754:	00000114 	.word	0x00000114
+
+00000758 <RLE0551C_patterngen_G>:
+
+void RLE0551C_patterngen_G(unsigned int addr)
+{
+     758:	e92d4010 	push	{r4, lr}
+     75c:	e1a04000 	mov	r4, r0
+unsigned int G[]={9, 0x02, 0x00, 0x210, 0x02, 0x01, 0x200, 0x02, 0x02, 0x206}; 	                   	                   
+     760:	e59fe034 	ldr	lr, [pc, #52]	; 79c <RLE0551C_patterngen_G+0x44>
+i2c_write(addr,F);
+wait();	
+}
+
+void RLE0551C_patterngen_G(unsigned int addr)
+{
+     764:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int G[]={9, 0x02, 0x00, 0x210, 0x02, 0x01, 0x200, 0x02, 0x02, 0x206}; 	                   	                   
+     768:	e1a0c00d 	mov	ip, sp
+     76c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     770:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     774:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     778:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     77c:	e89e0003 	ldm	lr, {r0, r1}
+     780:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,G);
+     784:	e1a0100d 	mov	r1, sp
+     788:	e1a00004 	mov	r0, r4
+     78c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     790:	ebfffffe 	bl	16a8 <wait>
+}
+     794:	e28dd028 	add	sp, sp, #40	; 0x28
+     798:	e8bd8010 	pop	{r4, pc}
+     79c:	00000130 	.word	0x00000130
+
+000007a0 <RLE0551C_patterngen_G_1>:
+
+void RLE0551C_patterngen_G_1(unsigned int addr)
+{
+     7a0:	e92d4010 	push	{r4, lr}
+     7a4:	e1a04000 	mov	r4, r0
+unsigned int G[]={9, 0x02, 0x00, 0x202, 0x02, 0x01, 0x280, 0x02, 0x02, 0x201}; 	                   	                   
+     7a8:	e59fe034 	ldr	lr, [pc, #52]	; 7e4 <RLE0551C_patterngen_G_1+0x44>
+i2c_write(addr,G);
+wait();	
+}
+
+void RLE0551C_patterngen_G_1(unsigned int addr)
+{
+     7ac:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int G[]={9, 0x02, 0x00, 0x202, 0x02, 0x01, 0x280, 0x02, 0x02, 0x201}; 	                   	                   
+     7b0:	e1a0c00d 	mov	ip, sp
+     7b4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     7b8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     7bc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     7c0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     7c4:	e89e0003 	ldm	lr, {r0, r1}
+     7c8:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,G);
+     7cc:	e1a0100d 	mov	r1, sp
+     7d0:	e1a00004 	mov	r0, r4
+     7d4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     7d8:	ebfffffe 	bl	16a8 <wait>
+}
+     7dc:	e28dd028 	add	sp, sp, #40	; 0x28
+     7e0:	e8bd8010 	pop	{r4, pc}
+     7e4:	00000158 	.word	0x00000158
+
+000007e8 <RLE0551C_patterngen_H>:
+
+void RLE0551C_patterngen_H(unsigned int addr)
+{
+     7e8:	e92d4010 	push	{r4, lr}
+     7ec:	e1a04000 	mov	r4, r0
+unsigned int H[]={9, 0x02, 0x03, 0x200, 0x02, 0x04, 0x200, 0x02, 0x05, 0x2ac}; 	                   	                   
+     7f0:	e59fe034 	ldr	lr, [pc, #52]	; 82c <RLE0551C_patterngen_H+0x44>
+i2c_write(addr,G);
+wait();	
+}
+
+void RLE0551C_patterngen_H(unsigned int addr)
+{
+     7f4:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int H[]={9, 0x02, 0x03, 0x200, 0x02, 0x04, 0x200, 0x02, 0x05, 0x2ac}; 	                   	                   
+     7f8:	e1a0c00d 	mov	ip, sp
+     7fc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     800:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     804:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     808:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     80c:	e89e0003 	ldm	lr, {r0, r1}
+     810:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,H);
+     814:	e1a0100d 	mov	r1, sp
+     818:	e1a00004 	mov	r0, r4
+     81c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     820:	ebfffffe 	bl	16a8 <wait>
+}
+     824:	e28dd028 	add	sp, sp, #40	; 0x28
+     828:	e8bd8010 	pop	{r4, pc}
+     82c:	00000180 	.word	0x00000180
+
+00000830 <RLE0551C_patterngen_H_1>:
+
+void RLE0551C_patterngen_H_1(unsigned int addr)
+{
+     830:	e92d4010 	push	{r4, lr}
+     834:	e1a04000 	mov	r4, r0
+unsigned int H[]={9, 0x02, 0x03, 0x2e0, 0x02, 0x04, 0x212, 0x02, 0x05, 0x22e}; 	                   	                   
+     838:	e59fe034 	ldr	lr, [pc, #52]	; 874 <RLE0551C_patterngen_H_1+0x44>
+i2c_write(addr,H);
+wait();	
+}
+
+void RLE0551C_patterngen_H_1(unsigned int addr)
+{
+     83c:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int H[]={9, 0x02, 0x03, 0x2e0, 0x02, 0x04, 0x212, 0x02, 0x05, 0x22e}; 	                   	                   
+     840:	e1a0c00d 	mov	ip, sp
+     844:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     848:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     84c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     850:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     854:	e89e0003 	ldm	lr, {r0, r1}
+     858:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,H);
+     85c:	e1a0100d 	mov	r1, sp
+     860:	e1a00004 	mov	r0, r4
+     864:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     868:	ebfffffe 	bl	16a8 <wait>
+}
+     86c:	e28dd028 	add	sp, sp, #40	; 0x28
+     870:	e8bd8010 	pop	{r4, pc}
+     874:	000001a8 	.word	0x000001a8
+
+00000878 <RLE0551C_patterngen_I>:
+
+void RLE0551C_patterngen_I(unsigned int addr)
+{
+     878:	e92d4010 	push	{r4, lr}
+     87c:	e1a04000 	mov	r4, r0
+unsigned int I[]={6, 0x02, 0x06, 0x200, 0x02, 0x07, 0x20a}; 	                   	                   
+     880:	e59fe02c 	ldr	lr, [pc, #44]	; 8b4 <RLE0551C_patterngen_I+0x3c>
+i2c_write(addr,H);
+wait();	
+}
+
+void RLE0551C_patterngen_I(unsigned int addr)
+{
+     884:	e24dd020 	sub	sp, sp, #32
+unsigned int I[]={6, 0x02, 0x06, 0x200, 0x02, 0x07, 0x20a}; 	                   	                   
+     888:	e28dc004 	add	ip, sp, #4
+     88c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     890:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     894:	e89e0007 	ldm	lr, {r0, r1, r2}
+     898:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,I);
+     89c:	e28d1004 	add	r1, sp, #4
+     8a0:	e1a00004 	mov	r0, r4
+     8a4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     8a8:	ebfffffe 	bl	16a8 <wait>
+}
+     8ac:	e28dd020 	add	sp, sp, #32
+     8b0:	e8bd8010 	pop	{r4, pc}
+     8b4:	000001d0 	.word	0x000001d0
+
+000008b8 <RLE0551C_patterngen_I_1>:
+
+void RLE0551C_patterngen_I_1(unsigned int addr)
+{
+     8b8:	e92d4010 	push	{r4, lr}
+     8bc:	e1a04000 	mov	r4, r0
+unsigned int I[]={6, 0x02, 0x06, 0x200, 0x02, 0x07, 0x21e}; 	                   	                   
+     8c0:	e59fe02c 	ldr	lr, [pc, #44]	; 8f4 <RLE0551C_patterngen_I_1+0x3c>
+i2c_write(addr,I);
+wait();	
+}
+
+void RLE0551C_patterngen_I_1(unsigned int addr)
+{
+     8c4:	e24dd020 	sub	sp, sp, #32
+unsigned int I[]={6, 0x02, 0x06, 0x200, 0x02, 0x07, 0x21e}; 	                   	                   
+     8c8:	e28dc004 	add	ip, sp, #4
+     8cc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     8d0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     8d4:	e89e0007 	ldm	lr, {r0, r1, r2}
+     8d8:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,I);
+     8dc:	e28d1004 	add	r1, sp, #4
+     8e0:	e1a00004 	mov	r0, r4
+     8e4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     8e8:	ebfffffe 	bl	16a8 <wait>
+}
+     8ec:	e28dd020 	add	sp, sp, #32
+     8f0:	e8bd8010 	pop	{r4, pc}
+     8f4:	000001ec 	.word	0x000001ec
+
+000008f8 <RLE0551C_patterngen_J>:
+
+void RLE0551C_patterngen_J(unsigned int addr)
+{
+     8f8:	e92d4010 	push	{r4, lr}
+     8fc:	e1a04000 	mov	r4, r0
+unsigned int J[]={6, 0x02, 0x08, 0x200, 0x02, 0x09, 0x200}; 	                   	                   
+     900:	e59fe02c 	ldr	lr, [pc, #44]	; 934 <RLE0551C_patterngen_J+0x3c>
+i2c_write(addr,I);
+wait();	
+}
+
+void RLE0551C_patterngen_J(unsigned int addr)
+{
+     904:	e24dd020 	sub	sp, sp, #32
+unsigned int J[]={6, 0x02, 0x08, 0x200, 0x02, 0x09, 0x200}; 	                   	                   
+     908:	e28dc004 	add	ip, sp, #4
+     90c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     910:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     914:	e89e0007 	ldm	lr, {r0, r1, r2}
+     918:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,J);
+     91c:	e28d1004 	add	r1, sp, #4
+     920:	e1a00004 	mov	r0, r4
+     924:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     928:	ebfffffe 	bl	16a8 <wait>
+}
+     92c:	e28dd020 	add	sp, sp, #32
+     930:	e8bd8010 	pop	{r4, pc}
+     934:	00000208 	.word	0x00000208
+
+00000938 <RLE0551C_patterngen_K>:
+
+void RLE0551C_patterngen_K(unsigned int addr)
+{
+     938:	e92d4010 	push	{r4, lr}
+     93c:	e1a04000 	mov	r4, r0
+unsigned int K[]={6, 0x03, 0x03, 0x200, 0x03, 0x04, 0x231}; 	                   	                   
+     940:	e59fe02c 	ldr	lr, [pc, #44]	; 974 <RLE0551C_patterngen_K+0x3c>
+i2c_write(addr,J);
+wait();	
+}
+
+void RLE0551C_patterngen_K(unsigned int addr)
+{
+     944:	e24dd020 	sub	sp, sp, #32
+unsigned int K[]={6, 0x03, 0x03, 0x200, 0x03, 0x04, 0x231}; 	                   	                   
+     948:	e28dc004 	add	ip, sp, #4
+     94c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     950:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     954:	e89e0007 	ldm	lr, {r0, r1, r2}
+     958:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,K);
+     95c:	e28d1004 	add	r1, sp, #4
+     960:	e1a00004 	mov	r0, r4
+     964:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     968:	ebfffffe 	bl	16a8 <wait>
+}
+     96c:	e28dd020 	add	sp, sp, #32
+     970:	e8bd8010 	pop	{r4, pc}
+     974:	00000224 	.word	0x00000224
+
+00000978 <RLE0551C_patterngen_L>:
+
+void RLE0551C_patterngen_L(unsigned int addr)
+{
+     978:	e92d4010 	push	{r4, lr}
+     97c:	e1a04000 	mov	r4, r0
+unsigned int K[]={6, 0x03, 0x05, 0x204, 0x03, 0x06, 0x203}; 	                   	                   
+     980:	e59fe02c 	ldr	lr, [pc, #44]	; 9b4 <RLE0551C_patterngen_L+0x3c>
+i2c_write(addr,K);
+wait();	
+}
+
+void RLE0551C_patterngen_L(unsigned int addr)
+{
+     984:	e24dd020 	sub	sp, sp, #32
+unsigned int K[]={6, 0x03, 0x05, 0x204, 0x03, 0x06, 0x203}; 	                   	                   
+     988:	e28dc004 	add	ip, sp, #4
+     98c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     990:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     994:	e89e0007 	ldm	lr, {r0, r1, r2}
+     998:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,K);
+     99c:	e28d1004 	add	r1, sp, #4
+     9a0:	e1a00004 	mov	r0, r4
+     9a4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     9a8:	ebfffffe 	bl	16a8 <wait>
+}
+     9ac:	e28dd020 	add	sp, sp, #32
+     9b0:	e8bd8010 	pop	{r4, pc}
+     9b4:	00000240 	.word	0x00000240
+
+000009b8 <RLE0551C_patterngen_L_1>:
+
+void RLE0551C_patterngen_L_1(unsigned int addr)
+{
+     9b8:	e92d4010 	push	{r4, lr}
+     9bc:	e1a04000 	mov	r4, r0
+unsigned int K[]={6, 0x03, 0x05, 0x20c, 0x03, 0x06, 0x206}; 	                   	                   
+     9c0:	e59fe02c 	ldr	lr, [pc, #44]	; 9f4 <RLE0551C_patterngen_L_1+0x3c>
+i2c_write(addr,K);
+wait();	
+}
+
+void RLE0551C_patterngen_L_1(unsigned int addr)
+{
+     9c4:	e24dd020 	sub	sp, sp, #32
+unsigned int K[]={6, 0x03, 0x05, 0x20c, 0x03, 0x06, 0x206}; 	                   	                   
+     9c8:	e28dc004 	add	ip, sp, #4
+     9cc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     9d0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     9d4:	e89e0007 	ldm	lr, {r0, r1, r2}
+     9d8:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,K);
+     9dc:	e28d1004 	add	r1, sp, #4
+     9e0:	e1a00004 	mov	r0, r4
+     9e4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     9e8:	ebfffffe 	bl	16a8 <wait>
+}
+     9ec:	e28dd020 	add	sp, sp, #32
+     9f0:	e8bd8010 	pop	{r4, pc}
+     9f4:	0000025c 	.word	0x0000025c
+
+000009f8 <RLE0551C_patterngen_M>:
+
+void RLE0551C_patterngen_M(unsigned int addr)
+{
+     9f8:	e92d4010 	push	{r4, lr}
+     9fc:	e1a04000 	mov	r4, r0
+unsigned int K[]={6, 0x03, 0x07, 0x20d, 0x03, 0x08, 0x209}; 	                   	                   
+     a00:	e59fe02c 	ldr	lr, [pc, #44]	; a34 <RLE0551C_patterngen_M+0x3c>
+i2c_write(addr,K);
+wait();	
+}
+
+void RLE0551C_patterngen_M(unsigned int addr)
+{
+     a04:	e24dd020 	sub	sp, sp, #32
+unsigned int K[]={6, 0x03, 0x07, 0x20d, 0x03, 0x08, 0x209}; 	                   	                   
+     a08:	e28dc004 	add	ip, sp, #4
+     a0c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     a10:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     a14:	e89e0007 	ldm	lr, {r0, r1, r2}
+     a18:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,K);
+     a1c:	e28d1004 	add	r1, sp, #4
+     a20:	e1a00004 	mov	r0, r4
+     a24:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     a28:	ebfffffe 	bl	16a8 <wait>
+}
+     a2c:	e28dd020 	add	sp, sp, #32
+     a30:	e8bd8010 	pop	{r4, pc}
+     a34:	00000278 	.word	0x00000278
+
+00000a38 <RLE0551C_patterngen_N>:
+
+void RLE0551C_patterngen_N(unsigned int addr)
+{
+     a38:	e92d4010 	push	{r4, lr}
+     a3c:	e1a04000 	mov	r4, r0
+unsigned int M[]={6, 0x03, 0x09, 0x21d, 0x03, 0x0a, 0x201}; 	                   	                   
+     a40:	e59fe02c 	ldr	lr, [pc, #44]	; a74 <RLE0551C_patterngen_N+0x3c>
+i2c_write(addr,K);
+wait();	
+}
+
+void RLE0551C_patterngen_N(unsigned int addr)
+{
+     a44:	e24dd020 	sub	sp, sp, #32
+unsigned int M[]={6, 0x03, 0x09, 0x21d, 0x03, 0x0a, 0x201}; 	                   	                   
+     a48:	e28dc004 	add	ip, sp, #4
+     a4c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     a50:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     a54:	e89e0007 	ldm	lr, {r0, r1, r2}
+     a58:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,M);
+     a5c:	e28d1004 	add	r1, sp, #4
+     a60:	e1a00004 	mov	r0, r4
+     a64:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     a68:	ebfffffe 	bl	16a8 <wait>
+}
+     a6c:	e28dd020 	add	sp, sp, #32
+     a70:	e8bd8010 	pop	{r4, pc}
+     a74:	00000294 	.word	0x00000294
+
+00000a78 <RLE0551C_patterngen_O>:
+
+void RLE0551C_patterngen_O(unsigned int addr)
+{
+     a78:	e92d4010 	push	{r4, lr}
+     a7c:	e1a04000 	mov	r4, r0
+unsigned int M[]={6, 0x03, 0x0b, 0x203, 0x03, 0x0c, 0x203}; 	                   	                   
+     a80:	e59fe02c 	ldr	lr, [pc, #44]	; ab4 <RLE0551C_patterngen_O+0x3c>
+i2c_write(addr,M);
+wait();	
+}
+
+void RLE0551C_patterngen_O(unsigned int addr)
+{
+     a84:	e24dd020 	sub	sp, sp, #32
+unsigned int M[]={6, 0x03, 0x0b, 0x203, 0x03, 0x0c, 0x203}; 	                   	                   
+     a88:	e28dc004 	add	ip, sp, #4
+     a8c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     a90:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     a94:	e89e0007 	ldm	lr, {r0, r1, r2}
+     a98:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,M);
+     a9c:	e28d1004 	add	r1, sp, #4
+     aa0:	e1a00004 	mov	r0, r4
+     aa4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     aa8:	ebfffffe 	bl	16a8 <wait>
+}
+     aac:	e28dd020 	add	sp, sp, #32
+     ab0:	e8bd8010 	pop	{r4, pc}
+     ab4:	000002b0 	.word	0x000002b0
+
+00000ab8 <RLE0551C_patterngen_O_1>:
+
+void RLE0551C_patterngen_O_1(unsigned int addr)
+{
+     ab8:	e92d4010 	push	{r4, lr}
+     abc:	e1a04000 	mov	r4, r0
+unsigned int M[]={6, 0x03, 0x0b, 0x209, 0x03, 0x0c, 0x209}; 	                   	                   
+     ac0:	e59fe02c 	ldr	lr, [pc, #44]	; af4 <RLE0551C_patterngen_O_1+0x3c>
+i2c_write(addr,M);
+wait();	
+}
+
+void RLE0551C_patterngen_O_1(unsigned int addr)
+{
+     ac4:	e24dd020 	sub	sp, sp, #32
+unsigned int M[]={6, 0x03, 0x0b, 0x209, 0x03, 0x0c, 0x209}; 	                   	                   
+     ac8:	e28dc004 	add	ip, sp, #4
+     acc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     ad0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     ad4:	e89e0007 	ldm	lr, {r0, r1, r2}
+     ad8:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,M);
+     adc:	e28d1004 	add	r1, sp, #4
+     ae0:	e1a00004 	mov	r0, r4
+     ae4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     ae8:	ebfffffe 	bl	16a8 <wait>
+}
+     aec:	e28dd020 	add	sp, sp, #32
+     af0:	e8bd8010 	pop	{r4, pc}
+     af4:	000002cc 	.word	0x000002cc
+
+00000af8 <RLE0551C_patterngen_P>:
+
+void RLE0551C_patterngen_P(unsigned int addr)
+{
+     af8:	e92d4010 	push	{r4, lr}
+     afc:	e1a04000 	mov	r4, r0
+unsigned int N[]={6, 0x03, 0x0d, 0x203, 0x03, 0x0e, 0x202}; 	                   	                   
+     b00:	e59fe02c 	ldr	lr, [pc, #44]	; b34 <RLE0551C_patterngen_P+0x3c>
+i2c_write(addr,M);
+wait();	
+}
+
+void RLE0551C_patterngen_P(unsigned int addr)
+{
+     b04:	e24dd020 	sub	sp, sp, #32
+unsigned int N[]={6, 0x03, 0x0d, 0x203, 0x03, 0x0e, 0x202}; 	                   	                   
+     b08:	e28dc004 	add	ip, sp, #4
+     b0c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     b10:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     b14:	e89e0007 	ldm	lr, {r0, r1, r2}
+     b18:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,N);
+     b1c:	e28d1004 	add	r1, sp, #4
+     b20:	e1a00004 	mov	r0, r4
+     b24:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     b28:	ebfffffe 	bl	16a8 <wait>
+}
+     b2c:	e28dd020 	add	sp, sp, #32
+     b30:	e8bd8010 	pop	{r4, pc}
+     b34:	000002e8 	.word	0x000002e8
+
+00000b38 <RLE0551C_patterngen_P_1>:
+
+void RLE0551C_patterngen_P_1(unsigned int addr)
+{
+     b38:	e92d4010 	push	{r4, lr}
+     b3c:	e1a04000 	mov	r4, r0
+unsigned int N[]={6, 0x03, 0x0d, 0x209, 0x03, 0x0e, 0x205}; 	                   	                   
+     b40:	e59fe02c 	ldr	lr, [pc, #44]	; b74 <RLE0551C_patterngen_P_1+0x3c>
+i2c_write(addr,N);
+wait();	
+}
+
+void RLE0551C_patterngen_P_1(unsigned int addr)
+{
+     b44:	e24dd020 	sub	sp, sp, #32
+unsigned int N[]={6, 0x03, 0x0d, 0x209, 0x03, 0x0e, 0x205}; 	                   	                   
+     b48:	e28dc004 	add	ip, sp, #4
+     b4c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     b50:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     b54:	e89e0007 	ldm	lr, {r0, r1, r2}
+     b58:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,N);
+     b5c:	e28d1004 	add	r1, sp, #4
+     b60:	e1a00004 	mov	r0, r4
+     b64:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     b68:	ebfffffe 	bl	16a8 <wait>
+}
+     b6c:	e28dd020 	add	sp, sp, #32
+     b70:	e8bd8010 	pop	{r4, pc}
+     b74:	00000304 	.word	0x00000304
+
+00000b78 <RLE0551C_patterngen_Q>:
+
+void RLE0551C_patterngen_Q(unsigned int addr)
+{
+     b78:	e92d4010 	push	{r4, lr}
+     b7c:	e1a04000 	mov	r4, r0
+unsigned int O[]={9, 0x03, 0x0f, 0x200, 0x03, 0x01, 0x200, 0x03, 0x11, 0x200 }; 	                   	                   
+     b80:	e59fe034 	ldr	lr, [pc, #52]	; bbc <RLE0551C_patterngen_Q+0x44>
+i2c_write(addr,N);
+wait();	
+}
+
+void RLE0551C_patterngen_Q(unsigned int addr)
+{
+     b84:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int O[]={9, 0x03, 0x0f, 0x200, 0x03, 0x01, 0x200, 0x03, 0x11, 0x200 }; 	                   	                   
+     b88:	e1a0c00d 	mov	ip, sp
+     b8c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     b90:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     b94:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     b98:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     b9c:	e89e0003 	ldm	lr, {r0, r1}
+     ba0:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,O);
+     ba4:	e1a0100d 	mov	r1, sp
+     ba8:	e1a00004 	mov	r0, r4
+     bac:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     bb0:	ebfffffe 	bl	16a8 <wait>
+}
+     bb4:	e28dd028 	add	sp, sp, #40	; 0x28
+     bb8:	e8bd8010 	pop	{r4, pc}
+     bbc:	00000320 	.word	0x00000320
+
+00000bc0 <RLE0551C_patterngen_R>:
+
+void RLE0551C_patterngen_R(unsigned int addr)
+{
+     bc0:	e92d4010 	push	{r4, lr}
+     bc4:	e1a04000 	mov	r4, r0
+unsigned int P[]={9, 0x03, 0x02, 0x2c3, 0x03, 0x17, 0x203, 0x03, 0x19, 0x21e}; 	                   	                   
+     bc8:	e59fe034 	ldr	lr, [pc, #52]	; c04 <RLE0551C_patterngen_R+0x44>
+i2c_write(addr,O);
+wait();	
+}
+
+void RLE0551C_patterngen_R(unsigned int addr)
+{
+     bcc:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int P[]={9, 0x03, 0x02, 0x2c3, 0x03, 0x17, 0x203, 0x03, 0x19, 0x21e}; 	                   	                   
+     bd0:	e1a0c00d 	mov	ip, sp
+     bd4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     bd8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     bdc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     be0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     be4:	e89e0003 	ldm	lr, {r0, r1}
+     be8:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,P);
+     bec:	e1a0100d 	mov	r1, sp
+     bf0:	e1a00004 	mov	r0, r4
+     bf4:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     bf8:	ebfffffe 	bl	16a8 <wait>
+}
+     bfc:	e28dd028 	add	sp, sp, #40	; 0x28
+     c00:	e8bd8010 	pop	{r4, pc}
+     c04:	00000348 	.word	0x00000348
+
+00000c08 <RLE0551C_patterngen_R_1>:
+
+void RLE0551C_patterngen_R_1(unsigned int addr)
+{
+     c08:	e92d4010 	push	{r4, lr}
+     c0c:	e1a04000 	mov	r4, r0
+unsigned int P[]={9, 0x03, 0x02, 0x201, 0x03, 0x17, 0x200, 0x03, 0x19, 0x21e}; 	                   	                   
+     c10:	e59fe034 	ldr	lr, [pc, #52]	; c4c <RLE0551C_patterngen_R_1+0x44>
+i2c_write(addr,P);
+wait();	
+}
+
+void RLE0551C_patterngen_R_1(unsigned int addr)
+{
+     c14:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int P[]={9, 0x03, 0x02, 0x201, 0x03, 0x17, 0x200, 0x03, 0x19, 0x21e}; 	                   	                   
+     c18:	e1a0c00d 	mov	ip, sp
+     c1c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     c20:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     c24:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     c28:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     c2c:	e89e0003 	ldm	lr, {r0, r1}
+     c30:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,P);
+     c34:	e1a0100d 	mov	r1, sp
+     c38:	e1a00004 	mov	r0, r4
+     c3c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     c40:	ebfffffe 	bl	16a8 <wait>
+}
+     c44:	e28dd028 	add	sp, sp, #40	; 0x28
+     c48:	e8bd8010 	pop	{r4, pc}
+     c4c:	00000370 	.word	0x00000370
+
+00000c50 <RLE0551C_patterngen_S>:
+
+void RLE0551C_patterngen_S(unsigned int addr)
+{
+     c50:	e92d4010 	push	{r4, lr}
+     c54:	e1a04000 	mov	r4, r0
+unsigned int Q[]={9, 0x03, 0x18, 0x2e4, 0x04, 0x18, 0x207, 0x03, 0x00, 0x201}; 	                   	                   
+     c58:	e59fe034 	ldr	lr, [pc, #52]	; c94 <RLE0551C_patterngen_S+0x44>
+i2c_write(addr,P);
+wait();	
+}
+
+void RLE0551C_patterngen_S(unsigned int addr)
+{
+     c5c:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int Q[]={9, 0x03, 0x18, 0x2e4, 0x04, 0x18, 0x207, 0x03, 0x00, 0x201}; 	                   	                   
+     c60:	e1a0c00d 	mov	ip, sp
+     c64:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     c68:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     c6c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     c70:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     c74:	e89e0003 	ldm	lr, {r0, r1}
+     c78:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,Q);
+     c7c:	e1a0100d 	mov	r1, sp
+     c80:	e1a00004 	mov	r0, r4
+     c84:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     c88:	ebfffffe 	bl	16a8 <wait>
+}
+     c8c:	e28dd028 	add	sp, sp, #40	; 0x28
+     c90:	e8bd8010 	pop	{r4, pc}
+     c94:	00000398 	.word	0x00000398
+
+00000c98 <RLE0551C_patterngen_T>:
+
+void RLE0551C_patterngen_T(unsigned int addr)
+{
+     c98:	e92d4010 	push	{r4, lr}
+     c9c:	e1a04000 	mov	r4, r0
+unsigned int R[]={9, 0x02, 0x11, 0x270, 0x02, 0x12, 0x2a0, 0x02, 0x13, 0x200}; 	                   	                   
+     ca0:	e59fe034 	ldr	lr, [pc, #52]	; cdc <RLE0551C_patterngen_T+0x44>
+i2c_write(addr,Q);
+wait();	
+}
+
+void RLE0551C_patterngen_T(unsigned int addr)
+{
+     ca4:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int R[]={9, 0x02, 0x11, 0x270, 0x02, 0x12, 0x2a0, 0x02, 0x13, 0x200}; 	                   	                   
+     ca8:	e1a0c00d 	mov	ip, sp
+     cac:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     cb0:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     cb4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     cb8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     cbc:	e89e0003 	ldm	lr, {r0, r1}
+     cc0:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,R);
+     cc4:	e1a0100d 	mov	r1, sp
+     cc8:	e1a00004 	mov	r0, r4
+     ccc:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     cd0:	ebfffffe 	bl	16a8 <wait>
+}
+     cd4:	e28dd028 	add	sp, sp, #40	; 0x28
+     cd8:	e8bd8010 	pop	{r4, pc}
+     cdc:	000003c0 	.word	0x000003c0
+
+00000ce0 <RLE0551C_patterngen_U>:
+
+void RLE0551C_patterngen_U(unsigned int addr)
+{
+     ce0:	e92d4010 	push	{r4, lr}
+     ce4:	e1a04000 	mov	r4, r0
+unsigned int S[]={9, 0x02, 0x14, 0x210, 0x02, 0x15, 0x210, 0x02, 0x16, 0x211}; 	                   	                   
+     ce8:	e59fe034 	ldr	lr, [pc, #52]	; d24 <RLE0551C_patterngen_U+0x44>
+i2c_write(addr,R);
+wait();	
+}
+
+void RLE0551C_patterngen_U(unsigned int addr)
+{
+     cec:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int S[]={9, 0x02, 0x14, 0x210, 0x02, 0x15, 0x210, 0x02, 0x16, 0x211}; 	                   	                   
+     cf0:	e1a0c00d 	mov	ip, sp
+     cf4:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     cf8:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     cfc:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     d00:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     d04:	e89e0003 	ldm	lr, {r0, r1}
+     d08:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,S);
+     d0c:	e1a0100d 	mov	r1, sp
+     d10:	e1a00004 	mov	r0, r4
+     d14:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     d18:	ebfffffe 	bl	16a8 <wait>
+}
+     d1c:	e28dd028 	add	sp, sp, #40	; 0x28
+     d20:	e8bd8010 	pop	{r4, pc}
+     d24:	000003e8 	.word	0x000003e8
+
+00000d28 <RLE0551C_patterngen_V>:
+
+void RLE0551C_patterngen_V(unsigned int addr)
+{
+     d28:	e92d4010 	push	{r4, lr}
+     d2c:	e1a04000 	mov	r4, r0
+unsigned int T[]={9, 0x02, 0x17, 0x210, 0x02, 0x18, 0x210, 0x02, 0x19, 0x200}; 	                   	                   
+     d30:	e59fe034 	ldr	lr, [pc, #52]	; d6c <RLE0551C_patterngen_V+0x44>
+i2c_write(addr,S);
+wait();	
+}
+
+void RLE0551C_patterngen_V(unsigned int addr)
+{
+     d34:	e24dd028 	sub	sp, sp, #40	; 0x28
+unsigned int T[]={9, 0x02, 0x17, 0x210, 0x02, 0x18, 0x210, 0x02, 0x19, 0x200}; 	                   	                   
+     d38:	e1a0c00d 	mov	ip, sp
+     d3c:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     d40:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     d44:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     d48:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     d4c:	e89e0003 	ldm	lr, {r0, r1}
+     d50:	e88c0003 	stm	ip, {r0, r1}
+i2c_write(addr,T);
+     d54:	e1a0100d 	mov	r1, sp
+     d58:	e1a00004 	mov	r0, r4
+     d5c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     d60:	ebfffffe 	bl	16a8 <wait>
+}
+     d64:	e28dd028 	add	sp, sp, #40	; 0x28
+     d68:	e8bd8010 	pop	{r4, pc}
+     d6c:	00000410 	.word	0x00000410
+
+00000d70 <RLE0551C_patterngen_W>:
+
+void RLE0551C_patterngen_W(unsigned int addr)
+{
+     d70:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+     d74:	e1a0e000 	mov	lr, r0
+unsigned int U[]={3, 0x02, 0x10, 0x2c0}; 	                   	                   
+     d78:	e59f301c 	ldr	r3, [pc, #28]	; d9c <RLE0551C_patterngen_W+0x2c>
+     d7c:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+     d80:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,U);
+     d84:	e1a0000e 	mov	r0, lr
+     d88:	e1a0100d 	mov	r1, sp
+     d8c:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     d90:	ebfffffe 	bl	16a8 <wait>
+}
+     d94:	e28dd014 	add	sp, sp, #20
+     d98:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+     d9c:	00000438 	.word	0x00000438
+
+00000da0 <RLE0551C_patterngen_W_1>:
+
+void RLE0551C_patterngen_W_1(unsigned int addr)
+{
+     da0:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+     da4:	e1a0e000 	mov	lr, r0
+unsigned int U[]={3, 0x02, 0x10, 0x280}; 	                   	                   
+     da8:	e59f301c 	ldr	r3, [pc, #28]	; dcc <RLE0551C_patterngen_W_1+0x2c>
+     dac:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+     db0:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,U);
+     db4:	e1a0000e 	mov	r0, lr
+     db8:	e1a0100d 	mov	r1, sp
+     dbc:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     dc0:	ebfffffe 	bl	16a8 <wait>
+}
+     dc4:	e28dd014 	add	sp, sp, #20
+     dc8:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+     dcc:	00000448 	.word	0x00000448
+
+00000dd0 <RLE0551C_test>:
+
+
+/*==================== main program ================== */
+
+void RLE0551C_test()
+{	
+     dd0:	e92d4008 	push	{r3, lr}
+	i2c_ini();			//i2c_ini
+     dd4:	ebfffffe 	bl	418 <i2c_ini>
+	  
+  //RLE0551C_test1(RLE0551C_patterngen_addr);  
+  RLE0551C_test2(RLE0551C_patterngen_addr);    
+     dd8:	e3a0007a 	mov	r0, #122	; 0x7a
+}
+     ddc:	e8bd4008 	pop	{r3, lr}
+void RLE0551C_test()
+{	
+	i2c_ini();			//i2c_ini
+	  
+  //RLE0551C_test1(RLE0551C_patterngen_addr);  
+  RLE0551C_test2(RLE0551C_patterngen_addr);    
+     de0:	eafffffe 	b	528 <RLE0551C_test2>
+
+00000de4 <RLE0551C_patterngen_2048x1536>:
+}
+
+
+void RLE0551C_patterngen_2048x1536()
+{
+     de4:	e92d4008 	push	{r3, lr}
+	i2c_ini();			//i2c_ini
+     de8:	ebfffffe 	bl	418 <i2c_ini>
+	 
+	wait();	  
+     dec:	ebfffffe 	bl	16a8 <wait>
+  /*RLE0551C pattern gen 2048x1536/YUV2/30fps/MIPI/4Lane */
+  RLE0551C_patterngen_A(RLE0551C_patterngen_addr);  
+     df0:	e3a0007a 	mov	r0, #122	; 0x7a
+     df4:	ebfffffe 	bl	558 <RLE0551C_patterngen_A>
+  RLE0551C_patterngen_B(RLE0551C_patterngen_addr);  
+     df8:	e3a0007a 	mov	r0, #122	; 0x7a
+     dfc:	ebfffffe 	bl	5a0 <RLE0551C_patterngen_B>
+  RLE0551C_patterngen_C(RLE0551C_patterngen_addr);
+     e00:	e3a0007a 	mov	r0, #122	; 0x7a
+     e04:	ebfffffe 	bl	5e8 <RLE0551C_patterngen_C>
+  RLE0551C_patterngen_D(RLE0551C_patterngen_addr);
+     e08:	e3a0007a 	mov	r0, #122	; 0x7a
+     e0c:	ebfffffe 	bl	648 <RLE0551C_patterngen_D>
+  RLE0551C_patterngen_E(RLE0551C_patterngen_addr);
+     e10:	e3a0007a 	mov	r0, #122	; 0x7a
+     e14:	ebfffffe 	bl	690 <RLE0551C_patterngen_E>
+  RLE0551C_patterngen_F(RLE0551C_patterngen_addr);
+     e18:	e3a0007a 	mov	r0, #122	; 0x7a
+     e1c:	ebfffffe 	bl	6d8 <RLE0551C_patterngen_F>
+  RLE0551C_patterngen_G(RLE0551C_patterngen_addr);
+     e20:	e3a0007a 	mov	r0, #122	; 0x7a
+     e24:	ebfffffe 	bl	758 <RLE0551C_patterngen_G>
+  RLE0551C_patterngen_H(RLE0551C_patterngen_addr);
+     e28:	e3a0007a 	mov	r0, #122	; 0x7a
+     e2c:	ebfffffe 	bl	7e8 <RLE0551C_patterngen_H>
+  RLE0551C_patterngen_I(RLE0551C_patterngen_addr);
+     e30:	e3a0007a 	mov	r0, #122	; 0x7a
+     e34:	ebfffffe 	bl	878 <RLE0551C_patterngen_I>
+  RLE0551C_patterngen_J(RLE0551C_patterngen_addr);
+     e38:	e3a0007a 	mov	r0, #122	; 0x7a
+     e3c:	ebfffffe 	bl	8f8 <RLE0551C_patterngen_J>
+  RLE0551C_patterngen_K(RLE0551C_patterngen_addr);
+     e40:	e3a0007a 	mov	r0, #122	; 0x7a
+     e44:	ebfffffe 	bl	938 <RLE0551C_patterngen_K>
+  RLE0551C_patterngen_L(RLE0551C_patterngen_addr);
+     e48:	e3a0007a 	mov	r0, #122	; 0x7a
+     e4c:	ebfffffe 	bl	978 <RLE0551C_patterngen_L>
+  RLE0551C_patterngen_M(RLE0551C_patterngen_addr);
+     e50:	e3a0007a 	mov	r0, #122	; 0x7a
+     e54:	ebfffffe 	bl	9f8 <RLE0551C_patterngen_M>
+  RLE0551C_patterngen_N(RLE0551C_patterngen_addr);
+     e58:	e3a0007a 	mov	r0, #122	; 0x7a
+     e5c:	ebfffffe 	bl	a38 <RLE0551C_patterngen_N>
+  RLE0551C_patterngen_O(RLE0551C_patterngen_addr);
+     e60:	e3a0007a 	mov	r0, #122	; 0x7a
+     e64:	ebfffffe 	bl	a78 <RLE0551C_patterngen_O>
+  RLE0551C_patterngen_P(RLE0551C_patterngen_addr);
+     e68:	e3a0007a 	mov	r0, #122	; 0x7a
+     e6c:	ebfffffe 	bl	af8 <RLE0551C_patterngen_P>
+  RLE0551C_patterngen_Q(RLE0551C_patterngen_addr);
+     e70:	e3a0007a 	mov	r0, #122	; 0x7a
+     e74:	ebfffffe 	bl	b78 <RLE0551C_patterngen_Q>
+  RLE0551C_patterngen_R(RLE0551C_patterngen_addr);
+     e78:	e3a0007a 	mov	r0, #122	; 0x7a
+     e7c:	ebfffffe 	bl	bc0 <RLE0551C_patterngen_R>
+  RLE0551C_patterngen_S(RLE0551C_patterngen_addr);
+     e80:	e3a0007a 	mov	r0, #122	; 0x7a
+     e84:	ebfffffe 	bl	c50 <RLE0551C_patterngen_S>
+  RLE0551C_patterngen_T(RLE0551C_patterngen_addr);
+     e88:	e3a0007a 	mov	r0, #122	; 0x7a
+     e8c:	ebfffffe 	bl	c98 <RLE0551C_patterngen_T>
+  RLE0551C_patterngen_U(RLE0551C_patterngen_addr);
+     e90:	e3a0007a 	mov	r0, #122	; 0x7a
+     e94:	ebfffffe 	bl	ce0 <RLE0551C_patterngen_U>
+  RLE0551C_patterngen_V(RLE0551C_patterngen_addr);
+     e98:	e3a0007a 	mov	r0, #122	; 0x7a
+     e9c:	ebfffffe 	bl	d28 <RLE0551C_patterngen_V>
+  RLE0551C_patterngen_W(RLE0551C_patterngen_addr);
+     ea0:	e3a0007a 	mov	r0, #122	; 0x7a
+  
+}
+     ea4:	e8bd4008 	pop	{r3, lr}
+  RLE0551C_patterngen_R(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_S(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_T(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_U(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_V(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_W(RLE0551C_patterngen_addr);
+     ea8:	eafffffe 	b	d70 <RLE0551C_patterngen_W>
+
+00000eac <RLE0551C_patterngen_640x480>:
+  
+}
+
+void RLE0551C_patterngen_640x480()
+{
+     eac:	e92d4008 	push	{r3, lr}
+	i2c_ini();			//i2c_ini
+     eb0:	ebfffffe 	bl	418 <i2c_ini>
+	 
+	wait();	  
+     eb4:	ebfffffe 	bl	16a8 <wait>
+  /*RLE0551C pattern gen 640x480/YUV2/30fps/MIPI/1Lane */
+  RLE0551C_patterngen_A(RLE0551C_patterngen_addr);  
+     eb8:	e3a0007a 	mov	r0, #122	; 0x7a
+     ebc:	ebfffffe 	bl	558 <RLE0551C_patterngen_A>
+  RLE0551C_patterngen_B(RLE0551C_patterngen_addr);  
+     ec0:	e3a0007a 	mov	r0, #122	; 0x7a
+     ec4:	ebfffffe 	bl	5a0 <RLE0551C_patterngen_B>
+  RLE0551C_patterngen_C(RLE0551C_patterngen_addr);
+     ec8:	e3a0007a 	mov	r0, #122	; 0x7a
+     ecc:	ebfffffe 	bl	5e8 <RLE0551C_patterngen_C>
+  RLE0551C_patterngen_D(RLE0551C_patterngen_addr);
+     ed0:	e3a0007a 	mov	r0, #122	; 0x7a
+     ed4:	ebfffffe 	bl	648 <RLE0551C_patterngen_D>
+  RLE0551C_patterngen_E(RLE0551C_patterngen_addr);
+     ed8:	e3a0007a 	mov	r0, #122	; 0x7a
+     edc:	ebfffffe 	bl	690 <RLE0551C_patterngen_E>
+  RLE0551C_patterngen_F_1(RLE0551C_patterngen_addr);
+     ee0:	e3a0007a 	mov	r0, #122	; 0x7a
+     ee4:	ebfffffe 	bl	718 <RLE0551C_patterngen_F_1>
+  RLE0551C_patterngen_G_1(RLE0551C_patterngen_addr);
+     ee8:	e3a0007a 	mov	r0, #122	; 0x7a
+     eec:	ebfffffe 	bl	7a0 <RLE0551C_patterngen_G_1>
+  RLE0551C_patterngen_H_1(RLE0551C_patterngen_addr);
+     ef0:	e3a0007a 	mov	r0, #122	; 0x7a
+     ef4:	ebfffffe 	bl	830 <RLE0551C_patterngen_H_1>
+  RLE0551C_patterngen_I_1(RLE0551C_patterngen_addr);
+     ef8:	e3a0007a 	mov	r0, #122	; 0x7a
+     efc:	ebfffffe 	bl	8b8 <RLE0551C_patterngen_I_1>
+  RLE0551C_patterngen_J(RLE0551C_patterngen_addr);
+     f00:	e3a0007a 	mov	r0, #122	; 0x7a
+     f04:	ebfffffe 	bl	8f8 <RLE0551C_patterngen_J>
+  RLE0551C_patterngen_K(RLE0551C_patterngen_addr);
+     f08:	e3a0007a 	mov	r0, #122	; 0x7a
+     f0c:	ebfffffe 	bl	938 <RLE0551C_patterngen_K>
+  RLE0551C_patterngen_L_1(RLE0551C_patterngen_addr);
+     f10:	e3a0007a 	mov	r0, #122	; 0x7a
+     f14:	ebfffffe 	bl	9b8 <RLE0551C_patterngen_L_1>
+  RLE0551C_patterngen_M(RLE0551C_patterngen_addr);
+     f18:	e3a0007a 	mov	r0, #122	; 0x7a
+     f1c:	ebfffffe 	bl	9f8 <RLE0551C_patterngen_M>
+  RLE0551C_patterngen_N(RLE0551C_patterngen_addr);
+     f20:	e3a0007a 	mov	r0, #122	; 0x7a
+     f24:	ebfffffe 	bl	a38 <RLE0551C_patterngen_N>
+  RLE0551C_patterngen_O_1(RLE0551C_patterngen_addr);
+     f28:	e3a0007a 	mov	r0, #122	; 0x7a
+     f2c:	ebfffffe 	bl	ab8 <RLE0551C_patterngen_O_1>
+  RLE0551C_patterngen_P_1(RLE0551C_patterngen_addr);
+     f30:	e3a0007a 	mov	r0, #122	; 0x7a
+     f34:	ebfffffe 	bl	b38 <RLE0551C_patterngen_P_1>
+  RLE0551C_patterngen_Q(RLE0551C_patterngen_addr);
+     f38:	e3a0007a 	mov	r0, #122	; 0x7a
+     f3c:	ebfffffe 	bl	b78 <RLE0551C_patterngen_Q>
+  RLE0551C_patterngen_R_1(RLE0551C_patterngen_addr);
+     f40:	e3a0007a 	mov	r0, #122	; 0x7a
+     f44:	ebfffffe 	bl	c08 <RLE0551C_patterngen_R_1>
+  RLE0551C_patterngen_S(RLE0551C_patterngen_addr);
+     f48:	e3a0007a 	mov	r0, #122	; 0x7a
+     f4c:	ebfffffe 	bl	c50 <RLE0551C_patterngen_S>
+  RLE0551C_patterngen_T(RLE0551C_patterngen_addr);
+     f50:	e3a0007a 	mov	r0, #122	; 0x7a
+     f54:	ebfffffe 	bl	c98 <RLE0551C_patterngen_T>
+  RLE0551C_patterngen_U(RLE0551C_patterngen_addr);
+     f58:	e3a0007a 	mov	r0, #122	; 0x7a
+     f5c:	ebfffffe 	bl	ce0 <RLE0551C_patterngen_U>
+  RLE0551C_patterngen_V(RLE0551C_patterngen_addr);
+     f60:	e3a0007a 	mov	r0, #122	; 0x7a
+     f64:	ebfffffe 	bl	d28 <RLE0551C_patterngen_V>
+  RLE0551C_patterngen_W(RLE0551C_patterngen_addr);
+     f68:	e3a0007a 	mov	r0, #122	; 0x7a
+  
+     f6c:	e8bd4008 	pop	{r3, lr}
+  RLE0551C_patterngen_R_1(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_S(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_T(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_U(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_V(RLE0551C_patterngen_addr);
+  RLE0551C_patterngen_W(RLE0551C_patterngen_addr);
+     f70:	eafffffe 	b	d70 <RLE0551C_patterngen_W>
+
+00000f74 <RTS5845_Rear_Preview_Format>:
+#define RTS5845_addr             0x3c
+
+/*==================== Functions ================== */
+
+void RTS5845_Rear_Preview_Format(unsigned int addr)
+{
+     f74:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+     f78:	e1a0e000 	mov	lr, r0
+unsigned int PALBG[]={3, 0x03, 0x50, 0x212};
+     f7c:	e59f301c 	ldr	r3, [pc, #28]	; fa0 <RTS5845_Rear_Preview_Format+0x2c>
+     f80:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+     f84:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,PALBG);
+     f88:	e1a0000e 	mov	r0, lr
+     f8c:	e1a0100d 	mov	r1, sp
+     f90:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     f94:	ebfffffe 	bl	16a8 <wait>
+}
+     f98:	e28dd014 	add	sp, sp, #20
+     f9c:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+     fa0:	00000458 	.word	0x00000458
+
+00000fa4 <RTS5845_Rear_Preview_Width>:
+
+void RTS5845_Rear_Preview_Width(unsigned int addr)
+{
+     fa4:	e92d4010 	push	{r4, lr}
+     fa8:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x51, 0x20a, 0x03, 0x52, 0x220};	                       
+     fac:	e59fe02c 	ldr	lr, [pc, #44]	; fe0 <RTS5845_Rear_Preview_Width+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Preview_Width(unsigned int addr)
+{
+     fb0:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x51, 0x20a, 0x03, 0x52, 0x220};	                       
+     fb4:	e28dc004 	add	ip, sp, #4
+     fb8:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     fbc:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+     fc0:	e89e0007 	ldm	lr, {r0, r1, r2}
+     fc4:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+     fc8:	e28d1004 	add	r1, sp, #4
+     fcc:	e1a00004 	mov	r0, r4
+     fd0:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+     fd4:	ebfffffe 	bl	16a8 <wait>
+}
+     fd8:	e28dd020 	add	sp, sp, #32
+     fdc:	e8bd8010 	pop	{r4, pc}
+     fe0:	00000468 	.word	0x00000468
+
+00000fe4 <RTS5845_Rear_Preview_Heigth>:
+
+void RTS5845_Rear_Preview_Heigth(unsigned int addr)
+{
+     fe4:	e92d4010 	push	{r4, lr}
+     fe8:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x53, 0x207, 0x03, 0x54, 0x298};	                        
+     fec:	e59fe02c 	ldr	lr, [pc, #44]	; 1020 <RTS5845_Rear_Preview_Heigth+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Preview_Heigth(unsigned int addr)
+{
+     ff0:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x53, 0x207, 0x03, 0x54, 0x298};	                        
+     ff4:	e28dc004 	add	ip, sp, #4
+     ff8:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+     ffc:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    1000:	e89e0007 	ldm	lr, {r0, r1, r2}
+    1004:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    1008:	e28d1004 	add	r1, sp, #4
+    100c:	e1a00004 	mov	r0, r4
+    1010:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1014:	ebfffffe 	bl	16a8 <wait>
+}
+    1018:	e28dd020 	add	sp, sp, #32
+    101c:	e8bd8010 	pop	{r4, pc}
+    1020:	00000484 	.word	0x00000484
+
+00001024 <RTS5845_Rear_Preview_FPS_1>:
+
+
+void RTS5845_Rear_Preview_FPS_1(unsigned int addr)
+{
+    1024:	e92d4010 	push	{r4, lr}
+    1028:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x55, 0x200, 0x03, 0x56, 0x205};	                        
+    102c:	e59fe02c 	ldr	lr, [pc, #44]	; 1060 <RTS5845_Rear_Preview_FPS_1+0x3c>
+wait();	
+}
+
+
+void RTS5845_Rear_Preview_FPS_1(unsigned int addr)
+{
+    1030:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x55, 0x200, 0x03, 0x56, 0x205};	                        
+    1034:	e28dc004 	add	ip, sp, #4
+    1038:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+    103c:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    1040:	e89e0007 	ldm	lr, {r0, r1, r2}
+    1044:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    1048:	e28d1004 	add	r1, sp, #4
+    104c:	e1a00004 	mov	r0, r4
+    1050:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1054:	ebfffffe 	bl	16a8 <wait>
+}
+    1058:	e28dd020 	add	sp, sp, #32
+    105c:	e8bd8010 	pop	{r4, pc}
+    1060:	000004a0 	.word	0x000004a0
+
+00001064 <RTS5845_Rear_Preview_FPS_2>:
+
+void RTS5845_Rear_Preview_FPS_2(unsigned int addr)
+{
+    1064:	e92d4010 	push	{r4, lr}
+    1068:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x57, 0x216, 0x03, 0x58, 0x215};	                        
+    106c:	e59fe02c 	ldr	lr, [pc, #44]	; 10a0 <RTS5845_Rear_Preview_FPS_2+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Preview_FPS_2(unsigned int addr)
+{
+    1070:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x57, 0x216, 0x03, 0x58, 0x215};	                        
+    1074:	e28dc004 	add	ip, sp, #4
+    1078:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+    107c:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    1080:	e89e0007 	ldm	lr, {r0, r1, r2}
+    1084:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    1088:	e28d1004 	add	r1, sp, #4
+    108c:	e1a00004 	mov	r0, r4
+    1090:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1094:	ebfffffe 	bl	16a8 <wait>
+}
+    1098:	e28dd020 	add	sp, sp, #32
+    109c:	e8bd8010 	pop	{r4, pc}
+    10a0:	000004bc 	.word	0x000004bc
+
+000010a4 <RTS5845_Rear_Still_Format>:
+
+void RTS5845_Rear_Still_Format(unsigned int addr)
+{
+    10a4:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+    10a8:	e1a0e000 	mov	lr, r0
+unsigned int PALBG[]={3, 0x03, 0x59, 0x212};
+    10ac:	e59f301c 	ldr	r3, [pc, #28]	; 10d0 <RTS5845_Rear_Still_Format+0x2c>
+    10b0:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+    10b4:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,PALBG);
+    10b8:	e1a0000e 	mov	r0, lr
+    10bc:	e1a0100d 	mov	r1, sp
+    10c0:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    10c4:	ebfffffe 	bl	16a8 <wait>
+}
+    10c8:	e28dd014 	add	sp, sp, #20
+    10cc:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+    10d0:	000004d8 	.word	0x000004d8
+
+000010d4 <RTS5845_Rear_Still_Width>:
+
+void RTS5845_Rear_Still_Width(unsigned int addr)
+{
+    10d4:	e92d4010 	push	{r4, lr}
+    10d8:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x5a, 0x20a, 0x03, 0x5b, 0x220};	                       
+    10dc:	e59fe02c 	ldr	lr, [pc, #44]	; 1110 <RTS5845_Rear_Still_Width+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Still_Width(unsigned int addr)
+{
+    10e0:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x5a, 0x20a, 0x03, 0x5b, 0x220};	                       
+    10e4:	e28dc004 	add	ip, sp, #4
+    10e8:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+    10ec:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    10f0:	e89e0007 	ldm	lr, {r0, r1, r2}
+    10f4:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    10f8:	e28d1004 	add	r1, sp, #4
+    10fc:	e1a00004 	mov	r0, r4
+    1100:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1104:	ebfffffe 	bl	16a8 <wait>
+}
+    1108:	e28dd020 	add	sp, sp, #32
+    110c:	e8bd8010 	pop	{r4, pc}
+    1110:	000004e8 	.word	0x000004e8
+
+00001114 <RTS5845_Rear_Still_Heigth>:
+
+void RTS5845_Rear_Still_Heigth(unsigned int addr)
+{
+    1114:	e92d4010 	push	{r4, lr}
+    1118:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x5c, 0x207, 0x03, 0x5d, 0x298};	                        
+    111c:	e59fe02c 	ldr	lr, [pc, #44]	; 1150 <RTS5845_Rear_Still_Heigth+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Still_Heigth(unsigned int addr)
+{
+    1120:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x5c, 0x207, 0x03, 0x5d, 0x298};	                        
+    1124:	e28dc004 	add	ip, sp, #4
+    1128:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+    112c:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    1130:	e89e0007 	ldm	lr, {r0, r1, r2}
+    1134:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    1138:	e28d1004 	add	r1, sp, #4
+    113c:	e1a00004 	mov	r0, r4
+    1140:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1144:	ebfffffe 	bl	16a8 <wait>
+}
+    1148:	e28dd020 	add	sp, sp, #32
+    114c:	e8bd8010 	pop	{r4, pc}
+    1150:	00000504 	.word	0x00000504
+
+00001154 <RTS5845_Rear_Still_FPS_1>:
+
+void RTS5845_Rear_Still_FPS_1(unsigned int addr)
+{
+    1154:	e92d4010 	push	{r4, lr}
+    1158:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x5e, 0x200, 0x03, 0x5f, 0x205};	                        
+    115c:	e59fe02c 	ldr	lr, [pc, #44]	; 1190 <RTS5845_Rear_Still_FPS_1+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Still_FPS_1(unsigned int addr)
+{
+    1160:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x5e, 0x200, 0x03, 0x5f, 0x205};	                        
+    1164:	e28dc004 	add	ip, sp, #4
+    1168:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+    116c:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    1170:	e89e0007 	ldm	lr, {r0, r1, r2}
+    1174:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    1178:	e28d1004 	add	r1, sp, #4
+    117c:	e1a00004 	mov	r0, r4
+    1180:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1184:	ebfffffe 	bl	16a8 <wait>
+}
+    1188:	e28dd020 	add	sp, sp, #32
+    118c:	e8bd8010 	pop	{r4, pc}
+    1190:	00000520 	.word	0x00000520
+
+00001194 <RTS5845_Rear_Still_FPS_2>:
+
+void RTS5845_Rear_Still_FPS_2(unsigned int addr)
+{
+    1194:	e92d4010 	push	{r4, lr}
+    1198:	e1a04000 	mov	r4, r0
+unsigned int PALBG[]={6, 0x03, 0x60, 0x216, 0x03, 0x61, 0x215};	                        
+    119c:	e59fe02c 	ldr	lr, [pc, #44]	; 11d0 <RTS5845_Rear_Still_FPS_2+0x3c>
+i2c_write(addr,PALBG);
+wait();	
+}
+
+void RTS5845_Rear_Still_FPS_2(unsigned int addr)
+{
+    11a0:	e24dd020 	sub	sp, sp, #32
+unsigned int PALBG[]={6, 0x03, 0x60, 0x216, 0x03, 0x61, 0x215};	                        
+    11a4:	e28dc004 	add	ip, sp, #4
+    11a8:	e8be000f 	ldm	lr!, {r0, r1, r2, r3}
+    11ac:	e8ac000f 	stmia	ip!, {r0, r1, r2, r3}
+    11b0:	e89e0007 	ldm	lr, {r0, r1, r2}
+    11b4:	e88c0007 	stm	ip, {r0, r1, r2}
+i2c_write(addr,PALBG);
+    11b8:	e28d1004 	add	r1, sp, #4
+    11bc:	e1a00004 	mov	r0, r4
+    11c0:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    11c4:	ebfffffe 	bl	16a8 <wait>
+}
+    11c8:	e28dd020 	add	sp, sp, #32
+    11cc:	e8bd8010 	pop	{r4, pc}
+    11d0:	0000053c 	.word	0x0000053c
+
+000011d4 <RTS5845_Rear_Still_Frame_No>:
+
+void RTS5845_Rear_Still_Frame_No(unsigned int addr)
+{
+    11d4:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+    11d8:	e1a0e000 	mov	lr, r0
+unsigned int PALBG[]={3, 0x03, 0x75, 0x201};
+    11dc:	e59f301c 	ldr	r3, [pc, #28]	; 1200 <RTS5845_Rear_Still_Frame_No+0x2c>
+    11e0:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+    11e4:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,PALBG);
+    11e8:	e1a0000e 	mov	r0, lr
+    11ec:	e1a0100d 	mov	r1, sp
+    11f0:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    11f4:	ebfffffe 	bl	16a8 <wait>
+}
+    11f8:	e28dd014 	add	sp, sp, #20
+    11fc:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+    1200:	00000558 	.word	0x00000558
+
+00001204 <RTS5845_Rear_switch>:
+
+void RTS5845_Rear_switch(unsigned int addr)
+{
+    1204:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+    1208:	e1a0e000 	mov	lr, r0
+unsigned int PALBG[]={3, 0x0c, 0x1e, 0x201};
+    120c:	e59f301c 	ldr	r3, [pc, #28]	; 1230 <RTS5845_Rear_switch+0x2c>
+    1210:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+    1214:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,PALBG);
+    1218:	e1a0000e 	mov	r0, lr
+    121c:	e1a0100d 	mov	r1, sp
+    1220:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1224:	ebfffffe 	bl	16a8 <wait>
+}
+    1228:	e28dd014 	add	sp, sp, #20
+    122c:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+    1230:	00000568 	.word	0x00000568
+
+00001234 <RTS5845_Rear_start>:
+
+
+void RTS5845_Rear_start(unsigned int addr)
+{
+    1234:	e92d401f 	push	{r0, r1, r2, r3, r4, lr}
+    1238:	e1a0e000 	mov	lr, r0
+unsigned int PALBG[]={3, 0x0c, 0x00, 0x202};
+    123c:	e59f301c 	ldr	r3, [pc, #28]	; 1260 <RTS5845_Rear_start+0x2c>
+    1240:	e893000f 	ldm	r3, {r0, r1, r2, r3}
+    1244:	e88d000f 	stm	sp, {r0, r1, r2, r3}
+i2c_write(addr,PALBG);
+    1248:	e1a0000e 	mov	r0, lr
+    124c:	e1a0100d 	mov	r1, sp
+    1250:	ebfffffe 	bl	488 <i2c_write>
+wait();	
+    1254:	ebfffffe 	bl	16a8 <wait>
+}
+    1258:	e28dd014 	add	sp, sp, #20
+    125c:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+    1260:	00000578 	.word	0x00000578
+
+00001264 <RTS5845>:
+
+/*==================== main program ================== */
+
+
+void RTS5845()
+{
+    1264:	e92d4008 	push	{r3, lr}
+	i2c_ini();			//i2c_ini
+    1268:	ebfffffe 	bl	418 <i2c_ini>
+	  
+  RTS5845_Rear_Preview_Format(RTS5845_addr);  
+    126c:	e3a0003c 	mov	r0, #60	; 0x3c
+    1270:	ebfffffe 	bl	f74 <RTS5845_Rear_Preview_Format>
+  RTS5845_Rear_Preview_Width(RTS5845_addr);  
+    1274:	e3a0003c 	mov	r0, #60	; 0x3c
+    1278:	ebfffffe 	bl	fa4 <RTS5845_Rear_Preview_Width>
+  RTS5845_Rear_Preview_Heigth(RTS5845_addr);
+    127c:	e3a0003c 	mov	r0, #60	; 0x3c
+    1280:	ebfffffe 	bl	fe4 <RTS5845_Rear_Preview_Heigth>
+  RTS5845_Rear_Preview_FPS_1(RTS5845_addr);
+    1284:	e3a0003c 	mov	r0, #60	; 0x3c
+    1288:	ebfffffe 	bl	1024 <RTS5845_Rear_Preview_FPS_1>
+  RTS5845_Rear_Preview_FPS_2(RTS5845_addr);
+    128c:	e3a0003c 	mov	r0, #60	; 0x3c
+    1290:	ebfffffe 	bl	1064 <RTS5845_Rear_Preview_FPS_2>
+  RTS5845_Rear_Still_Format(RTS5845_addr);
+    1294:	e3a0003c 	mov	r0, #60	; 0x3c
+    1298:	ebfffffe 	bl	10a4 <RTS5845_Rear_Still_Format>
+  RTS5845_Rear_Still_Width(RTS5845_addr);
+    129c:	e3a0003c 	mov	r0, #60	; 0x3c
+    12a0:	ebfffffe 	bl	10d4 <RTS5845_Rear_Still_Width>
+  RTS5845_Rear_Still_Heigth(RTS5845_addr);
+    12a4:	e3a0003c 	mov	r0, #60	; 0x3c
+    12a8:	ebfffffe 	bl	1114 <RTS5845_Rear_Still_Heigth>
+  RTS5845_Rear_Still_FPS_1(RTS5845_addr);
+    12ac:	e3a0003c 	mov	r0, #60	; 0x3c
+    12b0:	ebfffffe 	bl	1154 <RTS5845_Rear_Still_FPS_1>
+  RTS5845_Rear_Still_FPS_2(RTS5845_addr);
+    12b4:	e3a0003c 	mov	r0, #60	; 0x3c
+    12b8:	ebfffffe 	bl	1194 <RTS5845_Rear_Still_FPS_2>
+  RTS5845_Rear_Still_Frame_No(RTS5845_addr);
+    12bc:	e3a0003c 	mov	r0, #60	; 0x3c
+    12c0:	ebfffffe 	bl	11d4 <RTS5845_Rear_Still_Frame_No>
+  RTS5845_Rear_switch(RTS5845_addr);
+    12c4:	e3a0003c 	mov	r0, #60	; 0x3c
+    12c8:	ebfffffe 	bl	1204 <RTS5845_Rear_switch>
+  //wait10();
+  RTS5845_Rear_start(RTS5845_addr);
+    12cc:	e3a0003c 	mov	r0, #60	; 0x3c
+    12d0:	e8bd4008 	pop	{r3, lr}
+  RTS5845_Rear_Still_FPS_1(RTS5845_addr);
+  RTS5845_Rear_Still_FPS_2(RTS5845_addr);
+  RTS5845_Rear_Still_Frame_No(RTS5845_addr);
+  RTS5845_Rear_switch(RTS5845_addr);
+  //wait10();
+  RTS5845_Rear_start(RTS5845_addr);
+    12d4:	eafffffe 	b	1234 <RTS5845_Rear_start>
+
+000012d8 <VO_480p>:
+/*==================== Functions ================== */
+
+void VO_480p()
+{    
+    //Wreg32(0x180041f8 , 0x4);
+    Wreg32(VO_MIX1 , VO_MIX1_v1(1) | VO_MIX1_write_data(1));                              //@FPGA
+    12d8:	e59f3080 	ldr	r3, [pc, #128]	; 1360 <VO_480p+0x88>
+    //Wreg32(VO_MIX1 , VO_MIX1_i_vbi(1)|VO_MIX1_vbi(1)|VO_MIX1_osd1(1)|VO_MIX1_sub1(1)|VO_MIX1_v1(1)|VO_MIX1_bg(1)|VO_MIX1_write_data(0));  //@ASIC
+    //Wreg32(VO_MIX1 , VO_MIX1_i_vbi(0)|VO_MIX1_vbi(0)|VO_MIX1_osd1(0)|VO_MIX1_sub1(0)|VO_MIX1_v1(1)|VO_MIX1_bg(0)|VO_MIX1_write_data(1));  //@ASIC
+    Wreg32(VO_MODE , VO_MODE_ch1(1)| VO_MODE_write_data(1));                             //@FPGA
+    Wreg32(VO_OUT , VO_OUT_write_en3(1)|VO_OUT_h(1));                                    //@FPGA
+    12dc:	e3a00003 	mov	r0, #3
+    12e0:	e3a01c05 	mov	r1, #1280	; 0x500
+    12e4:	e3a02011 	mov	r2, #17
+#include "hdmi_reg.h"
+
+/*==================== Functions ================== */
+
+void VO_480p()
+{    
+    12e8:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    //Wreg32(0x180041f8 , 0x4);
+    Wreg32(VO_MIX1 , VO_MIX1_v1(1) | VO_MIX1_write_data(1));                              //@FPGA
+    //Wreg32(VO_MIX1 , VO_MIX1_i_vbi(1)|VO_MIX1_vbi(1)|VO_MIX1_osd1(1)|VO_MIX1_sub1(1)|VO_MIX1_v1(1)|VO_MIX1_bg(1)|VO_MIX1_write_data(0));  //@ASIC
+    //Wreg32(VO_MIX1 , VO_MIX1_i_vbi(0)|VO_MIX1_vbi(0)|VO_MIX1_osd1(0)|VO_MIX1_sub1(0)|VO_MIX1_v1(1)|VO_MIX1_bg(0)|VO_MIX1_write_data(1));  //@ASIC
+    Wreg32(VO_MODE , VO_MODE_ch1(1)| VO_MODE_write_data(1));                             //@FPGA
+    Wreg32(VO_OUT , VO_OUT_write_en3(1)|VO_OUT_h(1));                                    //@FPGA
+    12ec:	e8830007 	stm	r3, {r0, r1, r2}
+    
+    //Wreg32(VO_OUT  , VO_OUT_write_en3(1)|VO_OUT_h(1)|VO_OUT_write_en2(1)|VO_OUT_i(0)|VO_OUT_write_en1(1)|VO_OUT_p(0));                    //@ASIC
+    //Wreg32(VO_MODE , VO_MODE_ch2i(0)|VO_MODE_ch2(0)|VO_MODE_ch1i(0)|VO_MODE_ch1(1)|VO_MODE_write_data(1));                                //@ASIC
+    //Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));                                //@ASIC
+       
+    Wreg32(VO_V1 , VO_V1_seq(1)| VO_V1_f422(1)| VO_V1_write_data(1)); //YUV422 @FPGA
+    12f0:	e3012401 	movw	r2, #5121	; 0x1401
+     //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x3700000));  //For PIC 
+     
+        if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+        {
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0) | HDMI_INTSTV_vsyncupdated(0));
+            Wreg32(VO_INTST , VO_INTST_m1fin(1) | VO_INTST_write_data(0)); //@FPGA
+    12f4:	e1a00003 	mov	r0, r3
+    
+    //Wreg32(VO_OUT  , VO_OUT_write_en3(1)|VO_OUT_h(1)|VO_OUT_write_en2(1)|VO_OUT_i(0)|VO_OUT_write_en1(1)|VO_OUT_p(0));                    //@ASIC
+    //Wreg32(VO_MODE , VO_MODE_ch2i(0)|VO_MODE_ch2(0)|VO_MODE_ch1i(0)|VO_MODE_ch1(1)|VO_MODE_write_data(1));                                //@ASIC
+    //Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));                                //@ASIC
+       
+    Wreg32(VO_V1 , VO_V1_seq(1)| VO_V1_f422(1)| VO_V1_write_data(1)); //YUV422 @FPGA
+    12f8:	e5832020 	str	r2, [r3, #32]
+    //Wreg32(VO_V1 , VO_V1_seq(1)| VO_V1_f422(0)| VO_V1_write_data(1)); //YUV420   
+    //Wreg32(VO_V1 ,VO_V1_d3_dbh(0)|VO_V1_d3_dbw(0)|VO_V1_d3_dup(0)|VO_V1_st(0)|VO_V1_seq(1)|VO_V1_di(0)|VO_V1_f422(1)|VO_V1_vs(0)|VO_V1_vs_near(0)|
+    //       VO_V1_vs_yodd(0)|VO_V1_vs_codd(0)|VO_V1_hs(0)|VO_V1_hs_yodd(0)|VO_V1_hs_codd(0)|VO_V1_topfield(0)|VO_V1_dmaweave(0)|VO_V1_write_data(1));   //YUV422 @ASIC    
+    //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x3500000));
+    //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x3700000));
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(720));
+    12fc:	e3a02e2d 	mov	r2, #720	; 0x2d0
+    1300:	e5832048 	str	r2, [r3, #72]	; 0x48
+    Wreg32(VO_V1_SEQ_PITCH_C_C , VO_V1_SEQ_PITCH_C_C_p(720));
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(720) | VO_V1_SIZE_h(480));
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(720) | VO_M1_SIZE_h(480));
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)| VO_V1_XY_y(0));
+    1304:	e3a01000 	mov	r1, #0
+    //Wreg32(VO_V1 ,VO_V1_d3_dbh(0)|VO_V1_d3_dbw(0)|VO_V1_d3_dup(0)|VO_V1_st(0)|VO_V1_seq(1)|VO_V1_di(0)|VO_V1_f422(1)|VO_V1_vs(0)|VO_V1_vs_near(0)|
+    //       VO_V1_vs_yodd(0)|VO_V1_vs_codd(0)|VO_V1_hs(0)|VO_V1_hs_yodd(0)|VO_V1_hs_codd(0)|VO_V1_topfield(0)|VO_V1_dmaweave(0)|VO_V1_write_data(1));   //YUV422 @ASIC    
+    //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x3500000));
+    //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x3700000));
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(720));
+    Wreg32(VO_V1_SEQ_PITCH_C_C , VO_V1_SEQ_PITCH_C_C_p(720));
+    1308:	e583204c 	str	r2, [r3, #76]	; 0x4c
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(720) | VO_V1_SIZE_h(480));
+    130c:	e59f2050 	ldr	r2, [pc, #80]	; 1364 <VO_480p+0x8c>
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(720) | VO_M1_SIZE_h(480));
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)| VO_V1_XY_y(0));
+    1310:	e5831610 	str	r1, [r3, #1552]	; 0x610
+    //       VO_V1_vs_yodd(0)|VO_V1_vs_codd(0)|VO_V1_hs(0)|VO_V1_hs_yodd(0)|VO_V1_hs_codd(0)|VO_V1_topfield(0)|VO_V1_dmaweave(0)|VO_V1_write_data(1));   //YUV422 @ASIC    
+    //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x3500000));
+    //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x3700000));
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(720));
+    Wreg32(VO_V1_SEQ_PITCH_C_C , VO_V1_SEQ_PITCH_C_C_p(720));
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(720) | VO_V1_SIZE_h(480));
+    1314:	e5832068 	str	r2, [r3, #104]	; 0x68
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(720) | VO_M1_SIZE_h(480));
+    1318:	e59f2048 	ldr	r2, [pc, #72]	; 1368 <VO_480p+0x90>
+    131c:	e5832604 	str	r2, [r3, #1540]	; 0x604
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)| VO_V1_XY_y(0));
+    Wreg32(VO_CH1 , VO_CH1_itop(1)|VO_CH1_ireint(1)|VO_CH1_top(1)|VO_CH1_reint(1)|VO_CH1_write_data(0));  //@ASIC
+    1320:	e3a02036 	mov	r2, #54	; 0x36
+    1324:	e5832644 	str	r2, [r3, #1604]	; 0x644
+     Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x1500000));
+     Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1700000));
+     //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x3500000));  //For PIC
+     //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x3700000));  //For PIC 
+     
+        if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+    1328:	e59f203c 	ldr	r2, [pc, #60]	; 136c <VO_480p+0x94>
+    132c:	e1a0e002 	mov	lr, r2
+        {
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0) | HDMI_INTSTV_vsyncupdated(0));
+            Wreg32(VO_INTST , VO_INTST_m1fin(1) | VO_INTST_write_data(0)); //@FPGA
+    1330:	e3a04002 	mov	r4, #2
+     Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x1500000));
+     Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1700000));
+     //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x3500000));  //For PIC
+     //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x3700000));  //For PIC 
+     
+        if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+    1334:	e592c278 	ldr	ip, [r2, #632]	; 0x278
+    1338:	e31c0001 	tst	ip, #1
+    133c:	0afffffc 	beq	1334 <VO_480p+0x5c>
+        {
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0) | HDMI_INTSTV_vsyncupdated(0));
+    1340:	e58e1278 	str	r1, [lr, #632]	; 0x278
+            Wreg32(VO_INTST , VO_INTST_m1fin(1) | VO_INTST_write_data(0)); //@FPGA
+    1344:	e58346d0 	str	r4, [r3, #1744]	; 0x6d0
+            Wreg32(VO_FC , VO_FC_m1go(1) | VO_FC_write_data(1)); //@FPGA
+            //Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|VO_INTST_wbfin(0)|VO_INTST_m2fin(0)|VO_INTST_m1fin(1)|VO_INTST_write_data(0)); //@ASIC
+            //Wreg32(VO_FC , VO_FC_wbgo(0)|VO_FC_m2go(0)|VO_FC_m1go(1)|VO_FC_write_data(1)); //@ASIC
+            
+            if(VO_INTST_get_h_under(*(volatile unsigned int *)VO_INTST))
+    1348:	e593c6d0 	ldr	ip, [r3, #1744]	; 0x6d0
+    134c:	e31c0080 	tst	ip, #128	; 0x80
+    1350:	0afffff7 	beq	1334 <VO_480p+0x5c>
+            {
+                Wreg32(VO_INTST , VO_INTST_h_under(1) | VO_INTST_write_data(0));
+    1354:	e3a0c080 	mov	ip, #128	; 0x80
+    1358:	e580c6d0 	str	ip, [r0, #1744]	; 0x6d0
+    135c:	eafffff3 	b	1330 <VO_480p+0x58>
+    1360:	18005000 	.word	0x18005000
+    1364:	002d01e0 	.word	0x002d01e0
+    1368:	02d001e0 	.word	0x02d001e0
+    136c:	1800d000 	.word	0x1800d000
+
+00001370 <VO_720p>:
+void VO_720p()
+{
+	//0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));
+    //0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(0)|VO_MODE_ch2(0)|VO_MODE_ch1i(0)|VO_MODE_ch1(1)|VO_MODE_write_data(1));
+    1370:	e59f3090 	ldr	r3, [pc, #144]	; 1408 <VO_720p+0x98>
+    1374:	e3a02003 	mov	r2, #3
+    
+    return;
+}
+
+void VO_720p()
+{
+    1378:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+        if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+        {
+            //0xb800d278
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0)|HDMI_INTSTV_vsyncupdated(0));
+            //0xb80056d0
+            Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|VO_INTST_wbfin(0)|VO_INTST_m2fin(0)|VO_INTST_m1fin(1)|VO_INTST_write_data(0));
+    137c:	e1a00003 	mov	r0, r3
+void VO_720p()
+{
+	//0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));
+    //0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(0)|VO_MODE_ch2(0)|VO_MODE_ch1i(0)|VO_MODE_ch1(1)|VO_MODE_write_data(1));
+    1380:	e5832000 	str	r2, [r3]
+    //0xb8005008
+    Wreg32(VO_MIX1 , VO_MIX1_i_vbi(1)|VO_MIX1_vbi(1)|VO_MIX1_osd1(1)|VO_MIX1_sub1(1)|VO_MIX1_v1(1)|VO_MIX1_bg(1)|VO_MIX1_write_data(0));
+    //0xb8005008
+    Wreg32(VO_MIX1 , VO_MIX1_i_vbi(0)|VO_MIX1_vbi(0)|VO_MIX1_osd1(0)|VO_MIX1_sub1(0)|VO_MIX1_v1(1)|VO_MIX1_bg(0)|VO_MIX1_write_data(1));
+    1384:	e3a02011 	mov	r2, #17
+    1388:	e5832008 	str	r2, [r3, #8]
+    //0xb8005014
+    Wreg32(VO_3D , VO_3D_top_and_bottom(1)|VO_3D_side_by_side(1)|VO_3D_right(1)|VO_3D_write_data(0));
+    138c:	e3a0200e 	mov	r2, #14
+    1390:	e5832014 	str	r2, [r3, #20]
+    //0xb8005020
+    Wreg32(VO_V1 , VO_V1_d3_dbh(1)|VO_V1_d3_dbw(1)|VO_V1_d3_dup(1)|VO_V1_st(1)|VO_V1_seq(1)|VO_V1_di(1)|VO_V1_f422(1)|VO_V1_vs(1)|VO_V1_vs_near(1)|
+           VO_V1_vs_yodd(1)|VO_V1_vs_codd(1)|VO_V1_hs(1)|VO_V1_hs_yodd(1)|VO_V1_hs_codd(1)|VO_V1_topfield(1)|VO_V1_dmaweave(1)|VO_V1_write_data(0));
+    //0xb8005004
+    Wreg32(VO_OUT , VO_OUT_write_en3(1)|VO_OUT_h(1)|VO_OUT_write_en2(1)|VO_OUT_i(0)|VO_OUT_write_en1(1)|VO_OUT_p(0));
+    1394:	e3002544 	movw	r2, #1348	; 0x544
+    1398:	e5832004 	str	r2, [r3, #4]
+    //0xb8005020
+    Wreg32(VO_V1 , VO_V1_d3_dbh(0)|VO_V1_d3_dbw(0)|VO_V1_d3_dup(0)|VO_V1_st(0)|VO_V1_seq(1)|VO_V1_di(0)|VO_V1_f422(1)|VO_V1_vs(0)|VO_V1_vs_near(0)|
+    139c:	e3012401 	movw	r2, #5121	; 0x1401
+    13a0:	e5832020 	str	r2, [r3, #32]
+    //0xb8005038
+    //Wreg32(VO_V1_SEQ_SA_C_Y, VO_V1_SEQ_SA_C_Y_a(0x1198000));
+    //0xb800503c
+    //Wreg32(VO_V1_SEQ_SA_C_C, VO_V1_SEQ_SA_C_C_a(0x1288000));
+    //0xb8005048
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(1280));
+    13a4:	e3a02c05 	mov	r2, #1280	; 0x500
+    13a8:	e5832048 	str	r2, [r3, #72]	; 0x48
+    //0xb8005068
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(1280)|VO_V1_SIZE_h(720));
+    //0xb8005604
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(1280)|VO_M1_SIZE_h(720));
+    //0xb8005610
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)|VO_V1_XY_y(0));
+    13ac:	e3a01000 	mov	r1, #0
+    //0xb800503c
+    //Wreg32(VO_V1_SEQ_SA_C_C, VO_V1_SEQ_SA_C_C_a(0x1288000));
+    //0xb8005048
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(1280));
+    //0xb800504c
+    Wreg32(VO_V1_SEQ_PITCH_C_C , VO_V1_SEQ_PITCH_C_C_p(1280));
+    13b0:	e583204c 	str	r2, [r3, #76]	; 0x4c
+    //0xb8005068
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(1280)|VO_V1_SIZE_h(720));
+    13b4:	e59f2050 	ldr	r2, [pc, #80]	; 140c <VO_720p+0x9c>
+    //0xb8005604
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(1280)|VO_M1_SIZE_h(720));
+    //0xb8005610
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)|VO_V1_XY_y(0));
+    13b8:	e5831610 	str	r1, [r3, #1552]	; 0x610
+    //0xb8005048
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(1280));
+    //0xb800504c
+    Wreg32(VO_V1_SEQ_PITCH_C_C , VO_V1_SEQ_PITCH_C_C_p(1280));
+    //0xb8005068
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(1280)|VO_V1_SIZE_h(720));
+    13bc:	e5832068 	str	r2, [r3, #104]	; 0x68
+    //0xb8005604
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(1280)|VO_M1_SIZE_h(720));
+    13c0:	e282264b 	add	r2, r2, #78643200	; 0x4b00000
+    13c4:	e5832604 	str	r2, [r3, #1540]	; 0x604
+    //0xb8005610
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)|VO_V1_XY_y(0));
+    //0xb8005644
+    Wreg32(VO_CH1 , VO_CH1_itop(1)|VO_CH1_ireint(1)|VO_CH1_top(1)|VO_CH1_reint(1)|VO_CH1_write_data(0));
+    13c8:	e3a02036 	mov	r2, #54	; 0x36
+    13cc:	e5832644 	str	r2, [r3, #1604]	; 0x644
+    {
+    	Wreg32(mipi_int_st , fm_drop | fm_done1 | fm_done0 | write_data); //clear int
+      Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x1500000));
+      Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1700000));
+        
+        if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+    13d0:	e59f2038 	ldr	r2, [pc, #56]	; 1410 <VO_720p+0xa0>
+    13d4:	e1a0e002 	mov	lr, r2
+        {
+            //0xb800d278
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0)|HDMI_INTSTV_vsyncupdated(0));
+            //0xb80056d0
+            Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|VO_INTST_wbfin(0)|VO_INTST_m2fin(0)|VO_INTST_m1fin(1)|VO_INTST_write_data(0));
+    13d8:	e3a04002 	mov	r4, #2
+    {
+    	Wreg32(mipi_int_st , fm_drop | fm_done1 | fm_done0 | write_data); //clear int
+      Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x1500000));
+      Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1700000));
+        
+        if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+    13dc:	e592c278 	ldr	ip, [r2, #632]	; 0x278
+    13e0:	e31c0001 	tst	ip, #1
+    13e4:	0afffffc 	beq	13dc <VO_720p+0x6c>
+        {
+            //0xb800d278
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0)|HDMI_INTSTV_vsyncupdated(0));
+    13e8:	e58e1278 	str	r1, [lr, #632]	; 0x278
+            //0xb80056d0
+            Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|VO_INTST_wbfin(0)|VO_INTST_m2fin(0)|VO_INTST_m1fin(1)|VO_INTST_write_data(0));
+    13ec:	e58346d0 	str	r4, [r3, #1744]	; 0x6d0
+            //0xb8005018
+            Wreg32(VO_FC , VO_FC_wbgo(0)|VO_FC_m2go(0)|VO_FC_m1go(1)|VO_FC_write_data(1));
+            if(VO_INTST_get_h_under(*(volatile unsigned int *)VO_INTST))
+    13f0:	e593c6d0 	ldr	ip, [r3, #1744]	; 0x6d0
+    13f4:	e31c0080 	tst	ip, #128	; 0x80
+    13f8:	0afffff7 	beq	13dc <VO_720p+0x6c>
+            {
+                //0xb80056d0
+                Wreg32(VO_INTST , VO_INTST_h_under(1)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|VO_INTST_wbfin(0)|VO_INTST_m2fin(0)|VO_INTST_m1fin(0)|VO_INTST_write_data(0));
+    13fc:	e3a0c080 	mov	ip, #128	; 0x80
+    1400:	e580c6d0 	str	ip, [r0, #1744]	; 0x6d0
+    1404:	eafffff3 	b	13d8 <VO_720p+0x68>
+    1408:	18005000 	.word	0x18005000
+    140c:	005002d0 	.word	0x005002d0
+    1410:	1800d000 	.word	0x1800d000
+
+00001414 <VO_1080p>:
+    Wreg32(0x18000084, 0x0);
+
+    //0xb8005008
+    Wreg32(VO_MIX1 , VO_MIX1_i_vbi(1)|VO_MIX1_vbi(1)|VO_MIX1_osd1(1)|VO_MIX1_sub1(1)|VO_MIX1_v1(1)|VO_MIX1_bg(1)|VO_MIX1_write_data(0));
+    //0xb8005008
+    Wreg32(VO_MIX1 , VO_MIX1_i_vbi(0)|VO_MIX1_vbi(0)|VO_MIX1_osd1(0)|VO_MIX1_sub1(0)|VO_MIX1_v1(1)|VO_MIX1_bg(0)|VO_MIX1_write_data(1));
+    1414:	e59f3094 	ldr	r3, [pc, #148]	; 14b0 <VO_1080p+0x9c>
+    1418:	e3a01011 	mov	r1, #17
+}
+
+
+
+void VO_1080p()
+{    
+    141c:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    Wreg32(0x18000084, 0x0);
+    1420:	e3a02000 	mov	r2, #0
+
+    //0xb8005008
+    Wreg32(VO_MIX1 , VO_MIX1_i_vbi(1)|VO_MIX1_vbi(1)|VO_MIX1_osd1(1)|VO_MIX1_sub1(1)|VO_MIX1_v1(1)|VO_MIX1_bg(1)|VO_MIX1_write_data(0));
+    //0xb8005008
+    Wreg32(VO_MIX1 , VO_MIX1_i_vbi(0)|VO_MIX1_vbi(0)|VO_MIX1_osd1(0)|VO_MIX1_sub1(0)|VO_MIX1_v1(1)|VO_MIX1_bg(0)|VO_MIX1_write_data(1));
+    1424:	e5831008 	str	r1, [r3, #8]
+    //0xb8005014
+    Wreg32(VO_3D , VO_3D_top_and_bottom(1)|VO_3D_side_by_side(1)|VO_3D_right(1)|VO_3D_write_data(0));
+    1428:	e3a0100e 	mov	r1, #14
+    142c:	e5831014 	str	r1, [r3, #20]
+    //0xb8005020
+    Wreg32(VO_V1 , VO_V1_d3_dbh(1)|VO_V1_d3_dbw(1)|VO_V1_d3_dup(1)|VO_V1_st(1)|VO_V1_seq(1)|VO_V1_di(1)|VO_V1_f422(1)|VO_V1_vs(1)|VO_V1_vs_near(1)|
+           VO_V1_vs_yodd(1)|VO_V1_vs_codd(1)|VO_V1_hs(1)|VO_V1_hs_yodd(1)|VO_V1_hs_codd(1)|VO_V1_topfield(1)|VO_V1_dmaweave(1)|VO_V1_write_data(0));
+      
+    Wreg32(0x18000084, 0x0);
+    1430:	e3a01306 	mov	r1, #402653184	; 0x18000000
+    //0xb8005000       
+    Wreg32(VO_MODE , VO_MODE_ch2i(0)|VO_MODE_ch2(0)|VO_MODE_ch1i(0)|VO_MODE_ch1(1)|VO_MODE_write_data(1));
+    //0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));                       
+    //0xb8005004
+    Wreg32(VO_OUT , VO_OUT_write_en3(1)|VO_OUT_h(1)|VO_OUT_write_en2(1)|VO_OUT_i(0)|VO_OUT_write_en1(1)|VO_OUT_p(0));       
+    1434:	e300c544 	movw	ip, #1348	; 0x544
+         if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+          {
+            //0xb800d278
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0)|HDMI_INTSTV_vsyncupdated(0));
+            //0xb80056d0
+            Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|
+    1438:	e1a00003 	mov	r0, r3
+    Wreg32(VO_3D , VO_3D_top_and_bottom(1)|VO_3D_side_by_side(1)|VO_3D_right(1)|VO_3D_write_data(0));
+    //0xb8005020
+    Wreg32(VO_V1 , VO_V1_d3_dbh(1)|VO_V1_d3_dbw(1)|VO_V1_d3_dup(1)|VO_V1_st(1)|VO_V1_seq(1)|VO_V1_di(1)|VO_V1_f422(1)|VO_V1_vs(1)|VO_V1_vs_near(1)|
+           VO_V1_vs_yodd(1)|VO_V1_vs_codd(1)|VO_V1_hs(1)|VO_V1_hs_yodd(1)|VO_V1_hs_codd(1)|VO_V1_topfield(1)|VO_V1_dmaweave(1)|VO_V1_write_data(0));
+      
+    Wreg32(0x18000084, 0x0);
+    143c:	e5812084 	str	r2, [r1, #132]	; 0x84
+    //0xb8005000       
+    Wreg32(VO_MODE , VO_MODE_ch2i(0)|VO_MODE_ch2(0)|VO_MODE_ch1i(0)|VO_MODE_ch1(1)|VO_MODE_write_data(1));
+    //0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));                       
+    //0xb8005004
+    Wreg32(VO_OUT , VO_OUT_write_en3(1)|VO_OUT_h(1)|VO_OUT_write_en2(1)|VO_OUT_i(0)|VO_OUT_write_en1(1)|VO_OUT_p(0));       
+    1440:	e3a0101c 	mov	r1, #28
+    1444:	e8831002 	stm	r3, {r1, ip}
+    //0xb8005068
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(1920)|VO_V1_SIZE_h(1080));
+    //0xb8005604
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(1920)|VO_M1_SIZE_h(1080));
+    //0xb8005610
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)|VO_V1_XY_y(0));
+    1448:	e5832610 	str	r2, [r3, #1552]	; 0x610
+    //0xb8005000
+    Wreg32(VO_MODE , VO_MODE_ch2i(1)|VO_MODE_ch2(1)|VO_MODE_ch1i(1)|VO_MODE_ch1(0)|VO_MODE_write_data(0));                       
+    //0xb8005004
+    Wreg32(VO_OUT , VO_OUT_write_en3(1)|VO_OUT_h(1)|VO_OUT_write_en2(1)|VO_OUT_i(0)|VO_OUT_write_en1(1)|VO_OUT_p(0));       
+    //0xb8005020
+    Wreg32(VO_V1 , VO_V1_d3_dbh(0)|VO_V1_d3_dbw(0)|VO_V1_d3_dup(0)|VO_V1_st(0)|VO_V1_seq(1)|VO_V1_di(0)|VO_V1_f422(1)|VO_V1_vs(0)|VO_V1_vs_near(0)|
+    144c:	e3011401 	movw	r1, #5121	; 0x1401
+    1450:	e5831020 	str	r1, [r3, #32]
+           VO_V1_vs_yodd(0)|VO_V1_vs_codd(0)|VO_V1_hs(0)|VO_V1_hs_yodd(0)|VO_V1_hs_codd(0)|VO_V1_topfield(0)|VO_V1_dmaweave(0)|VO_V1_write_data(1));                       
+    //0xb8005048
+    Wreg32(VO_V1_SEQ_PITCH_C_Y , VO_V1_SEQ_PITCH_C_Y_p(1920));
+    1454:	e3a01d1e 	mov	r1, #1920	; 0x780
+    1458:	e5831048 	str	r1, [r3, #72]	; 0x48
+    //0xb800504c
+    Wreg32(VO_V1_SEQ_PITCH_C_C , VO_V1_SEQ_PITCH_C_C_p(1920));
+    145c:	e583104c 	str	r1, [r3, #76]	; 0x4c
+    //0xb8005068
+    Wreg32(VO_V1_SIZE , VO_V1_SIZE_w(1920)|VO_V1_SIZE_h(1080));
+    1460:	e59f104c 	ldr	r1, [pc, #76]	; 14b4 <VO_1080p+0xa0>
+    1464:	e5831068 	str	r1, [r3, #104]	; 0x68
+    //0xb8005604
+    Wreg32(VO_M1_SIZE , VO_M1_SIZE_w(1920)|VO_M1_SIZE_h(1080));
+    1468:	e59f1048 	ldr	r1, [pc, #72]	; 14b8 <VO_1080p+0xa4>
+    146c:	e5831604 	str	r1, [r3, #1540]	; 0x604
+    //0xb8005610
+    Wreg32(VO_V1_XY , VO_V1_XY_x(0)|VO_V1_XY_y(0));
+    //0xb8005644
+    Wreg32(VO_CH1 , VO_CH1_itop(1)|VO_CH1_ireint(1)|VO_CH1_top(1)|VO_CH1_reint(1)|VO_CH1_write_data(0));
+    1470:	e3a01036 	mov	r1, #54	; 0x36
+    1474:	e5831644 	str	r1, [r3, #1604]	; 0x644
+     Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1700000));
+     
+     //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x1700000));
+     //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1500000));
+                
+         if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+    1478:	e59f103c 	ldr	r1, [pc, #60]	; 14bc <VO_1080p+0xa8>
+    147c:	e1a0e001 	mov	lr, r1
+          {
+            //0xb800d278
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0)|HDMI_INTSTV_vsyncupdated(0));
+            //0xb80056d0
+            Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|
+    1480:	e3a04002 	mov	r4, #2
+     Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1700000));
+     
+     //Wreg32(VO_V1_SEQ_SA_C_Y , VO_V1_SEQ_SA_C_Y_a(0x1700000));
+     //Wreg32(VO_V1_SEQ_SA_C_C , VO_V1_SEQ_SA_C_C_a(0x1500000));
+                
+         if(HDMI_INTSTV_get_vsyncupdated(*(volatile unsigned int *)HDMI_INTSTV))
+    1484:	e591c278 	ldr	ip, [r1, #632]	; 0x278
+    1488:	e31c0001 	tst	ip, #1
+    148c:	0afffffc 	beq	1484 <VO_1080p+0x70>
+          {
+            //0xb800d278
+            Wreg32(HDMI_INTSTV , HDMI_INTSTV_vendupdated(0)|HDMI_INTSTV_vsyncupdated(0));
+    1490:	e58e2278 	str	r2, [lr, #632]	; 0x278
+            //0xb80056d0
+            Wreg32(VO_INTST , VO_INTST_h_under(0)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|
+    1494:	e58346d0 	str	r4, [r3, #1744]	; 0x6d0
+                   VO_INTST_wbfin(0)|VO_INTST_m2fin(0)|VO_INTST_m1fin(1)|VO_INTST_write_data(0));
+            //0xb8005018
+            Wreg32(VO_FC , VO_FC_wbgo(0)|VO_FC_m2go(0)|VO_FC_m1go(1)|VO_FC_write_data(1));
+                           
+                if(VO_INTST_get_h_under(*(volatile unsigned int *)VO_INTST))
+    1498:	e593c6d0 	ldr	ip, [r3, #1744]	; 0x6d0
+    149c:	e31c0080 	tst	ip, #128	; 0x80
+    14a0:	0afffff7 	beq	1484 <VO_1080p+0x70>
+                {
+                  //0xb80056d0
+                  Wreg32(VO_INTST , VO_INTST_h_under(1)|VO_INTST_i_under(0)|VO_INTST_p_under(0)|VO_INTST_sub1(0)|
+    14a4:	e3a0c080 	mov	ip, #128	; 0x80
+    14a8:	e580c6d0 	str	ip, [r0, #1744]	; 0x6d0
+    14ac:	eafffff3 	b	1480 <VO_1080p+0x6c>
+    14b0:	18005000 	.word	0x18005000
+    14b4:	00780438 	.word	0x00780438
+    14b8:	07800438 	.word	0x07800438
+    14bc:	1800d000 	.word	0x1800d000
+
+000014c0 <MIPI_PHY_init>:
+
+
+/*==================== Functions ================== */
+
+void MIPI_PHY_init(void)
+{	
+    14c0:	e92d4008 	push	{r3, lr}
+	  printf("%s\n",__FUNCTION__);	
+    14c4:	e59f0044 	ldr	r0, [pc, #68]	; 1510 <MIPI_PHY_init+0x50>
+    14c8:	e59f1044 	ldr	r1, [pc, #68]	; 1514 <MIPI_PHY_init+0x54>
+    14cc:	ebfffffe 	bl	0 <printf>
+    if (addr < (RBUS_BASE_VIRT_OLD+RBUS_BASE_SIZE) && addr >= 0xb8000000)
+        __raw_writel(val,addr-RBUS_BASE_VIRT_OLD+RBUS_BASE_VIRT);
+	else if (addr < (SPI_FLASH_BASE_VIRT_OLD+SPI_FLASH_BASE_SIZE) && addr >= SPI_FLASH_BASE_VIRT_OLD)
+        __raw_writel(val, addr-SPI_FLASH_BASE_VIRT_OLD+SPI_FLASH_BASE_VIRT);
+    else
+        __raw_writel(val,addr);
+    14d0:	e59f3040 	ldr	r3, [pc, #64]	; 1518 <MIPI_PHY_init+0x58>
+    14d4:	e3a02001 	mov	r2, #1
+    14d8:	e583203c 	str	r2, [r3, #60]	; 0x3c
+    14dc:	e3a02008 	mov	r2, #8
+    14e0:	e5832098 	str	r2, [r3, #152]	; 0x98
+    14e4:	e3a0200f 	mov	r2, #15
+    14e8:	e5832074 	str	r2, [r3, #116]	; 0x74
+    14ec:	e3a0204f 	mov	r2, #79	; 0x4f
+    14f0:	e5832080 	str	r2, [r3, #128]	; 0x80
+    14f4:	e3a02000 	mov	r2, #0
+    14f8:	e58320ac 	str	r2, [r3, #172]	; 0xac
+    14fc:	e3a02032 	mov	r2, #50	; 0x32
+    1500:	e583208c 	str	r2, [r3, #140]	; 0x8c
+    1504:	e3a0201e 	mov	r2, #30
+    1508:	e5832090 	str	r2, [r3, #144]	; 0x90
+    150c:	e8bd8008 	pop	{r3, pc}
+    1510:	00000000 	.word	0x00000000
+    1514:	00000588 	.word	0x00000588
+    1518:	18004000 	.word	0x18004000
+
+0000151c <MIPI_wrapper_scalingdown_init>:
+    //Wreg32(mipi_dphy_reg6  , DVld_Lane1(0x5) | DVld_Lane0(0x5));                                                                 
+    //Wreg32(mipi_dphy_reg7  , DVld_Lane3(0x5) | DVld_Lane2(0x5));                                                                 
+}
+
+void MIPI_wrapper_scalingdown_init(void)
+{  
+    151c:	e92d4008 	push	{r3, lr}
+	printf("%s\n",__FUNCTION__);
+    1520:	e59f00dc 	ldr	r0, [pc, #220]	; 1604 <MIPI_wrapper_scalingdown_init+0xe8>
+    1524:	e59f10dc 	ldr	r1, [pc, #220]	; 1608 <MIPI_wrapper_scalingdown_init+0xec>
+    1528:	ebfffffe 	bl	0 <printf>
+    152c:	e59f30d8 	ldr	r3, [pc, #216]	; 160c <MIPI_wrapper_scalingdown_init+0xf0>
+    1530:	e3a02615 	mov	r2, #22020096	; 0x1500000
+    1534:	e5832104 	str	r2, [r3, #260]	; 0x104
+    1538:	e3a02625 	mov	r2, #38797312	; 0x2500000
+    153c:	e5832108 	str	r2, [r3, #264]	; 0x108
+    1540:	e3a02635 	mov	r2, #55574528	; 0x3500000
+    1544:	e583210c 	str	r2, [r3, #268]	; 0x10c
+    1548:	e3a02617 	mov	r2, #24117248	; 0x1700000
+    154c:	e58321e0 	str	r2, [r3, #480]	; 0x1e0
+    1550:	e3a02627 	mov	r2, #40894464	; 0x2700000
+    1554:	e58321e4 	str	r2, [r3, #484]	; 0x1e4
+    1558:	e3a02637 	mov	r2, #57671680	; 0x3700000
+    155c:	e58321e8 	str	r2, [r3, #488]	; 0x1e8
+    1560:	e59f20a8 	ldr	r2, [pc, #168]	; 1610 <MIPI_wrapper_scalingdown_init+0xf4>
+    1564:	e5832110 	str	r2, [r3, #272]	; 0x110
+    1568:	e2422605 	sub	r2, r2, #5242880	; 0x500000
+    156c:	e5832114 	str	r2, [r3, #276]	; 0x114
+    1570:	e2822e53 	add	r2, r2, #1328	; 0x530
+    1574:	e5832118 	str	r2, [r3, #280]	; 0x118
+    1578:	e59f2094 	ldr	r2, [pc, #148]	; 1614 <MIPI_wrapper_scalingdown_init+0xf8>
+    157c:	e5832164 	str	r2, [r3, #356]	; 0x164
+    1580:	e59f2090 	ldr	r2, [pc, #144]	; 1618 <MIPI_wrapper_scalingdown_init+0xfc>
+    1584:	e583216c 	str	r2, [r3, #364]	; 0x16c
+    1588:	e59f208c 	ldr	r2, [pc, #140]	; 161c <MIPI_wrapper_scalingdown_init+0x100>
+    158c:	e5832170 	str	r2, [r3, #368]	; 0x170
+    1590:	e5832174 	str	r2, [r3, #372]	; 0x174
+    1594:	e5832178 	str	r2, [r3, #376]	; 0x178
+    1598:	e583217c 	str	r2, [r3, #380]	; 0x17c
+    159c:	e5832180 	str	r2, [r3, #384]	; 0x180
+    15a0:	e5832184 	str	r2, [r3, #388]	; 0x184
+    15a4:	e5832188 	str	r2, [r3, #392]	; 0x188
+    15a8:	e583218c 	str	r2, [r3, #396]	; 0x18c
+    15ac:	e5832190 	str	r2, [r3, #400]	; 0x190
+    15b0:	e5832194 	str	r2, [r3, #404]	; 0x194
+    15b4:	e5832198 	str	r2, [r3, #408]	; 0x198
+    15b8:	e583219c 	str	r2, [r3, #412]	; 0x19c
+    15bc:	e58321a0 	str	r2, [r3, #416]	; 0x1a0
+    15c0:	e58321a4 	str	r2, [r3, #420]	; 0x1a4
+    15c4:	e58321a8 	str	r2, [r3, #424]	; 0x1a8
+    15c8:	e58321ac 	str	r2, [r3, #428]	; 0x1ac
+    15cc:	e59f204c 	ldr	r2, [pc, #76]	; 1620 <MIPI_wrapper_scalingdown_init+0x104>
+    15d0:	e58321b0 	str	r2, [r3, #432]	; 0x1b0
+    15d4:	e58321b4 	str	r2, [r3, #436]	; 0x1b4
+    15d8:	e58321b8 	str	r2, [r3, #440]	; 0x1b8
+    15dc:	e58321bc 	str	r2, [r3, #444]	; 0x1bc
+    15e0:	e58321c0 	str	r2, [r3, #448]	; 0x1c0
+    15e4:	e58321c4 	str	r2, [r3, #452]	; 0x1c4
+    15e8:	e58321c8 	str	r2, [r3, #456]	; 0x1c8
+    15ec:	e58321cc 	str	r2, [r3, #460]	; 0x1cc
+    15f0:	e3a020ff 	mov	r2, #255	; 0xff
+    15f4:	e58320b4 	str	r2, [r3, #180]	; 0xb4
+    15f8:	e59f2024 	ldr	r2, [pc, #36]	; 1624 <MIPI_wrapper_scalingdown_init+0x108>
+    15fc:	e5832100 	str	r2, [r3, #256]	; 0x100
+    1600:	e8bd8008 	pop	{r3, pc}
+    1604:	00000000 	.word	0x00000000
+    1608:	00000596 	.word	0x00000596
+    160c:	18004000 	.word	0x18004000
+    1610:	02d002d0 	.word	0x02d002d0
+    1614:	2d00b600 	.word	0x2d00b600
+    1618:	1e00cccc 	.word	0x1e00cccc
+    161c:	04000400 	.word	0x04000400
+    1620:	08000800 	.word	0x08000800
+    1624:	14c4053f 	.word	0x14c4053f
+
+00001628 <sd_test_0>:
+}
+
+/*==================== main program ================== */
+//void main(void)
+void sd_test_0(void)
+{	  
+    1628:	e92d4008 	push	{r3, lr}
+  printf("%s\n",__FUNCTION__);	
+    162c:	e59f1040 	ldr	r1, [pc, #64]	; 1674 <sd_test_0+0x4c>
+    1630:	e59f0040 	ldr	r0, [pc, #64]	; 1678 <sd_test_0+0x50>
+    1634:	ebfffffe 	bl	0 <printf>
+    1638:	e59f203c 	ldr	r2, [pc, #60]	; 167c <sd_test_0+0x54>
+    163c:	e3a03306 	mov	r3, #402653184	; 0x18000000
+    1640:	e5832024 	str	r2, [r3, #36]	; 0x24
+    1644:	e3a02013 	mov	r2, #19
+    1648:	e5832190 	str	r2, [r3, #400]	; 0x190
+    164c:	e3a0201b 	mov	r2, #27
+    1650:	e5832190 	str	r2, [r3, #400]	; 0x190
+  //HDMI config
+  Wreg32(0x18000024, 0x00018100);
+	Wreg32(0x18000190, 0x00000013); 
+  Wreg32(0x18000190, 0x0000001b); 
+  
+  RLE0551C_patterngen_2048x1536();
+    1654:	ebfffffe 	bl	de4 <RLE0551C_patterngen_2048x1536>
+  //RLE0551C_patterngen_640x480();
+  //RLE0551C_test();
+  //RTS5845();
+	
+	MIPI_PHY_init();
+    1658:	ebfffffe 	bl	14c0 <MIPI_PHY_init>
+		
+  MIPI_wrapper_scalingdown_init();
+    165c:	ebfffffe 	bl	151c <MIPI_wrapper_scalingdown_init>
+  
+  printf("**********Test****************\n");		
+    1660:	e59f0018 	ldr	r0, [pc, #24]	; 1680 <sd_test_0+0x58>
+    1664:	ebfffffe 	bl	0 <printf>
+	
+  //HDMI_1080p60();
+  
+  //VO_1080p();
+  
+  HDMI_480p();
+    1668:	ebfffffe 	bl	0 <HDMI_480p>
+  
+  VO_480p();
+    166c:	ebfffffe 	bl	12d8 <VO_480p>
+    1670:	eafffffe 	b	1670 <sd_test_0+0x48>
+    1674:	000005b4 	.word	0x000005b4
+    1678:	00000000 	.word	0x00000000
+    167c:	00018100 	.word	0x00018100
+    1680:	00000004 	.word	0x00000004
+
+00001684 <sd_test_1>:
+
+
+
+void sd_test_1(void)
+{	  
+  printf("start sd test 1\n");
+    1684:	e59f0000 	ldr	r0, [pc]	; 168c <sd_test_1+0x8>
+    1688:	eafffffe 	b	0 <printf>
+    168c:	00000024 	.word	0x00000024
+
+00001690 <sd_test_2>:
+
+
+
+void sd_test_2(void)
+{	  
+  printf("start sd test 2\n");
+    1690:	e59f0000 	ldr	r0, [pc]	; 1698 <sd_test_2+0x8>
+    1694:	eafffffe 	b	0 <printf>
+    1698:	00000035 	.word	0x00000035
+
+0000169c <sd_test_3>:
+
+
+
+void sd_test_3(void)
+{	  
+  printf("start sd test 3\n");
+    169c:	e59f0000 	ldr	r0, [pc]	; 16a4 <sd_test_3+0x8>
+    16a0:	eafffffe 	b	0 <printf>
+    16a4:	00000046 	.word	0x00000046
+
+000016a8 <wait>:
+#include "util.h"
+
+/*==================== Functions ================== */
+
+void wait()
+{
+    16a8:	e12fff1e 	bx	lr
+
+000016ac <wait10>:
+int i;
+for(i=0; i<2000; i++) {}
+}
+
+void wait10()
+{
+    16ac:	e12fff1e 	bx	lr

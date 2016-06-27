@@ -1,0 +1,659 @@
+Archive member included because of file (symbol)
+
+../../static_lib/libefuse.verify.a(verifymain.o)
+                              start.o (verifymain)
+../../static_lib/libefuse.verify.a(cache_v7.o)
+                              ../../static_lib/libefuse.verify.a(verifymain.o) (flush_cache)
+../../static_lib/libefuse.verify.a(mcp.o)
+                              ../../static_lib/libefuse.verify.a(verifymain.o) (swap_endian)
+../../static_lib/libefuse.verify.a(timer.o)
+                              ../../static_lib/libefuse.verify.a(mcp.o) (mdelay)
+../../static_lib/libefuse.verify.a(util.o)
+                              ../../static_lib/libefuse.verify.a(verifymain.o) (sync)
+../../static_lib/libefuse.verify.a(efuse.o)
+                              ../../static_lib/libefuse.verify.a(mcp.o) (OTP_Get_Word)
+
+Discarded input sections
+
+ .note.GNU-stack
+                0x00000000        0x0 strlen.o
+ .note.GNU-stack
+                0x00000000        0x0 strstr.o
+ .note.GNU-stack
+                0x00000000        0x0 strtoul.o
+ .note.GNU-stack
+                0x00000000        0x0 ctype.o
+ .note.GNU-stack
+                0x00000000        0x0 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .note.GNU-stack
+                0x00000000        0x0 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .note.GNU-stack
+                0x00000000        0x0 ../../static_lib/libefuse.verify.a(mcp.o)
+ .note.GNU-stack
+                0x00000000        0x0 ../../static_lib/libefuse.verify.a(timer.o)
+ .note.GNU-stack
+                0x00000000        0x0 ../../static_lib/libefuse.verify.a(util.o)
+ .note.GNU-stack
+                0x00000000        0x0 ../../static_lib/libefuse.verify.a(efuse.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .text set to 0x1610000
+LOAD temp_target_array.o
+LOAD start.o
+LOAD strlen.o
+LOAD strstr.o
+LOAD strtoul.o
+LOAD ctype.o
+LOAD ../../static_lib/libefuse.verify.a
+LOAD /home/fae/nas/svn/1295/trunk-6.0.0_r1/bootcode/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a32nt-150615/bin/../lib/gcc/arm-linux-gnueabi/4.9.3/armv8-a/libgcc.a
+                0x00010000                PROVIDE (__executable_start, 0x10000)
+                0x00010094                . = (0x10000 + SIZEOF_HEADERS)
+
+.interp
+ *(.interp)
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.hash
+ *(.hash)
+
+.gnu.hash
+ *(.gnu.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.dyn        0x00010094        0x0
+ *(.rel.init)
+ *(.rel.text .rel.text.* .rel.gnu.linkonce.t.*)
+ *(.rel.fini)
+ *(.rel.rodata .rel.rodata.* .rel.gnu.linkonce.r.*)
+ *(.rel.data.rel.ro .rel.data.rel.ro.* .rel.gnu.linkonce.d.rel.ro.*)
+ *(.rel.data .rel.data.* .rel.gnu.linkonce.d.*)
+ *(.rel.tdata .rel.tdata.* .rel.gnu.linkonce.td.*)
+ *(.rel.tbss .rel.tbss.* .rel.gnu.linkonce.tb.*)
+ *(.rel.ctors)
+ *(.rel.dtors)
+ *(.rel.got)
+ *(.rel.bss .rel.bss.* .rel.gnu.linkonce.b.*)
+                0x00010094                PROVIDE (__rel_iplt_start, .)
+ *(.rel.iplt)
+ .rel.iplt      0x00000000        0x0 start.o
+                0x00010094                PROVIDE (__rel_iplt_end, .)
+
+.rela.dyn       0x00010094        0x0
+ *(.rela.init)
+ *(.rela.text .rela.text.* .rela.gnu.linkonce.t.*)
+ *(.rela.fini)
+ *(.rela.rodata .rela.rodata.* .rela.gnu.linkonce.r.*)
+ *(.rela.data .rela.data.* .rela.gnu.linkonce.d.*)
+ *(.rela.tdata .rela.tdata.* .rela.gnu.linkonce.td.*)
+ *(.rela.tbss .rela.tbss.* .rela.gnu.linkonce.tb.*)
+ *(.rela.ctors)
+ *(.rela.dtors)
+ *(.rela.got)
+ *(.rela.bss .rela.bss.* .rela.gnu.linkonce.b.*)
+                0x00010094                PROVIDE (__rela_iplt_start, .)
+ *(.rela.iplt)
+                0x00010094                PROVIDE (__rela_iplt_end, .)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.init
+ *(SORT(.init))
+
+.plt
+ *(.plt)
+
+.iplt           0x00010094        0x0
+ *(.iplt)
+ .iplt          0x00000000        0x0 start.o
+
+.text           0x01610000     0x23b4
+ *(.text.unlikely .text.*_unlikely .text.unlikely.*)
+ *(.text.exit .text.exit.*)
+ *(.text.startup .text.startup.*)
+ *(.text.hot .text.hot.*)
+ *(.text .stub .text.* .gnu.linkonce.t.*)
+ .text          0x01610000        0x0 temp_target_array.o
+ .text          0x01610000       0x74 start.o
+                0x01610000                _back_addr
+                0x01610004                _stack_start
+                0x01610008                _stack_start1
+ .text          0x01610074       0x28 strlen.o
+                0x01610074                strlen
+ .text          0x0161009c       0xa0 strstr.o
+                0x0161009c                strstr
+ .text          0x0161013c      0x194 strtoul.o
+                0x0161013c                strtoul
+ .text          0x016102d0        0x0 ctype.o
+ .text          0x016102d0      0x3c8 ../../static_lib/libefuse.verify.a(verifymain.o)
+                0x016102d0                ctrlc
+                0x016102d8                printf
+                0x016102e8                memcpy
+                0x0161030c                memcmp
+                0x01610364                do_verify
+                0x01610638                do_go_exec
+                0x0161064c                verifymain
+ .text          0x01610698      0x218 ../../static_lib/libefuse.verify.a(cache_v7.o)
+                0x0161077c                invalidate_icache_all
+                0x01610794                __v7_outer_cache_enable
+                0x01610794                v7_outer_cache_enable
+                0x01610798                v7_outer_cache_disable
+                0x01610798                __v7_outer_cache_disable
+                0x0161079c                __v7_outer_cache_flush_all
+                0x0161079c                v7_outer_cache_flush_all
+                0x016107a0                flush_dcache_all
+                0x016107b4                v7_outer_cache_inval_all
+                0x016107b4                __v7_outer_cache_inval_all
+                0x016107b8                invalidate_dcache_all
+                0x016107cc                arm_init_before_mmu
+                0x016107fc                v7_outer_cache_flush_range
+                0x016107fc                __v7_outer_cache_flush_range
+                0x01610800                flush_dcache_range
+                0x0161083c                flush_cache
+                0x01610844                __v7_outer_cache_inval_range
+                0x01610844                v7_outer_cache_inval_range
+                0x01610848                invalidate_dcache_range
+ .text          0x016108b0      0xc04 ../../static_lib/libefuse.verify.a(mcp.o)
+                0x01610a5c                swap_endian
+                0x01610a64                reverse_rsa_signature
+                0x01610cd4                AES_CBC_decrypt
+                0x01610d64                AES_CBC_encrypt
+                0x01610df4                AES_ECB_decrypt
+                0x01610e88                AES_ECB_encrypt
+                0x01610f74                AES_hash_one
+                0x01610fe4                AES_hash
+                0x0161113c                SHA1_hash
+                0x01611208                do_RSA
+                0x01611384                SHA256_hash
+                0x0161148c                reverse_signature
+ .text          0x016114b4      0x168 ../../static_lib/libefuse.verify.a(timer.o)
+                0x016114b4                InitTimer
+                0x0161150c                DisableTimer
+                0x01611538                SystemTimeout
+                0x01611568                mdelay
+                0x016115c4                udelay
+ .text          0x0161161c      0x4c8 ../../static_lib/libefuse.verify.a(util.o)
+                0x0161161c                sync
+                0x01611638                init_uart
+                0x0161168c                set_focus_uart
+                0x016116b4                prints
+                0x0161171c                wait_done
+                0x0161177c                print_val
+                0x016117cc                print_hex
+                0x016117d4                sys_dcache_flush_all
+                0x016117d8                put_char
+                0x016117fc                hexstr2int
+                0x01611808                simple_malloc
+                0x0161185c                is_hex_digit
+                0x01611890                hexdump
+                0x01611940                memset
+                0x01611964                set_memory
+                0x01611980                copy_memory
+                0x01611a1c                compare_memory
+                0x01611a74                compare_str
+                0x01611ab8                watchdog_reset
+                0x01611ae0                __div0
+ .text          0x01611ae4      0x8d0 ../../static_lib/libefuse.verify.a(efuse.o)
+                0x01611ae4                e_buffer
+                0x01611cc0                read_efuse
+                0x01611d70                OTP_JUDGE_BIT
+                0x01611da0                do_burn_efuse_getmptest2
+                0x01611ddc                OTP_Program_Start
+                0x01611de0                OTP_Program_End
+                0x01611e20                start_program
+                0x01611ecc                do_burn_efuse_rsa
+                0x01611f00                burn_id_test
+                0x01611f64                do_burn_efuse_aes
+                0x01611fd0                do_burn_efuse_deviceID
+                0x01611ff0                do_burn_efuse_secureboot
+                0x01612018                do_burn_efuse_bootenc
+                0x01612040                do_burn_efuse_loadsos
+                0x01612068                do_burn_efuse_disonecore
+                0x01612090                do_burn_efuse_usb2sram
+                0x016120b8                do_burn_efuse_mptest2
+                0x016120e0                do_burn_efuse_keysel
+                0x0161215c                do_burn_efuse_hwchk
+                0x016121d8                do_burn_efuse_all
+                0x01612274                OTP_Get_Word
+                0x016122f4                OTP_Get_Byte
+                0x01612348                read_id_test
+ *(.gnu.warning)
+ *(.glue_7t)
+ .glue_7t       0x00000000        0x0 linker stubs
+ *(.glue_7)
+ .glue_7        0x00000000        0x0 linker stubs
+ *(.vfp11_veneer)
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+ *(.v4_bx)
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.fini
+ *(SORT(.fini))
+                0x016123b4                PROVIDE (__etext, .)
+                0x016123b4                PROVIDE (_etext, .)
+                0x016123b4                PROVIDE (etext, .)
+
+.rodata         0x016123b4      0x570
+ *(.rodata .rodata.* .gnu.linkonce.r.*)
+ .rodata        0x016123b4      0x100 ctype.o
+                0x016123b4                _ctype
+ .rodata        0x016124b4       0x20 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .rodata.str1.4
+                0x016124d4       0xb0 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .rodata        0x01612584       0x20 ../../static_lib/libefuse.verify.a(mcp.o)
+                0x01612594                Kh_key_default
+ .rodata.str1.4
+                0x016125a4       0x2c ../../static_lib/libefuse.verify.a(mcp.o)
+ .rodata        0x016125d0        0x8 ../../static_lib/libefuse.verify.a(util.o)
+ .rodata.str1.4
+                0x016125d8       0x22 ../../static_lib/libefuse.verify.a(util.o)
+                                 0x28 (size before relaxing)
+ *fill*         0x016125fa        0x2 
+ .rodata        0x016125fc       0x10 ../../static_lib/libefuse.verify.a(efuse.o)
+ .rodata.str1.4
+                0x0161260c      0x318 ../../static_lib/libefuse.verify.a(efuse.o)
+                                0x320 (size before relaxing)
+
+.rodata1
+ *(.rodata1)
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x01612924                PROVIDE (__exidx_start, .)
+
+.ARM.exidx
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                0x01612924                PROVIDE (__exidx_end, .)
+
+.eh_frame_hdr
+ *(.eh_frame_hdr)
+
+.eh_frame
+ *(.eh_frame)
+
+.gcc_except_table
+ *(.gcc_except_table .gcc_except_table.*)
+
+.exception_ranges
+ *(.exception_ranges .exception_ranges*)
+                0x01612924                . = (ALIGN (0x10000) - ((0x10000 - .) & 0xffff))
+                0x01622924                . = DATA_SEGMENT_ALIGN (0x10000, 0x1000)
+
+.eh_frame
+ *(.eh_frame)
+
+.gcc_except_table
+ *(.gcc_except_table .gcc_except_table.*)
+
+.exception_ranges
+ *(.exception_ranges .exception_ranges*)
+
+.tdata
+ *(.tdata .tdata.* .gnu.linkonce.td.*)
+
+.tbss
+ *(.tbss .tbss.* .gnu.linkonce.tb.*)
+ *(.tcommon)
+
+.preinit_array  0x01622924        0x0
+                0x01622924                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array)
+                0x01622924                PROVIDE (__preinit_array_end, .)
+
+.init_array     0x01622924        0x0
+                0x01622924                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ *(.init_array)
+                0x01622924                PROVIDE (__init_array_end, .)
+
+.fini_array     0x01622924        0x0
+                0x01622924                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array)
+                0x01622924                PROVIDE (__fini_array_end, .)
+
+.ctors
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+
+.dtors
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend?.o *crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+
+.jcr
+ *(.jcr)
+
+.data.rel.ro
+ *(.data.rel.ro.local* .gnu.linkonce.d.rel.ro.local.*)
+ *(.data.rel.ro .data.rel.ro.* .gnu.linkonce.d.rel.ro.*)
+
+.dynamic
+ *(.dynamic)
+                0x01622924                . = DATA_SEGMENT_RELRO_END (., 0x0)
+
+.got            0x01622924        0x0
+ *(.got.plt)
+ *(.igot.plt)
+ .igot.plt      0x00000000        0x0 start.o
+ *(.got)
+ *(.igot)
+
+.data           0x01622924      0x294
+                0x01622924                PROVIDE (__data_start, .)
+ *(.data .data.* .gnu.linkonce.d.*)
+ .data          0x01622924      0x118 temp_target_array.o
+                0x01622924                rsa_pub_key
+                0x01622a24                rsa_pub_key_end
+                0x01622a28                aes_key
+                0x01622a38                aes_key_end
+ .data          0x01622a3c        0x0 start.o
+ .data          0x01622a3c        0x0 strlen.o
+ .data          0x01622a3c        0x0 strstr.o
+ .data          0x01622a3c        0x0 strtoul.o
+ .data          0x01622a3c        0x0 ctype.o
+ .data          0x01622a3c        0x0 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .data          0x01622a3c        0x0 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .data          0x01622a3c        0x0 ../../static_lib/libefuse.verify.a(mcp.o)
+ .data          0x01622a3c        0x0 ../../static_lib/libefuse.verify.a(timer.o)
+ .data          0x01622a3c        0x8 ../../static_lib/libefuse.verify.a(util.o)
+ .data          0x01622a44      0x174 ../../static_lib/libefuse.verify.a(efuse.o)
+                0x01622a44                arrayB
+                0x01622a54                arrayA
+                0x01622a64                arrayC
+
+.data1
+ *(.data1)
+                0x01622bb8                _edata = .
+                0x01622bb8                PROVIDE (edata, .)
+                0x01622bb8                . = .
+                0x01622bb8                __bss_start = .
+                0x01622bb8                __bss_start__ = .
+
+.bss            0x01622bb8        0x8
+ *(.dynbss)
+ *(.bss .bss.* .gnu.linkonce.b.*)
+ .bss           0x01622bb8        0x0 temp_target_array.o
+ .bss           0x01622bb8        0x0 start.o
+ .bss           0x01622bb8        0x0 strlen.o
+ .bss           0x01622bb8        0x0 strstr.o
+ .bss           0x01622bb8        0x0 strtoul.o
+ .bss           0x01622bb8        0x0 ctype.o
+ .bss           0x01622bb8        0x0 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .bss           0x01622bb8        0x0 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .bss           0x01622bb8        0x4 ../../static_lib/libefuse.verify.a(mcp.o)
+                0x01622bb8                mcp_dscpt_addr
+ .bss           0x01622bbc        0x0 ../../static_lib/libefuse.verify.a(timer.o)
+ .bss           0x01622bbc        0x4 ../../static_lib/libefuse.verify.a(util.o)
+ .bss           0x01622bc0        0x0 ../../static_lib/libefuse.verify.a(efuse.o)
+ *(COMMON)
+                0x01622bc0                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x01622bc0                _bss_end__ = .
+                0x01622bc0                __bss_end__ = .
+                0x01622bc0                . = ALIGN (0x4)
+                0x01622bc0                . = SEGMENT_START ("ldata-segment", .)
+                0x01622bc0                . = ALIGN (0x4)
+                0x01622bc0                __end__ = .
+                0x01622bc0                _end = .
+                0x01622bc0                PROVIDE (end, .)
+                0x01622bc0                . = DATA_SEGMENT_END (.)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x41
+ *(.comment)
+ .comment       0x00000000       0x41 strlen.o
+                                 0x42 (size before relaxing)
+ .comment       0x00000000       0x42 strstr.o
+ .comment       0x00000000       0x42 strtoul.o
+ .comment       0x00000000       0x42 ctype.o
+ .comment       0x00000000       0x42 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .comment       0x00000000       0x42 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .comment       0x00000000       0x42 ../../static_lib/libefuse.verify.a(mcp.o)
+ .comment       0x00000000       0x42 ../../static_lib/libefuse.verify.a(timer.o)
+ .comment       0x00000000       0x42 ../../static_lib/libefuse.verify.a(util.o)
+ .comment       0x00000000       0x42 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.ARM.attributes
+                0x00000000       0x33
+ .ARM.attributes
+                0x00000000       0x25 temp_target_array.o
+ .ARM.attributes
+                0x00000025       0x25 start.o
+ .ARM.attributes
+                0x0000004a       0x3a strlen.o
+ .ARM.attributes
+                0x00000084       0x3a strstr.o
+ .ARM.attributes
+                0x000000be       0x3a strtoul.o
+ .ARM.attributes
+                0x000000f8       0x3a ctype.o
+ .ARM.attributes
+                0x00000132       0x3a ../../static_lib/libefuse.verify.a(verifymain.o)
+ .ARM.attributes
+                0x0000016c       0x3a ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .ARM.attributes
+                0x000001a6       0x3a ../../static_lib/libefuse.verify.a(mcp.o)
+ .ARM.attributes
+                0x000001e0       0x3a ../../static_lib/libefuse.verify.a(timer.o)
+ .ARM.attributes
+                0x0000021a       0x3a ../../static_lib/libefuse.verify.a(util.o)
+ .ARM.attributes
+                0x00000254       0x3a ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x158
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x20 start.o
+ .debug_aranges
+                0x00000020       0x20 strlen.o
+ .debug_aranges
+                0x00000040       0x20 strstr.o
+ .debug_aranges
+                0x00000060       0x20 strtoul.o
+ .debug_aranges
+                0x00000080       0x18 ctype.o
+ .debug_aranges
+                0x00000098       0x20 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_aranges
+                0x000000b8       0x20 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_aranges
+                0x000000d8       0x20 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_aranges
+                0x000000f8       0x20 ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_aranges
+                0x00000118       0x20 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_aranges
+                0x00000138       0x20 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x50ae
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000       0x7b start.o
+ .debug_info    0x0000007b       0xab strlen.o
+ .debug_info    0x00000126       0xcb strstr.o
+ .debug_info    0x000001f1      0x148 strtoul.o
+ .debug_info    0x00000339       0x52 ctype.o
+ .debug_info    0x0000038b      0xad0 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_info    0x00000e5b      0x8e9 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_info    0x00001744     0x1437 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_info    0x00002b7b      0x2ef ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_info    0x00002e6a      0xd54 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_info    0x00003bbe     0x14f0 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_abbrev   0x00000000     0x1462
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000       0x14 start.o
+ .debug_abbrev  0x00000014       0x74 strlen.o
+ .debug_abbrev  0x00000088       0x83 strstr.o
+ .debug_abbrev  0x0000010b       0xc0 strtoul.o
+ .debug_abbrev  0x000001cb       0x45 ctype.o
+ .debug_abbrev  0x00000210      0x339 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_abbrev  0x00000549      0x26c ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_abbrev  0x000007b5      0x3fe ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_abbrev  0x00000bb3      0x13f ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_abbrev  0x00000cf2      0x376 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_abbrev  0x00001068      0x3fa ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_line     0x00000000      0xfd6
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x00000000       0x50 start.o
+ .debug_line    0x00000050       0x3a strlen.o
+ .debug_line    0x0000008a       0x59 strstr.o
+ .debug_line    0x000000e3       0xe3 strtoul.o
+ .debug_line    0x000001c6       0x28 ctype.o
+ .debug_line    0x000001ee      0x1b8 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_line    0x000003a6      0x1c1 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_line    0x00000567      0x4a4 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_line    0x00000a0b      0x113 ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_line    0x00000b1e      0x188 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_line    0x00000ca6      0x330 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_frame    0x00000000      0x94c
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x20 strlen.o
+ .debug_frame   0x00000020       0x30 strstr.o
+ .debug_frame   0x00000050       0x34 strtoul.o
+ .debug_frame   0x00000084       0xc8 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_frame   0x0000014c      0x130 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_frame   0x0000027c      0x240 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_frame   0x000004bc       0x78 ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_frame   0x00000534      0x1b0 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_frame   0x000006e4      0x268 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_str      0x00000000      0xec3
+ *(.debug_str)
+ .debug_str     0x00000000      0x1bc strlen.o
+                                0x1ec (size before relaxing)
+ .debug_str     0x000001bc       0x10 strstr.o
+                                0x1ec (size before relaxing)
+ .debug_str     0x000001cc       0x33 strtoul.o
+                                0x20f (size before relaxing)
+ .debug_str     0x000001ff       0x11 ctype.o
+                                0x182 (size before relaxing)
+ .debug_str     0x00000210      0x1d4 ../../static_lib/libefuse.verify.a(verifymain.o)
+                                0x387 (size before relaxing)
+ .debug_str     0x000003e4      0x2ef ../../static_lib/libefuse.verify.a(cache_v7.o)
+                                0x50b (size before relaxing)
+ .debug_str     0x000006d3      0x1c9 ../../static_lib/libefuse.verify.a(mcp.o)
+                                0x49b (size before relaxing)
+ .debug_str     0x0000089c       0x83 ../../static_lib/libefuse.verify.a(timer.o)
+                                0x253 (size before relaxing)
+ .debug_str     0x0000091f      0x277 ../../static_lib/libefuse.verify.a(util.o)
+                                0x549 (size before relaxing)
+ .debug_str     0x00000b96      0x32d ../../static_lib/libefuse.verify.a(efuse.o)
+                                0x5ab (size before relaxing)
+
+.debug_loc      0x00000000     0x3966
+ *(.debug_loc)
+ .debug_loc     0x00000000       0x5b strlen.o
+ .debug_loc     0x0000005b       0xa5 strstr.o
+ .debug_loc     0x00000100      0x1ed strtoul.o
+ .debug_loc     0x000002ed      0x76b ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_loc     0x00000a58      0x513 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_loc     0x00000f6b     0x168a ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_loc     0x000025f5      0x17e ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_loc     0x00002773      0x672 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_loc     0x00002de5      0xb81 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000      0x630
+ *(.debug_ranges)
+ .debug_ranges  0x00000000       0x18 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_ranges  0x00000018       0x30 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_ranges  0x00000048      0x420 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_ranges  0x00000468       0x88 ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_ranges  0x000004f0       0x68 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_ranges  0x00000558       0xd8 ../../static_lib/libefuse.verify.a(efuse.o)
+
+.debug_macro
+ *(.debug_macro)
+
+.gnu.attributes
+ *(.gnu.attributes)
+
+.note.gnu.arm.ident
+ *(.note.gnu.arm.ident)
+
+/DISCARD/
+ *(.note.GNU-stack)
+ *(.gnu_debuglink)
+ *(.gnu.lto_*)
+OUTPUT(/home/fae/nas/svn/1295/trunk-6.0.0_r1/bootcode/uboot/examples/efuse_verify/out/efuse_verify elf32-littlearm)
