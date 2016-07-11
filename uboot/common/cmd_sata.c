@@ -158,9 +158,14 @@ int do_sata(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			ulong addr = simple_strtoul(argv[2], NULL, 16);
 			lbaint_t cnt = (lbaint_t) (simple_strtoul(argv[4], NULL, 16));
 			lbaint_t blk = (lbaint_t) (simple_strtoul(argv[3], NULL, 16));
-#if 0
+#if 1
+#ifdef CONFIG_SYS_64BIT_LBA
+			printf("\nSATA read: device %d block # %lld, count %lld ... ",
+				sata_curr_device, blk, cnt);
+#else
 			printf("\nSATA read: device %d block # %ld, count %ld ... ",
 				sata_curr_device, blk, cnt);
+#endif
 #else // workaround for invalid argument pass in printf
 			printf("\nSATA read: device %d block # ",
 				sata_curr_device);
@@ -180,9 +185,14 @@ int do_sata(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 			ulong addr = simple_strtoul(argv[2], NULL, 16);
 			lbaint_t cnt = (lbaint_t) (simple_strtoul(argv[4], NULL, 16));
 			lbaint_t blk = (lbaint_t) (simple_strtoul(argv[3], NULL, 16));
-#if 0 
+#if 1
+#ifdef CONFIG_SYS_64BIT_LBA
+			printf("\nSATA write: device %d block # %lld, count %lld ... ",
+				sata_curr_device, blk, cnt);
+#else
 			printf("\nSATA write: device %d block # %ld, count %ld ... ",
 				sata_curr_device, blk, cnt);
+#endif
 #else // workaround for invalid argument pass in printf
 			printf("\nSATA write: device %d block # ",
 				sata_curr_device);

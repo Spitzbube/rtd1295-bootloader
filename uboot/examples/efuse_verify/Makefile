@@ -57,6 +57,7 @@ TOP_DIR              = $(shell cd .; pwd)
 TOOLS_DIR            = $(TOP_DIR)/../flash_writer_u/tools
 SCRIPT_DIR           = $(TOOLS_DIR)/script
 GEN_RSA_PATTERN      = $(SCRIPT_DIR)/gen_rsa_pattern.pl
+GEN_LENGTH_HEADER    = $(SCRIPT_DIR)/gen_length_header.pl
 OUTPUT_PATH          = $(TOP_DIR)/out
 
 OPENSSL    = openssl
@@ -70,6 +71,7 @@ EFUSE_PROGRAMMER_FINAL   = $(TOP_DIR)/efuse_programmer.final
 EFUSE_PROGRAMMER_FINAL_ENC   = $(TOP_DIR)/efuse_programmer.final.enc
 EFUSE_PROGRAMMER_DIGEST_ENC  = $(TOP_DIR)/efuse_programmer.digest.enc
 EFUSE_PROGRAMMER_COMPLETE_ENC = $(TOP_DIR)/out/efuse_programmer.complete.enc
+EFUSE_PROGRAMMER_LENGTH_HEADER = $(TOP_DIR)/efuse_programmer.header
 BOOTCODE_UBOOT_TARGET       = $(TOP_DIR)/../../u-boot.bin
 TMP_RSA_OUT         = rsa_enc.bin
 REAL_RSA_OUT        = $(TOP_DIR)/msg.bin
@@ -110,6 +112,7 @@ DIS  := $(addsuffix .dis,$(ELF))
 SOBJS	:= temp_target_array.o
 SOBJS	+= start.o
 #COBJS	:= verifymain.o util.o  strlen.o strstr.o strtoul.o ctype.o mcp.o efuse.o timer.o cache_v7.o
+#GOBJS	:= verifymain.o util.o  mcp.o efuse.o timer.o cache_v7.o
 COBJS	:= strlen.o strstr.o strtoul.o ctype.o
 LIB	= $(obj)
 
@@ -166,6 +169,8 @@ b2a:
 clean:
 	-rm -f $(ELF) *.o temp_target_array.h *.bin *.map *.dis *.srec efuse_verify*.* efuse_programmer*.* efuse_programmer $(OUTPUT_PATH)/*
 	
+gen_lib:
+	$(AR) rcs $(STATIC_LIB) $(GOBJS)
 #########################################################################
 $(LIB):	$(obj).depend $(LIBOBJS)
 	$(call cmd_link_o_target, $(LIBOBJS))
@@ -187,5 +192,6 @@ $(obj)%.bin:	$(obj)%
 		cat $(EFUSE_PROGRAMMER) $(EFUSE_PROGRAMMER_PADDING) > $(EFUSE_PROGRAMMER_FINAL)
 		$(RTSSL_EXE) enc -e -aes_128_cbc -i $(EFUSE_PROGRAMMER_FINAL) -o $(EFUSE_PROGRAMMER_FINAL_ENC) -k `hexdump -e '8/1 "%02x"' $(AES_KEY_TARGET)`
 		$(call hwrsa-sign, $(RSA_KEY_FILE), $(EFUSE_PROGRAMMER_DIGEST), $(EFUSE_PROGRAMMER_DIGEST_ENC))
-		cat $(EFUSE_PROGRAMMER_FINAL_ENC) $(EFUSE_PROGRAMMER_DIGEST_ENC) > $(EFUSE_PROGRAMMER_COMPLETE_ENC)
+		$(GEN_LENGTH_HEADER) $(EFUSE_PROGRAMMER_FINAL_ENC) $(EFUSE_PROGRAMMER_LENGTH_HEADER) 
+		cat $(EFUSE_PROGRAMMER_LENGTH_HEADER) $(EFUSE_PROGRAMMER_FINAL_ENC) $(EFUSE_PROGRAMMER_DIGEST_ENC) > $(EFUSE_PROGRAMMER_COMPLETE_ENC)
 

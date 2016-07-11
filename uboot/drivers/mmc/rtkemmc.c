@@ -94,6 +94,8 @@ int swap_endian(UINT32 input);
 int gCurrentBootDeviceType=0;
 volatile unsigned int gCurrentBootMode=MODE_SD20;
 
+static int realErrTuning = 0;
+
 
 /**************************************************************************************
  * kylin mmc driver
@@ -306,7 +308,7 @@ int rtkemmc_send_status(u32* resp, uint show_msg, int bIgnore)
         	printf("MMC_SEND_STATUS fail\n");
     }else{
         UINT8 cur_state = R1_CURRENT_STATE(cmd.resp[0]);
-	*resp = cmd.resp[0];
+		*resp = cmd.resp[0];
 		if((show_msg)&&(!bIgnore))
 		{
 	            printf("get cur_state=");
@@ -736,24 +738,29 @@ int rtkemmc_get_mode_selection()
 //010: div4
 //011: div8
 
-void rtkemmc_set_speed( unsigned int level )
+void rtkemmc_set_wrapper_div( unsigned int level )
 {
    	u32 tmp_para;
     unsigned long flags;
 
-    MMCPRINTF("rtkemmc_set_speed; switch to level 0x%08x\n",level);
+    MMCPRINTF("rtkemmc_set_wrapper_div; switch to level 0x%08x\n",level);
 
     switch(level)
     {
         case 0:  
-            writel(0x2010, CR_EMMC_CKGEN_CTL);
-            break;
-        case 1:
             writel(0x2100, CR_EMMC_CKGEN_CTL);
             break;
-        case 2:
-        default :
+        case 1:
             writel(0x2010, CR_EMMC_CKGEN_CTL);
+            break;
+        case 2:
+			writel(0x2012, CR_EMMC_CKGEN_CTL);
+            break;
+		case 3:
+			writel(0x2013, CR_EMMC_CKGEN_CTL);
+            break;	
+        default :
+            printf("error wrapper div setting ! \n");
             break;          
     }
     sync();
@@ -1107,7 +1114,7 @@ RET_CMD:
 	CP15ISB;
 	sync();
 
-
+	
 	if ((ret_err = check_error(bIgnore))==0)
 	{
 		wait_done_timeout((UINT32 *)CR_EMMC_STATUS, 0x200, 0x0); 	
@@ -1118,6 +1125,10 @@ RET_CMD:
 	{
 		if (!bIgnore)
 			wait_done_timeout((UINT32 *)CR_EMMC_STATUS, 0x200, 0x0);
+		// bIgnore =1 is tuning case
+		else if (cmd_info->cmd->opcode == MMC_SEND_STATUS && (cr_readl(CR_EMMC_RINTSTS) & 0x8180) ){
+			realErrTuning = 1;
+		}
 		return ret_err;
 	}		
     return ret_err;
@@ -1510,6 +1521,8 @@ int rtkemmc_send_cmd18()
 	{
 		sts1_val = cr_readl(CR_EMMC_STATUS);
 		MMCPRINTF("[LY] status1 val=%02x\n", sts1_val);
+		udelay(200);
+		rtkemmc_stop_transmission(card,1);
 		card_stop();
 		polling_to_tran_state(MMC_CMD_READ_MULTIPLE_BLOCK,1);
 	}
@@ -1522,20 +1535,14 @@ int rtkemmc_send_cmd13()
 	e_device_type * card = &emmc_card;
 
 	#ifdef MMC_DEBUG
-	ret_err = rtkemmc_send_status(&sts_val, 1, 0);
+	ret_err = rtkemmc_send_status(&sts_val, 1, 1);
 	#else
-	ret_err = rtkemmc_send_status(&sts_val, 0, 0);
+	ret_err = rtkemmc_send_status(&sts_val, 0, 1);
 	#endif
-	if (ret_err)
-	{
-		sts_val = cr_readl(CR_EMMC_STATUS);
-		MMCPRINTF("[LY] status1 val=%02x\n", sts_val);
-		card_stop();
-		polling_to_tran_state(MMC_CMD_SEND_STATUS,1);
-	}
+	
 	return ret_err;
 }
-int mmc_send_cmd25()
+int rtkemmc_send_cmd25()
 {
 	int ret_err=0;
     struct rtk_cmd_info cmd_info;
@@ -1596,7 +1603,7 @@ int rtkemmc_Stream( unsigned int cmd_idx,UINT32 blk_addr, UINT32 dma_addr, UINT3
 	cr_writel(blk_addr,CR_EMMC_CMDARG);		
 	CP15ISB;
 	sync();
-
+	
 	cr_writel(cmd_idx, CR_EMMC_CMD);
 	CP15ISB;
 	sync();
@@ -1614,47 +1621,63 @@ int rtkemmc_Stream( unsigned int cmd_idx,UINT32 blk_addr, UINT32 dma_addr, UINT3
 	} 
 	else
 	{	//for tuning usage, fast quit method
-        	if ((CMD_IDX_MASK(cmd_idx)==MMC_READ_MULTIPLE_BLOCK) ||(CMD_IDX_MASK(cmd_idx)==MMC_WRITE_MULTIPLE_BLOCK) ){
-                	while ((cr_readl(CR_EMMC_RINTSTS)&0xffc2)==0);
-        	}
-        	else
-        	{
-                	while ((cr_readl(CR_EMMC_RINTSTS)&0xbfc6)==0);
-        	}
+    	if ((CMD_IDX_MASK(cmd_idx)==MMC_READ_MULTIPLE_BLOCK) ||(CMD_IDX_MASK(cmd_idx)==MMC_WRITE_MULTIPLE_BLOCK) ){
+        	while ((cr_readl(CR_EMMC_RINTSTS)&0xffc2)==0);
+    	}
+    	else
+    	{
+        	while ((cr_readl(CR_EMMC_RINTSTS)&0xbfc6)==0);
+    	}
 	}
 	
 
 	if (!bIgnore){
-	//read case : polling dma_done for safety
-	if (CMD_IDX_MASK(cmd_idx)==MMC_READ_SINGLE_BLOCK || CMD_IDX_MASK(cmd_idx)==MMC_READ_MULTIPLE_BLOCK ||
-		CMD_IDX_MASK(cmd_idx)==MMC_SEND_EXT_CSD || CMD_IDX_MASK(cmd_idx)==MMC_SEND_WRITE_PROT_TYPE) {
-#if 0 /* from CONFIG_SYS_TEXT_BASE to TEXT END */
-      /* CONFIG_SYS_TEXT_BASE : 0x0002_1000    */
-      /* TEXT END : .golden_section 0x000e0000 */
-		if (dma_addr >= 0x20000 && dma_addr < 0xe0000){
+		//read case : polling dma_done for safety
+		if (CMD_IDX_MASK(cmd_idx)==MMC_READ_SINGLE_BLOCK || CMD_IDX_MASK(cmd_idx)==MMC_READ_MULTIPLE_BLOCK ||
+			CMD_IDX_MASK(cmd_idx)==MMC_SEND_EXT_CSD || CMD_IDX_MASK(cmd_idx)==MMC_SEND_WRITE_PROT_TYPE) {
 
-			printf("panic: dma_addr = 0x%08x \n", dma_addr);
-			while(1);
+			if (dma_addr >= 0x20000 && dma_addr < 0xe0000){
+
+				printf("panic: dma_addr = 0x%08x \n", dma_addr);
+				while(1);
+			}
+			
+			wait_done_timeout((UINT32 *)CR_EMMC_ISR, 0x2, 0x2); //dma_done_int
+			cr_writel(0x2, CR_EMMC_ISR);
+			CP15ISB;
+			sync();
 		}
-#endif		
-		wait_done_timeout((UINT32 *)CR_EMMC_ISR, 0x2, 0x2); //dma_done_int
-		cr_writel(0x2, CR_EMMC_ISR);
-		CP15ISB;
-		sync();
 	}
+	//HS200 tuning case
+	if (bIgnore) {
+		if (check_error(bIgnore) == 0){ 
+			//no error
+			wait_done_timeout((UINT32 *)CR_EMMC_STATUS, 0x200, 0x0); 
+			return 0;
+		}
+		else{
+			if ((CMD_IDX_MASK(cmd_idx)==MMC_READ_MULTIPLE_BLOCK) && (cr_readl(CR_EMMC_RINTSTS) & 0xa0c0 )){
+				realErrTuning = 1;
+			}
+			else if ((CMD_IDX_MASK(cmd_idx)==MMC_WRITE_MULTIPLE_BLOCK) && (cr_readl(CR_EMMC_RINTSTS) & 0x8180)){
+				realErrTuning = 1;
+			}
+			return -1;
+		}
 	}
-
-	if ((ret_error = check_error(bIgnore))!=0){
-		if (!bIgnore){
+	 //normal case
+	else{
+		if ((ret_error = check_error(bIgnore))!=0){
 			wait_done_timeout((UINT32 *)CR_EMMC_STATUS, 0x200, 0x0); 
 			print_ip_desc();
+			return ret_error;
 		}
-		return ret_error;
+		else{
+			//no error
+			wait_done_timeout((UINT32 *)CR_EMMC_STATUS, 0x200, 0x0); 
+			return 0;
+		} 	
 	}
-	else{
-		wait_done_timeout((UINT32 *)CR_EMMC_STATUS, 0x200, 0x0); 
-		return 0;
-	} 	
 }
 
 /*******************************************************
@@ -2647,20 +2670,24 @@ int mmc_Tuning_HS200(){
 
 	rtkemmc_set_freq(0xaf);
 	rtkemmc_set_div(EMMC_CLOCK_DIV_NON); // 200MHZ/1 = 200MHZ
-	rtkemmc_set_pad_driving(0xff, 0xff,0xff,0xff);
+	rtkemmc_set_pad_driving(0xbb, 0xbb,0xbb,0xbb);
 	phase(0, 0);	//VP0, VP1 phas	
 	mdelay(5);
 	emmc_info_show();
 	sync();
+
+	card_stop();
+	
 	#ifdef MMC_DEBUG
-	MMCPRINTF("==============Start HS200 TX Tuning ==================\n");
+	MMCPRINTF("==============Start HS200 TX Tuning round 1==================\n");
 	#endif
 	for(i=0x0; i<0x20; i++){
 		phase(i, 0xff);
 		#ifdef MMC_DEBUG		
 		printf("phase =0x%x \n", i);
 		#endif
-		if(mmc_send_cmd25() != 0)
+		realErrTuning = 0;
+		if(rtkemmc_send_cmd13() != 0 && realErrTuning)
 		{
 			TX_window= TX_window&(~(1<<i));
 		}
@@ -2672,26 +2699,28 @@ int mmc_Tuning_HS200(){
 	MMCPRINTF("TX phase pass from 0x%x to=0x%x \n", TX_pass_start, TX_pass_end);
 	MMCPRINTF("TX_best= 0x%x \n", TX_best);
 	#endif
-	printf("TX_WINDOW=0x%x, TX_best=0x%x \n",TX_window, TX_best);
+	printf("TEMP TX_WINDOW=0x%x, TX_best=0x%x \n",TX_window, TX_best);
 	if (TX_window == 0x0)
 	{
 		printf("[LY] HS200 TX tuning fail \n");
 		return -1;
 	}
 	phase(TX_best, 0xff);
+	
 	#ifdef MMC_DEBUG
 	MMCPRINTF("++++++++++++++++++ Start HS200 RX Tuning ++++++++++++++++++\n");
 	#endif
-	i=0;
+	
 	for(i=0x0; i<0x20; i++){
 		phase(0xff, i);
 		#ifdef MMC_DEBUG		
 		MMCPRINTF("phase =0x%x \n", i);
 		#endif
-		if(rtkemmc_send_cmd18()!=0)
+		realErrTuning = 0;
+		if(rtkemmc_send_cmd18()!=0 && realErrTuning)
 		{
 			RX_window= RX_window&(~(1<<i));
-			}
+		}
 		MMCPRINTF("%s:%u ... \n", __func__,__LINE__);
 	}
 	RX_best = search_best(RX_window,0x20);
@@ -2707,10 +2736,33 @@ int mmc_Tuning_HS200(){
 		printf("[LY] HS200 RX tuning fail \n");
 		return -2;
 	}
-	phase(TX_best, 0xff);
 	phase( 0xff, RX_best);
+	
+	#ifdef MMC_DEBUG
+	MMCPRINTF("==============Start HS200 TX Tuning round 2==================\n");
+	#endif
+	TX_window=0xffffffff;
+	for(i=0x0; i<0x20; i++){
+		phase(i, 0xff);
+		#ifdef MMC_DEBUG		
+		printf("phase =0x%x \n", i);
+		#endif
+		realErrTuning = 0;
+		if(rtkemmc_send_cmd25() != 0 && realErrTuning)
+		{
+			TX_window= TX_window&(~(1<<i));
+		}
+	}
+	TX_best = search_best(TX_window,0x20);
+	printf("TX_WINDOW=0x%x, TX_best=0x%x \n",TX_window, TX_best);
+	if (TX_window == 0x0)
+	{
+		printf("[LY] HS200 TX tuning fail \n");
+		return -1;
+	}
+	phase(TX_best, 0xff);
+	
 	sync();
-
 	card_stop();
 	polling_to_tran_state(MMC_CMD_WRITE_MULTIPLE_BLOCK,1);
 
@@ -2741,7 +2793,7 @@ int mmc_Tuning_DDR50(){
 
 	rtkemmc_set_freq(0x46); //80Mhz
 	sync();
-	rtkemmc_set_speed(0);    //no wrapper divider
+	rtkemmc_set_wrapper_div(0);    //no wrapper divider
 	sync();
 	rtkemmc_set_pad_driving(0x33, 0x33,0x33,0x33);
 
@@ -2755,9 +2807,9 @@ int mmc_Tuning_DDR50(){
 		#ifdef MMC_DEBUG
 		MMCPRINTF("phase (%d) - VP=0x%08x\n", i,REG32(PLL_EMMC1));
 		#endif
-		if (mmc_send_cmd25()!=0)
+		if (rtkemmc_send_cmd25()!=0)
 		{
-				TX_window= TX_window&(~(1<<i));
+			TX_window= TX_window&(~(1<<i));
 		}
 	}
 	TX_best = search_best(TX_window,0x20);
@@ -2817,7 +2869,7 @@ int mmc_Select_SDR50_Push_Sample(){
 	#endif
 
 	rtkemmc_set_freq(0x46); //80Mhz
-	rtkemmc_set_speed(0);    //no wrapper divider
+	rtkemmc_set_wrapper_div(0);    //no wrapper divider
     rtkemmc_set_div(EMMC_CLOCK_DIV_2); //80/2 = 40Mhz
 
 	mdelay(5);
@@ -2825,14 +2877,14 @@ int mmc_Select_SDR50_Push_Sample(){
 	#ifdef MMC_DEBUG
 	MMCPRINTF("==============Select SDR50 Push Point ==================\n");
 	#endif
-	if ((err = mmc_send_cmd25())==0)
+	if ((err = rtkemmc_send_cmd25())==0)
 	{
 		MMCPRINTF("Output at FALLING edge of SDCLK \n");
 	}
 	else
 	{
 		sync();
-		if ((err = mmc_send_cmd25())==0)
+		if ((err = rtkemmc_send_cmd25())==0)
 		{
 			MMCPRINTF("Output is ahead by 1/4 SDCLK period \n");		
 		}

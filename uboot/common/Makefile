@@ -50,7 +50,7 @@ COBJS-y += cmd_nvedit.o
 COBJS-y += cmd_version.o
 
 # print64
-COBJS-y += print64.o
+#COBJS-y += print64.o
 
 # rtk platform utility
 COBJS-$(CONFIG_CMD_RTKSPI) += cmd_rtkspi.o
@@ -244,7 +244,7 @@ SRCS	:= $(COBJS:.o=.c) $(XCOBJS:.o=.c)
 OBJS	:= $(addprefix $(obj),$(COBJS))
 XOBJS	:= $(addprefix $(obj),$(XCOBJS))
 
-CPPFLAGS += -I..
+#CFLAGS += -save-temps
 
 cmd_link_o_target_m = $(if $(strip $1),\
 			$(LD) $(LDFLAGS) -r -o $@ $1 $(STATIC_LIB),\

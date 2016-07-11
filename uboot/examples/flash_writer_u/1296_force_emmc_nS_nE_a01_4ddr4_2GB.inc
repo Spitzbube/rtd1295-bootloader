@@ -7,24 +7,14 @@ Board_CPU =                 RTD1295
 ##Board_Chip_Rev =          [1295]
 Board_Chip_Rev =            1295
 
-##### QA Board Ver.A 4Layer HWSETTING selection note ##############
-#DC1: 512MB x 2
-#Speed: 1600
-#####################################################################
-#Board_HWSETTING =           RTD1195.hwsetting_BGA_2DDR.4Gb.s1600_v1
-
-##### QA Board Ver.A 4Layer HWSETTING selection note ##############
-#DC1: 512MB x 2
-#Speed: 1333
-#####################################################################
-Board_HWSETTING =           RTD1295_hwsetting_BOOT_2DDR3_4Gb_s1866
+Board_HWSETTING =           RTD1296_hwsetting_BOOT_4DDR4_4Gb_s1866
 
 
 # ********************************************************************
 # Config
 # ********************************************************************
 # flag                      value
-# ********************************************************************        
+# ********************************************************************
 ##Board_Security =         [TRUE | FALSE]
 Config_Encryption =        FALSE
 ##Config_NOR_BOOT_NAND =   [TRUE | FALSE]
@@ -36,7 +26,7 @@ Config_SPI_BOOT_FISRT =    SPI
 ##Config_SPI_BOOTCODE3  =  [TRUE | FALSE]
 #Config_SPI_BOOTCODE3 =     FALSE
 ##Config_FLASH_TYPE = [SPI | EMMC | NAND]
-Config_FLASH_TYPE =	NULL
+Config_FLASH_TYPE =NULL
 
 # ********************************************************************
 # config password to allow input from UART when secure boot (maximum 255)
@@ -46,6 +36,7 @@ Config_FLASH_TYPE =	NULL
 ##Config_Secure_Disable_Uart = [TRUE | FALSE]
 ##Config_Secure_Disable_Uart =   FALSE
 ##Config_Secure_Uart =  "1234512345123451234512345"
+
 
 # ********************************************************************
 # RSA key file & AES key file (under bin/image)
@@ -81,6 +72,14 @@ Config_Jumper_Mode = TRUE
 Config_Uboot64_Mode = TRUE
 
 # ********************************************************************
+# Config for Simulation Mode - only use BOOTCODE_UBOOT_TARGET_SIM, don't ignore RSA calculation
+# ********************************************************************
+# flag                      value
+# ********************************************************************
+##Config_Uboot_Sim_Mode = [TRUE | FALSE]
+Config_Uboot_Sim_Mode =  FALSE
+
+# ********************************************************************
 # Config for SecureBoot Loader & Secure OS
 # ********************************************************************
 # flag                      value
@@ -88,10 +87,10 @@ Config_Uboot64_Mode = TRUE
 ##Config_FSBL = [TRUE | FALSE]
 Config_FSBL = TRUE
 Config_FSBL_File_Name = fsbl-loader-00.00.bin
-//Config_FSBL_OS = TRUE
-//Config_FSBL_OS_File_Name = fsbl-os-00.00.bin
-//Config_BL31 = TRUE
-//Config_BL31_File_Name = bl31.bin
+Config_FSBL_OS = TRUE
+Config_FSBL_OS_File_Name = fsbl-os-00.00.bin
+Config_BL31 = TRUE
+Config_BL31_File_Name = bl31.bin
 
 # ********************************************************************
 # Boot parameters
@@ -135,7 +134,9 @@ Rescue_File_Name =          vmlinux.rescue.phoenix.bin
 # ********************************************************************
 # flag                      value
 # ********************************************************************
-#User_Defined =               FPGA "1"
-#User_Defined =               FPGA_BOOT_SPI "1"
-#User_Defined =               ROMCODE_ON_SPI
-User_Defined =               NOT_ERASE_SPI_DATA_IN_FIRST_128KB
+#User_Defined =          FPGA "1"
+#User_Defined = 	 ROMCODE_ON_SPI
+User_Defined = 		 CR_MEMORY_DUMP "1"
+User_Defined =           FPGA_BOOT_EMMC "1"
+
+

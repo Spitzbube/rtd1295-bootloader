@@ -87,7 +87,7 @@
 	#define CONFIG_FLASH_WRITER_SETTING            "1295_force_nand_nS_nE"
 	#define CONFIG_CHIP_ID            			   "rtd1295"
 	#define CONFIG_CUSTOMER_ID            		   "demo" 
-	#define CONFIG_CHIP_TYPE            		   "0000"
+	#define CONFIG_CHIP_TYPE            		   "0001"
 
 	/* Factory*/	
 	#define CONFIG_FACTORY_START_BLK	0x60		/* For NAND */
@@ -112,7 +112,7 @@
 	#define CONFIG_FLASH_WRITER_SETTING            "1295_force_spi_nS_nE"
 	#define CONFIG_CHIP_ID            			   "rtd1295"
 	#define CONFIG_CUSTOMER_ID            		   "demo" 
-	#define CONFIG_CHIP_TYPE            		   "0000"
+	#define CONFIG_CHIP_TYPE            		   "0001"
 
 	#define CONFIG_BOOTCODE2_BASE                  0x00080000
 	#define CONFIG_DTS_BASE                        0x000F0000

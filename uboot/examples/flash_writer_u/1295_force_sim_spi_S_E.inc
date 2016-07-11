@@ -196,9 +196,8 @@ Config_Uboot_Sim_Mode =  TRUE
 # ********************************************************************
 ##Config_FSBL = [TRUE | FALSE]
 Config_FSBL = TRUE
-Config_FSBL_OS = TRUE
-Config_FSBL_File_Name = fsbl-loader-00.00.bin
-Config_FSBL_OS_File_Name = fsbl-os-00.00.bin
+Config_FSBL_OS = FALSE
+Config_FSBL_File_Name = pseudo-fsbl-loader-00.00.bin
 
 # ********************************************************************
 # Boot parameters

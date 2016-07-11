@@ -407,7 +407,8 @@ int do_RSA(unsigned char* signature_addr, unsigned char* rsa_addr, unsigned char
         flush_cache(output_addr, output_addr+SHA256_SIZE);
         reverse_rsa_signature(output_addr);
         flush_cache(output_addr, output_addr+SHA256_SIZE);
-        return 0;	
+
+        return output_addr;	
 }
 int SHA256_hash(unsigned char * src_addr, unsigned int length, unsigned char *dst_addr, unsigned int iv[8])
 {
@@ -451,7 +452,7 @@ int SHA256_hash(unsigned char * src_addr, unsigned int length, unsigned char *ds
 	return do_mcp(dscpt);
 }
 
-int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned char * ref_sha256, unsigned int do_recovery )
+int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned char * ref_sha256, unsigned int do_recovery, unsigned char *rsa_key_addr)
 {
 	unsigned int ret = 0;
 	unsigned char * hash1; // hash value calculated by CP engine
@@ -472,12 +473,15 @@ int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned 
 		#endif
 			{
 				memcpy(signature_key,rsa_key_2048_little,sizeof(rsa_key_2048_little));
+                sys_rsa_key_address =(unsigned int)signature_key;
 			}
 			else
 			{
-				OTP_Get_Byte(0,signature_key,256);	
+				//OTP_Get_Byte(0,signature_key,256);	
+				if(rsa_key_addr)
+                    sys_rsa_key_address =(unsigned int)rsa_key_addr;
 			}
-			sys_rsa_key_address =(unsigned int)signature_key;
+			
 		#else // big endian
 			sys_rsa_key_address = (unsigned int)rsa_key_2048_big;
 		#endif
@@ -495,12 +499,11 @@ int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned 
 		return -1;
 	}
 
-	rtk_hexdump("hash 1", hash1, 32 );
+    flush_cache((unsigned int) hash1, 32);
+	//rtk_hexdump("hash 1", hash1, 32 );
 
 	if( do_recovery ) {
-		//rtk_hexdump("signature form ref_sha256", ref_sha256, 256 );
-		//rtk_hexdump("RSA key", (unsigned char *)sys_rsa_key_address, 256 );
-		flush_cache((unsigned int) sys_rsa_key_address, SECURE_SIGN2HASH_BUF);
+		flush_cache((unsigned int) sys_rsa_key_address, 256);
 		ret = do_RSA( signature_key_address, sys_rsa_key_address, SECURE_SIGN2HASH_BUF );
 		if( ret == NULL ) {
 			printf("[ERR] %s: do_RSA return NULL\n", __FUNCTION__ );
@@ -509,9 +512,9 @@ int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned 
 		hash2 = (unsigned char *)ret;
 	}
 
-	rtk_hexdump("hash 2", hash2, 32 );
-	flush_cache((unsigned int) hash1, 32);
-	flush_cache((unsigned int) hash2, 32);
+    flush_cache((unsigned int) hash2, 32);
+	//rtk_hexdump("hash 2", hash2, 32 );
+
 	ret = memcmp(hash1, hash2, 32);
 	if( ret ) {
 		printf("[ERR] %s: hash value not match\n", __FUNCTION__ );

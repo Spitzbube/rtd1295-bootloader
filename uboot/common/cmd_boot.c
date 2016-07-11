@@ -141,6 +141,7 @@ static int rtk_call_bootm(void);
 int decrypt_image(char *src, char *dst, uint length, uint *key);
 int rtk_get_secure_boot_type(void);
 void rtk_hexdump( const char * str, unsigned char * pcBuf, unsigned int length );
+void GetKeyFromSRAM(unsigned int sram_addr, unsigned char* key, unsigned int length);
 
 static void reset_shared_memory(void);
 
@@ -210,12 +211,14 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 {
 	char tmpbuf[128];
 	unsigned char ks[16],kh[16],kimg[16];
+    unsigned char aes_key[16],rsa_key[256];
+    unsigned int real_body_size = 0;
 #ifdef CONFIG_CMD_KEY_BURNING
 	unsigned int * Kh_key_ptr = NULL; 
 #else
 	unsigned int * Kh_key_ptr = Kh_key_default; 
 #endif
-	unsigned int img_truncated_size = RSA_SIGNATURE_LENGTH; // install_a will append 256-byte signature data to it
+	unsigned int img_truncated_size = RSA_SIGNATURE_LENGTH*2+NP_INV32_LENGTH; // install_a will append 256-byte signature data to it
 	int ret;
 	unsigned int image_size=0;
 	
@@ -234,6 +237,14 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 	memset(kh,0x00,16);
 	memset(kimg,0x00,16);
 
+    memset(aes_key,0x00,16);
+	memset(rsa_key,0x00,256);
+
+    GetKeyFromSRAM(KH_P_SRAM_ADDR, aes_key, AES_KEY_SIZE);
+    GetKeyFromSRAM(RSA_KEY_FW_SRAM_ADDR, rsa_key, RSA_KEY_SIZE);
+    flush_cache((unsigned int) aes_key, AES_KEY_SIZE);
+    flush_cache((unsigned int) rsa_key, RSA_KEY_SIZE);
+
 #ifdef CONFIG_CMD_KEY_BURNING
 	OTP_Get_Byte(OTP_K_S, ks, 16);
 	OTP_Get_Byte(OTP_K_H, kh, 16);
@@ -245,19 +256,20 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 	flush_cache((unsigned int) kimg, 16);
 	sync();
 	
-	Kh_key_ptr = kimg;    
-	Kh_key_ptr[0] = swap_endian(Kh_key_ptr[0]);
-	Kh_key_ptr[1] = swap_endian(Kh_key_ptr[1]);
-	Kh_key_ptr[2] = swap_endian(Kh_key_ptr[2]);
-	Kh_key_ptr[3] = swap_endian(Kh_key_ptr[3]);
-	flush_cache((unsigned int) kimg, 16);
+	//Kh_key_ptr = kimg;    
+	//Kh_key_ptr[0] = swap_endian(Kh_key_ptr[0]);
+	//Kh_key_ptr[1] = swap_endian(Kh_key_ptr[1]);
+	//Kh_key_ptr[2] = swap_endian(Kh_key_ptr[2]);
+	//Kh_key_ptr[3] = swap_endian(Kh_key_ptr[3]);
+    Kh_key_ptr = aes_key; 
+	flush_cache((unsigned int) aes_key, 16);
 								
-		// decrypt image
+    // decrypt image
 	printf("to decrypt...\n");						
 	flush_cache((unsigned int) ENCRYPTED_FW_ADDR, image_size);
 	if (decrypt_image((char *)ENCRYPTED_FW_ADDR,
 		(char *)target,
-		image_size,
+		image_size - img_truncated_size,
 		Kh_key_ptr))
 	{
 		printf("decrypt image:%s error!\n", filename);
@@ -269,12 +281,16 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 	memset(kh,0x00,16);
 	memset(kimg,0x00,16);
 		
-
+    copy_memory(target + image_size - img_truncated_size, ENCRYPTED_FW_ADDR + image_size - img_truncated_size, img_truncated_size);
 	flush_cache((unsigned int) target, image_size);
+	real_body_size = (UINT32)(REG32(target + (image_size - img_truncated_size) - 4));
+    real_body_size = swap_endian(real_body_size);
+	real_body_size /= 8;
+    
 	ret = Verify_SHA256_hash( (unsigned char *)target,
-							image_size - img_truncated_size,
+							real_body_size,
 							(unsigned char *)(target + image_size - img_truncated_size),
-							1 );						  
+							1, rsa_key);						  
 	if( ret < 0 ) {
 		printf("[ERR] %s: verify hash fail(%d)\n", __FUNCTION__, ret );
 		return RTK_PLAT_ERR_READ_FW_IMG;
@@ -657,6 +673,17 @@ int decrypt_image(char *src, char *dst, uint length, uint *key)
 
 	printf("decrypt from 0x%08x to 0x%08x, len:0x%08x\n", (uint)src, (uint)dst, length);
 
+    if (length & 0xf) {
+        printf("%s %d, fail\n", __FUNCTION__, __LINE__);
+        return -1;
+    }
+
+    if (AES_ECB_decrypt((uchar *)src, length, (uchar *)dst, key)) {
+		printf("%s %d, fail\n", __FUNCTION__, __LINE__);
+		return -1;
+	}
+
+#if 0
 	// get short block size
 	sblock_len = length & 0xf;
 
@@ -664,6 +691,7 @@ int decrypt_image(char *src, char *dst, uint length, uint *key)
 		printf("%s %d, fail\n", __FUNCTION__, __LINE__);
 		return -1;
 	}
+	
 
 	// handle short block (<16B)
 	if (sblock_len) {
@@ -680,6 +708,7 @@ int decrypt_image(char *src, char *dst, uint length, uint *key)
 		for (i = 0; i < sblock_len; i++)
 			sblock_dst[i] ^= sblock_src[i];
 	}
+#endif
 
 	return 0;
 }
@@ -1175,6 +1204,18 @@ int rtk_preload_bootimages_sata(void)
 #endif // CONFIG_RTK_SATA
 
 #endif // CONFIG_PRELOAD_BOOT_IMAGES
+
+void GetKeyFromSRAM(unsigned int sram_addr, unsigned char* key, unsigned int length)
+{
+        #define REG8( addr )		(*(volatile unsigned char*) (addr))
+
+        int i = 0;
+ 
+        for(i = 0; i < length; i++) {
+            *(key + i) = REG8(sram_addr + i);
+        }
+}
+
 /*
  * Use firmware description table to read images from eMMC flash.
  */
@@ -1204,6 +1245,8 @@ int rtk_plat_read_fw_image_from_eMMC(
 #endif
 	unsigned int secure_mode;
 	unsigned char ks[16],kh[16],kimg[16];
+    unsigned char aes_key[16];
+    unsigned char rsa_key[256];
 #ifdef CONFIG_CMD_KEY_BURNING
 	unsigned int * Kh_key_ptr = NULL; 
 #else
@@ -1224,7 +1267,7 @@ int rtk_plat_read_fw_image_from_eMMC(
 	mcp_dscpt_addr = 0;
 
 	secure_mode = rtk_get_secure_boot_type();
-	img_truncated_size = RSA_SIGNATURE_LENGTH;
+	img_truncated_size = RSA_SIGNATURE_LENGTH*2+NP_INV32_LENGTH;
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
@@ -1304,6 +1347,12 @@ int rtk_plat_read_fw_image_from_eMMC(
 						printf("Rescue ROOTFS:\n");
 #ifdef NAS_ENABLE
 						initrd_size = this_entry->length;
+						if(secure_mode != NONE_SECURE_BOOT)
+						{
+							initrd_size -= img_truncated_size;
+							/* Pad 1 ~ 64 bytes by do_sha256 */
+							initrd_size -= 64;
+						}
 #endif
 						break;
 
@@ -1574,12 +1623,43 @@ int rtk_plat_read_fw_image_from_eMMC(
 				{
 					if (secure_mode == RTK_SECURE_BOOT)
 					{       
+						unsigned int real_body_size = 0;
 						//rtk_hexdump("the first 32-byte encrypted data", (unsigned char *)mem_layout.encrpyted_addr, 32);
 						//rtk_hexdump("the last 512-byte encrypted data", (unsigned char *)(ENCRYPTED_LINUX_KERNEL_ADDR+this_entry->length-512), 512);
 
                         memset(ks,0x00,16);
                         memset(kh,0x00,16);
                         memset(kimg,0x00,16);
+                       
+                        memset(aes_key, 0x00, 16);
+                        memset(rsa_key, 0x00, 256);
+
+                        switch(this_entry->type) 
+                        {
+                            case FW_TYPE_KERNEL:                           
+                            case FW_TYPE_RESCUE_ROOTFS:                   
+                            case FW_TYPE_KERNEL_ROOTFS:                          
+                            case FW_TYPE_AUDIO:
+                                GetKeyFromSRAM(KH_P_SRAM_ADDR, aes_key, AES_KEY_SIZE);
+                                GetKeyFromSRAM(RSA_KEY_FW_SRAM_ADDR, rsa_key, RSA_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, AES_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, RSA_KEY_SIZE);
+                                sync();
+                                //rtk_hexdump("kh_p : ", aes_key, AES_KEY_SIZE);
+                                //rtk_hexdump("rsa_key_fw : ", rsa_key, RSA_KEY_SIZE);
+                                break;
+                            case FW_TYPE_TEE:
+                                GetKeyFromSRAM(KX_P_SRAM_ADDR, aes_key, AES_KEY_SIZE);
+                                GetKeyFromSRAM(RSA_KEY_TEE_SRAM_ADDR, rsa_key, RSA_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, AES_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, RSA_KEY_SIZE);
+                                sync();
+                                //rtk_hexdump("kx_p : ", aes_key, 16);
+                                //rtk_hexdump("rsa_key_tee : ", rsa_key, RSA_KEY_SIZE);
+                                break;
+                            default:
+                                break;
+                        }
 
 #ifdef CONFIG_CMD_KEY_BURNING
                         OTP_Get_Byte(OTP_K_S, ks, 16);
@@ -1593,20 +1673,19 @@ int rtk_plat_read_fw_image_from_eMMC(
                         sync();
 
                         Kh_key_ptr = kimg;
-                        //rtk_hexdump("kimg key : ", (unsigned char *)kimg, 16);
-                        Kh_key_ptr[0] = swap_endian(Kh_key_ptr[0]);
-                        Kh_key_ptr[1] = swap_endian(Kh_key_ptr[1]);
-                        Kh_key_ptr[2] = swap_endian(Kh_key_ptr[2]);
-                        Kh_key_ptr[3] = swap_endian(Kh_key_ptr[3]);
-                        //rtk_hexdump("Kh_key_ptr : ", (unsigned char *)Kh_key_ptr, 16);
-						flush_cache((unsigned int) kimg, 16);
+                        Kh_key_ptr = aes_key;
+                        //Kh_key_ptr[0] = swap_endian(Kh_key_ptr[0]);
+                        //Kh_key_ptr[1] = swap_endian(Kh_key_ptr[1]);
+                        //Kh_key_ptr[2] = swap_endian(Kh_key_ptr[2]);
+                        //Kh_key_ptr[3] = swap_endian(Kh_key_ptr[3]);
+						flush_cache((unsigned int) aes_key, 16);
                                                 
 						// decrypt image
 						printf("to decrypt...\n");						
 						flush_cache((unsigned int) mem_layout.encrpyted_addr, this_entry->length);
 						if (decrypt_image((char *)mem_layout.encrpyted_addr,
 							(char *)mem_layout.decrypted_addr,
-							this_entry->length,
+							this_entry->length  - img_truncated_size,
 							Kh_key_ptr))
 						{
 							printf("decrypt image(%d) error!\n", this_entry->type);
@@ -1622,17 +1701,24 @@ int rtk_plat_read_fw_image_from_eMMC(
 
 						//reverse_signature( (unsigned char *)(mem_layout.decrypted_addr + imageSize - img_truncated_size) );
 
+                        copy_memory(mem_layout.decrypted_addr + this_entry->length - img_truncated_size, mem_layout.encrpyted_addr + this_entry->length - img_truncated_size, img_truncated_size);
+                    	flush_cache((unsigned int) mem_layout.decrypted_addr, this_entry->length);
+
+                        real_body_size = (UINT32)(REG32(mem_layout.decrypted_addr + (this_entry->length - img_truncated_size) - 4));
+                        real_body_size = swap_endian(real_body_size);
+                    	real_body_size /= 8;
+
 						flush_cache((unsigned int) mem_layout.decrypted_addr, this_entry->length);
 						ret = Verify_SHA256_hash( (unsigned char *)mem_layout.decrypted_addr,
-												  this_entry->length - img_truncated_size,
+												  real_body_size,
 												  (unsigned char *)(mem_layout.decrypted_addr + this_entry->length - img_truncated_size),
-												  1 );						  
+												  1, rsa_key);						  
 						if( ret < 0 ) {
 							printf("[ERR] %s: verify hash fail(%d)\n", __FUNCTION__, ret );
 							return RTK_PLAT_ERR_READ_FW_IMG;
 						}
 
-						imageSize = imageSize - img_truncated_size - SHA256_SIZE;
+						//imageSize = imageSize - img_truncated_size - SHA256_SIZE;
 					}
 				}
 
@@ -1745,6 +1831,8 @@ int rtk_plat_read_fw_image_from_SATA(
 #endif // mark secure boot
 	unsigned int secure_mode;
 	unsigned char ks[16],kh[16],kimg[16];
+    unsigned char aes_key[16];
+    unsigned char rsa_key[256];
 #ifdef CONFIG_CMD_KEY_BURNING
 	unsigned int * Kh_key_ptr = NULL; 
 #else
@@ -1764,7 +1852,7 @@ int rtk_plat_read_fw_image_from_SATA(
 	mcp_dscpt_addr = 0;
 
 	secure_mode = rtk_get_secure_boot_type();
-	img_truncated_size = RSA_SIGNATURE_LENGTH;
+	img_truncated_size = RSA_SIGNATURE_LENGTH*2+NP_INV32_LENGTH;
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
@@ -2041,12 +2129,43 @@ int rtk_plat_read_fw_image_from_SATA(
 				{
 					if (secure_mode == RTK_SECURE_BOOT)
 					{       
+						unsigned int real_body_size = 0;
 						//rtk_hexdump("the first 32-byte encrypted data", (unsigned char *)mem_layout.encrpyted_addr, 32);
 						//rtk_hexdump("the last 512-byte encrypted data", (unsigned char *)(ENCRYPTED_LINUX_KERNEL_ADDR+this_entry->length-512), 512);
 
                         memset(ks,0x00,16);
                         memset(kh,0x00,16);
                         memset(kimg,0x00,16);
+                       
+                        memset(aes_key, 0x00, 16);
+                        memset(rsa_key, 0x00, 256);
+
+                        switch(this_entry->type) 
+                        {
+                            case FW_TYPE_KERNEL:                           
+                            case FW_TYPE_RESCUE_ROOTFS:                   
+                            case FW_TYPE_KERNEL_ROOTFS:                          
+                            case FW_TYPE_AUDIO:
+                                GetKeyFromSRAM(KH_P_SRAM_ADDR, aes_key, AES_KEY_SIZE);
+                                GetKeyFromSRAM(RSA_KEY_FW_SRAM_ADDR, rsa_key, RSA_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, AES_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, RSA_KEY_SIZE);
+                                sync();
+                                //rtk_hexdump("kh_p : ", aes_key, AES_KEY_SIZE);
+                                //rtk_hexdump("rsa_key_fw : ", rsa_key, RSA_KEY_SIZE);
+                                break;
+                            case FW_TYPE_TEE:
+                                GetKeyFromSRAM(KX_P_SRAM_ADDR, aes_key, AES_KEY_SIZE);
+                                GetKeyFromSRAM(RSA_KEY_TEE_SRAM_ADDR, rsa_key, RSA_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, AES_KEY_SIZE);
+                                flush_cache((unsigned int) aes_key, RSA_KEY_SIZE);
+                                sync();
+                                //rtk_hexdump("kx_p : ", aes_key, 16);
+                                //rtk_hexdump("rsa_key_tee : ", rsa_key, RSA_KEY_SIZE);
+                                break;
+                            default:
+                                break;
+                        }
 
 #ifdef CONFIG_CMD_KEY_BURNING
                         OTP_Get_Byte(OTP_K_S, ks, 16);
@@ -2060,20 +2179,21 @@ int rtk_plat_read_fw_image_from_SATA(
                         sync();
 
                         Kh_key_ptr = kimg;
-                        //rtk_hexdump("kimg key : ", (unsigned char *)kimg, 16);
-                        Kh_key_ptr[0] = swap_endian(Kh_key_ptr[0]);
-                        Kh_key_ptr[1] = swap_endian(Kh_key_ptr[1]);
-                        Kh_key_ptr[2] = swap_endian(Kh_key_ptr[2]);
-                        Kh_key_ptr[3] = swap_endian(Kh_key_ptr[3]);
-                        //rtk_hexdump("Kh_key_ptr : ", (unsigned char *)Kh_key_ptr, 16);
-						flush_cache((unsigned int) kimg, 16);
+                        Kh_key_ptr = aes_key;
+                        //Kh_key_ptr[0] = swap_endian(Kh_key_ptr[0]);
+                        //Kh_key_ptr[1] = swap_endian(Kh_key_ptr[1]);
+                        //Kh_key_ptr[2] = swap_endian(Kh_key_ptr[2]);
+                        //Kh_key_ptr[3] = swap_endian(Kh_key_ptr[3]);
+						flush_cache((unsigned int) aes_key, 16);
                                                 
 						// decrypt image
-						printf("to decrypt...\n");						
+						printf("to decrypt...\n");
+                        
 						flush_cache((unsigned int) mem_layout.encrpyted_addr, this_entry->length);
+                        
 						if (decrypt_image((char *)mem_layout.encrpyted_addr,
 							(char *)mem_layout.decrypted_addr,
-							this_entry->length,
+							this_entry->length  - img_truncated_size,
 							Kh_key_ptr))
 						{
 							printf("decrypt image(%d) error!\n", this_entry->type);
@@ -2089,17 +2209,24 @@ int rtk_plat_read_fw_image_from_SATA(
 
 						//reverse_signature( (unsigned char *)(mem_layout.decrypted_addr + imageSize - img_truncated_size) );
 
+                        copy_memory(mem_layout.decrypted_addr + this_entry->length - img_truncated_size, mem_layout.encrpyted_addr + this_entry->length - img_truncated_size, img_truncated_size);
+                    	flush_cache((unsigned int) mem_layout.decrypted_addr, this_entry->length);
+
+                        real_body_size = (UINT32)(REG32(mem_layout.decrypted_addr + (this_entry->length - img_truncated_size) - 4));
+                        real_body_size = swap_endian(real_body_size);
+                    	real_body_size /= 8;
+
 						flush_cache((unsigned int) mem_layout.decrypted_addr, this_entry->length);
 						ret = Verify_SHA256_hash( (unsigned char *)mem_layout.decrypted_addr,
-												  this_entry->length - img_truncated_size,
+												  real_body_size,
 												  (unsigned char *)(mem_layout.decrypted_addr + this_entry->length - img_truncated_size),
-												  1 );						  
+												  1, rsa_key);						  
 						if( ret < 0 ) {
 							printf("[ERR] %s: verify hash fail(%d)\n", __FUNCTION__, ret );
 							return RTK_PLAT_ERR_READ_FW_IMG;
 						}
 
-						imageSize = imageSize - img_truncated_size - SHA256_SIZE;
+						//imageSize = imageSize - img_truncated_size - SHA256_SIZE;
 					}
 				}
 
@@ -2249,6 +2376,12 @@ int rtk_plat_read_fw_image_from_NAND(
 						printf("Rescue ROOTFS:\n");
 #ifdef NAS_ENABLE
 						initrd_size = this_entry->length;
+						if(secure_mode != NONE_SECURE_BOOT)
+						{
+							initrd_size -= img_truncated_size;
+							/* Pad 1 ~ 64 bytes by do_sha256 */
+							initrd_size -= 64;
+						}
 #endif
 						break;
 
@@ -2463,7 +2596,7 @@ int rtk_plat_read_fw_image_from_NAND(
 						ret = Verify_SHA256_hash( (unsigned char *)mem_layout.flash_to_ram_addr,
 												  this_entry->length - img_truncated_size,												  
 												  (unsigned char *)(mem_layout.flash_to_ram_addr + this_entry->length - img_truncated_size),
-												  1 );
+												  1, NULL );
 						if( ret < 0 ) {
 							printf("[ERR] %s: verify hash fail(%d)\n", __FUNCTION__, ret );
 							return RTK_PLAT_ERR_READ_FW_IMG;
@@ -3673,6 +3806,29 @@ int  rtk_plat_boot_handler(void)
 
 	return ret;
 }
+
+#ifdef CONFIG_MODULE_TEST
+void rtk_plat_do_bootr_after_mt()
+{
+	int ret = RTK_PLAT_ERR_OK;
+
+	/* reset boot flags */
+	boot_from_flash = BOOT_FROM_FLASH_NORMAL_MODE;
+	boot_from_usb = BOOT_FROM_USB_DISABLE;
+
+	WATCHDOG_KICK();
+	ret = rtk_plat_boot_handler();
+#if 0    
+    if (ret != RTK_PLAT_ERR_OK) {
+        /*   LOAD GOLD FW   */
+        ret = RTK_PLAT_ERR_OK;
+        boot_mode=BOOT_GOLD_MODE;
+        ret = rtk_plat_boot_handler();
+    }
+#endif
+	return;
+}
+#endif
 
 int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
