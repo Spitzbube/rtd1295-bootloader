@@ -541,8 +541,6 @@ static int vsnprintf_internal(char *buf, size_t size, const char *fmt,
 			      va_list args)
 {
 	unsigned NUM_TYPE num;
-	unsigned NUM_TYPE num2;
-	unsigned NUM_TYPE num3;
 	int base;
 	char *str;
 
@@ -693,18 +691,7 @@ static int vsnprintf_internal(char *buf, size_t size, const char *fmt,
 			continue;
 		}
 		if (qualifier == 'L')  /* "quad" for 64 bit variables */
-		{
-#if 1
 			num = va_arg(args, unsigned long long);
-#else
-			num2 = va_arg(args, unsigned long);
-			if( num2 == 0xA ) {
-				num2 = va_arg(args, unsigned long);
-			}
-			num3 = va_arg(args, unsigned long);
-			num = (num3<<32) | num2;
-#endif
-		}
 		else if (qualifier == 'l') {
 			num = va_arg(args, unsigned long);
 			if (flags & SIGN)

@@ -604,10 +604,10 @@ static void dwc_ahsata_print_info(int dev)
 
 	printf("SATA Device Info:\n\r");
 #ifdef CONFIG_SYS_64BIT_LBA
-#if 0
+#if 1
 	printf("S/N: %s\n\rProduct model number: %s\n\r"
-		"Firmware version: %s\n\rCapacity: %lld sectors\n\r",
-		pdev->product, pdev->vendor, pdev->revision, pdev->lba);
+		"Firmware version: %s\n\rCapacity: %lld(%llx) sectors\n\r",
+		pdev->product, pdev->vendor, pdev->revision, pdev->lba, pdev->lba);
 #else // workaround for invalid argument pass in printf
 	printf("S/N: %s\n\rProduct model number: %s\n\r"
 		"Firmware version: %s\n\rCapacity: ",
@@ -1153,7 +1153,7 @@ void sata_init(int port)
 	int ret, gpio;
 	unsigned int reg;
 
-	setGPIO(16, 1);
+	setGPIO(18, 1);
 
 	reg = rtd_inl(CLOCK_ENABLE1);
 	reg = reg | 1<<2 | 1<<7;

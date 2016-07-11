@@ -9,14 +9,7 @@ start:
         cmp         r1,#0x00                      @ core0 : 0x00 , others 0x01 , 0x02 ...
         bne         run_secondary
 
-#ifdef FPGA
        b       reset
-#endif
-	mov	R3,sp
-	MOV 	R3, R3,LSR#24
-	cmp	R3,#16
-	beq	reset	
-	bl	dvrmain 
 
 .globl _stack_start
 _stack_start:

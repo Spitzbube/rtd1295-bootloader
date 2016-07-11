@@ -123,9 +123,24 @@ typedef struct mcp_descriptor
 #define SECURE_KH_KEY2 				0xe56ef350
 #define SECURE_KH_KEY3 				0xc53ce48b
 
+#define NP_INV32_LENGTH			    4   /* np_inv length (32bits) */
 #define RSA_SIGNATURE_LENGTH		256
 
 #define PHYS(addr)              	((uint)(addr))
+
+#define AES_KEY_SIZE                    16
+#define RSA_KEY_SIZE                    256
+
+//SRAM key position
+#define KEY_SRAM_ADDR                   (0x80006A00)
+#define KC_P_SRAM_ADDR                  (KEY_SRAM_ADDR)
+#define KH_P_SRAM_ADDR                  (KC_P_SRAM_ADDR + AES_KEY_SIZE)
+#define KX_P_SRAM_ADDR                  (KH_P_SRAM_ADDR + AES_KEY_SIZE)
+#define KSS_P_SRAM_ADDR                 (KX_P_SRAM_ADDR + AES_KEY_SIZE)
+#define KHT_P_SRAM_ADDR                 (KSS_P_SRAM_ADDR + AES_KEY_SIZE)
+#define KIMG_SRAM_ADDR                  (KHT_P_SRAM_ADDR + AES_KEY_SIZE)
+#define RSA_KEY_FW_SRAM_ADDR            (KIMG_SRAM_ADDR + AES_KEY_SIZE)
+#define RSA_KEY_TEE_SRAM_ADDR           (RSA_KEY_FW_SRAM_ADDR + RSA_KEY_SIZE)
 
 //#define MCP_DEBUG
 /************************************************************************
@@ -139,7 +154,7 @@ int AES_hash_one(unsigned char * src_addr, unsigned int length, unsigned char * 
 int AES_hash(unsigned char * src_addr, unsigned int length, unsigned char * dst_addr, unsigned int block_size);
 int SHA1_hash(unsigned char * src_addr, unsigned int length, unsigned char * dst_addr, unsigned int iv[5]);
 int SHA256_hash(unsigned char * src_addr, unsigned int length, unsigned char *dst_addr, unsigned int iv[8]);
-int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned char * ref_sha256, unsigned int do_recovery );
+int Verify_SHA256_hash( unsigned char * src_addr, unsigned int length, unsigned char * ref_sha256, unsigned int do_recovery, unsigned char * rsa_key_addr);
 void rtk_hexdump( const char * str, unsigned char * pcBuf, unsigned int length );
 void reverse_signature( unsigned char * pSignature );
 

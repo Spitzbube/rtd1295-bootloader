@@ -139,6 +139,7 @@ SECTIONS
 	}
 
 	. += 0x10000;
+	. = ALIGN(8);
 	__stack_start = .;
 
 	/DISCARD/ : { *(.dynstr*) }
