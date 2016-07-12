@@ -21,15 +21,17 @@
 
 /* Board config name */
 #define CONFIG_BOARD_FPGA_RTD1295
-#define CONFIG_BOARD_WD_MORNACH
-
+#define CONFIG_BOARD_WD_MONARCH
 
 /* Flash type is SPI or NAND or eMMC*/
 #define CONFIG_SYS_RTK_SPI_FLASH
 //#define CONFIG_SYS_RTK_NAND_FLASH
 //#define CONFIG_SYS_RTK_EMMC_FLASH
 
-
+#ifdef HDD0
+#undef HDD0
+#define HDD0 18
+#endif
 
 #if defined(CONFIG_SYS_RTK_EMMC_FLASH)
 	/* Flash writer setting:
