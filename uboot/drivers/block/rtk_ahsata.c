@@ -1156,7 +1156,7 @@ void sata_init(int port)
 #ifndef HDD0
     // This is for all Realtek reference board
     #define HDD0 16
-#endf
+#endif
     setGPIO(HDD0,1);
     //ey: FIXME! Minimum of 6 second is required before enable the 2nd HDD
     // Comment it out and turn it on in kernel instead of waiting
