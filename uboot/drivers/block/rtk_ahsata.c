@@ -1153,14 +1153,13 @@ void sata_init(int port)
 	int ret, gpio;
 	unsigned int reg;
 
-#ifdef CONFIG_BOARD_WD_MORNACH
-	setGPIO(18, 1);
-#elif defined(CONFIG_BOARD_WD_PELICAN)
-	setGPIO(60, 1);
-	setGPIO(62, 1);
-#else
-	setGPIO(16, 1);
-#endif
+#ifndef HDD0
+    // This is for all Realtek reference board
+    #define HDD0 16
+#endf
+    setGPIO(HDD0,1);
+    //ey: FIXME! Minimum of 6 second is required before enable the 2nd HDD
+    // Comment it out and turn it on in kernel instead of waiting
 
 	reg = rtd_inl(CLOCK_ENABLE1);
 	reg = reg | 1<<2 | 1<<7;

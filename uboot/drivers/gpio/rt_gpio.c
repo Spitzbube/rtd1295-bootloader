@@ -12,7 +12,8 @@ int getGPIO(int GPIO_NUM) {
 	volatile int regAddr;
 	int regValue;
 
-	if(GPIO_NUM <= 31) {
+    // Flag error if GPIO_NUM was negative
+	if(GPIO_NUM >=0 && GPIO_NUM <= 31) {
 		bitOffset = GPIO_NUM;
 
 		// Set Direction to Input
