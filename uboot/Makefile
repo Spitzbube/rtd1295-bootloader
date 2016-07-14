@@ -155,12 +155,12 @@ SUBDIR_TOOLS = tools
 ifdef CONFIG_UBOOT_DEFAULT
 #SUBDIR_EXAMPLES = examples/standalone examples/api examples/redirect examples/flash_writer_u
 SUBDIR_EXAMPLES = examples/standalone examples/api examples/flash_writer_u
-SUBDIR_EXAMPLES += examples/efuse_programmer
-SUBDIR_EXAMPLES += examples/efuse_verify
+#SUBDIR_EXAMPLES += examples/efuse_programmer
+#SUBDIR_EXAMPLES += examples/efuse_verify
 else
 SUBDIR_EXAMPLES = examples/flash_writer_u
-SUBDIR_EXAMPLES += examples/efuse_programmer
-SUBDIR_EXAMPLES += examples/efuse_verify
+#SUBDIR_EXAMPLES += examples/efuse_programmer
+#SUBDIR_EXAMPLES += examples/efuse_verify
 endif
 SUBDIRS = $(SUBDIR_TOOLS)
 
