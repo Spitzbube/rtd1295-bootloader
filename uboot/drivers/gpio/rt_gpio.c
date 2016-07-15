@@ -30,7 +30,7 @@ int getGPIO(int GPIO_NUM) {
 		else
 			return 0;
 	}
-	else if(GPIO_NUM >= 32 && GPIO_NUM <= 59) {
+	else if(GPIO_NUM >= 32 && GPIO_NUM <= 63) {
 		bitOffset = GPIO_NUM - 32;
 
 		// Set Direction to Input
@@ -80,7 +80,7 @@ int setGPIO(int GPIO_NUM, int value) {
 
 		return 0;
 	}
-	else if(GPIO_NUM >= 32 && GPIO_NUM <= 59) {
+	else if(GPIO_NUM >= 32 && GPIO_NUM <= 63) {
 		bitOffset = GPIO_NUM - 32;
 
 		// Set Direction to Ouput
