@@ -28,10 +28,7 @@
 //#define CONFIG_SYS_RTK_NAND_FLASH
 //#define CONFIG_SYS_RTK_EMMC_FLASH
 
-#ifdef HDD0
-#undef HDD0
-#define HDD0 18
-#endif
+#define HDD0_POWER_GPIO 18
 
 #if defined(CONFIG_SYS_RTK_EMMC_FLASH)
 	/* Flash writer setting:
