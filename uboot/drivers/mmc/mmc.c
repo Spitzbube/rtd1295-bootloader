@@ -37,14 +37,7 @@
 #ifndef CONFIG_SYS_MMC_MAX_BLK_COUNT
 #define CONFIG_SYS_MMC_MAX_BLK_COUNT 65535
 #endif
-
-/**
-   07/13/2016
-   ey: FIXME! Disabled EMMC HS mode due to
-   voltage mismatch. Should be reverted
-   back later in next hardware build.
-**/
-//#define SUPPORT_HS200
+#define SUPPORT_HS200
 #define SUPPORT_WRITE_PROT
 //#define MMC_DEBUG
 //#define DISABLE_MICRON_AUTO_STANDBY
