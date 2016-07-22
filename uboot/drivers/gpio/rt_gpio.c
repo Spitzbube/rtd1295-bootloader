@@ -12,8 +12,7 @@ int getGPIO(int GPIO_NUM) {
 	volatile int regAddr;
 	int regValue;
 
-    // Flag error if GPIO_NUM was negative
-	if(GPIO_NUM >=0 && GPIO_NUM <= 31) {
+	if(GPIO_NUM <= 31) {
 		bitOffset = GPIO_NUM;
 
 		// Set Direction to Input
@@ -41,6 +40,40 @@ int getGPIO(int GPIO_NUM) {
 
 		// Get Value
 		regAddr = (MIS_GP1DATI_reg);
+		regValue = rtd_inl(regAddr);
+		if(regValue & (0x01 << bitOffset))
+			return 1;
+		else
+			return 0;
+	}
+	else if(GPIO_NUM >= 64 && GPIO_NUM <= 95) {
+		bitOffset = GPIO_NUM - 64;
+
+		// Set Direction to Input
+		regAddr = (MIS_GP2DIR_reg);
+		regValue = rtd_inl(regAddr);
+		regValue = regValue & (~(0x01 << bitOffset));
+		rtd_outl(regAddr, regValue);
+
+		// Get Value
+		regAddr = (MIS_GP2DATI_reg);
+		regValue = rtd_inl(regAddr);
+		if(regValue & (0x01 << bitOffset))
+			return 1;
+		else
+			return 0;
+	}
+	else if(GPIO_NUM >= 96 && GPIO_NUM <= 100) {
+		bitOffset = GPIO_NUM - 96;
+
+		// Set Direction to Input
+		regAddr = (MIS_GP3DIR_reg);
+		regValue = rtd_inl(regAddr);
+		regValue = regValue & (~(0x01 << bitOffset));
+		rtd_outl(regAddr, regValue);
+
+		// Get Value
+		regAddr = (MIS_GP3DATI_reg);
 		regValue = rtd_inl(regAddr);
 		if(regValue & (0x01 << bitOffset))
 			return 1;
@@ -102,6 +135,50 @@ int setGPIO(int GPIO_NUM, int value) {
 
 		return 0;
 	}
+	else if(GPIO_NUM >= 64 && GPIO_NUM <= 95) {
+		bitOffset = GPIO_NUM - 64;
+
+		// Set Direction to Ouput
+		regAddr = (MIS_GP2DIR_reg);
+		regValue = rtd_inl(regAddr);
+		regValue = regValue | (0x01 << bitOffset);
+		rtd_outl(regAddr, regValue);
+
+		// Set Value
+		regAddr = (MIS_GP2DATO_reg);
+		regValue = rtd_inl(regAddr);
+
+		if(value)
+			regValue = regValue | (0x01 << bitOffset);	// set to 1
+		else
+			regValue = regValue & (~(0x01 << bitOffset)); // set to 0
+
+		rtd_outl(regAddr, regValue);
+
+		return 0;
+	}
+	else if(GPIO_NUM >= 96 && GPIO_NUM <= 100) {
+		bitOffset = GPIO_NUM - 96;
+
+		// Set Direction to Ouput
+		regAddr = (MIS_GP3DIR_reg);
+		regValue = rtd_inl(regAddr);
+		regValue = regValue | (0x01 << bitOffset);
+		rtd_outl(regAddr, regValue);
+
+		// Set Value
+		regAddr = (MIS_GP3DATO_reg);
+		regValue = rtd_inl(regAddr);
+
+		if(value)
+			regValue = regValue | (0x01 << bitOffset);	// set to 1
+		else
+			regValue = regValue & (~(0x01 << bitOffset)); // set to 0
+
+		rtd_outl(regAddr, regValue);
+
+		return 0;
+	}
 	else { // no such GPIO pin!
 		printf("no GPIO#%d pin\n",GPIO_NUM);
 		return -1;
@@ -114,7 +191,7 @@ int getISOGPIO(int ISOGPIO_NUM)
 	volatile int regAddr;
 	int regValue;
 
-	if(ISOGPIO_NUM <= 20) {
+	if(ISOGPIO_NUM <= 31) {
 		bitOffset = ISOGPIO_NUM;
 
 		// Set Direction to Input
@@ -125,6 +202,23 @@ int getISOGPIO(int ISOGPIO_NUM)
 
 		// Get Value
 		regAddr = (ISO_GPDATI_reg);
+		regValue = rtd_inl(regAddr);
+		if(regValue & (0x01 << bitOffset))
+			return 1;
+		else
+			return 0;
+	}
+	else if(ISOGPIO_NUM >= 32 && ISOGPIO_NUM <= 34) {
+		bitOffset = ISOGPIO_NUM - 32;
+
+		// Set Direction to Input
+		regAddr = (ISO_GPDIR_1_reg);
+		regValue = rtd_inl(regAddr);
+		regValue = regValue & (~(0x01 << bitOffset));
+		rtd_outl(regAddr, regValue);
+
+		// Get Value
+		regAddr = (ISO_GPDATI_1_reg);
 		regValue = rtd_inl(regAddr);
 		if(regValue & (0x01 << bitOffset))
 			return 1;
@@ -143,8 +237,14 @@ int setISOGPIO(int ISOGPIO_NUM, int value)
 	volatile int regAddr;
 	int regValue;
 
-	if(ISOGPIO_NUM <= 20) {
+	if(ISOGPIO_NUM <= 31) {
 		bitOffset = ISOGPIO_NUM;
+
+		// Set Direction to Ouput
+		regAddr = (ISO_GPDIR_reg);
+		regValue = rtd_inl(regAddr);
+		regValue = regValue | (0x01 << bitOffset);
+		rtd_outl(regAddr, regValue);
 
 		// Set Value
 		regAddr = (ISO_GPDATO_reg);
@@ -157,10 +257,26 @@ int setISOGPIO(int ISOGPIO_NUM, int value)
 
 		rtd_outl(regAddr, regValue);
 
+		return 0;
+	}	
+	else if(ISOGPIO_NUM >= 32 && ISOGPIO_NUM <= 34) {
+		bitOffset = ISOGPIO_NUM - 32;
+
 		// Set Direction to Ouput
-		regAddr = (ISO_GPDIR_reg);
+		regAddr = (ISO_GPDIR_1_reg);
 		regValue = rtd_inl(regAddr);
 		regValue = regValue | (0x01 << bitOffset);
+		rtd_outl(regAddr, regValue);
+
+		// Set Value
+		regAddr = (ISO_GPDATO_1_reg);
+		regValue = rtd_inl(regAddr);
+
+		if(value)
+			regValue = regValue | (0x01 << bitOffset);  // set to 1
+		else
+			regValue = regValue & (~(0x01 << bitOffset)); // set to 0
+
 		rtd_outl(regAddr, regValue);
 
 		return 0;
