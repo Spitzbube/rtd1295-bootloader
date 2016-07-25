@@ -31,13 +31,15 @@ OBJS  +=  rcic.o
 all : $(MYLIB) 
 
 .c.o:
+	@mkdir -p obj
 	@$(CC) $(CFLAGS) -I inc $(INCS) -c $< -o obj/$@		
 	
 $(MYLIB): $(OBJS)
+	@mkdir -p lib
 	@set -e; for i in $(OBJS); do $(AR) rcv $(MYLIB) obj/$$i; done;		
 	
 clean:	
 	@$(RM) src/*~ src/*.bak 	
 	@$(RM) inc/*~ inc/*.bak
-	@$(RM) obj/*	
+	@$(RM) -rf obj lib
 	@$(RM) *~ *.bak *.o $(MYPROG) $(MYLIB)
