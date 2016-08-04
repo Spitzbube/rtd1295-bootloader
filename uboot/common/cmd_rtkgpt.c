@@ -265,33 +265,33 @@ void fill_GPT_PTES(gpt_entry * pte_curr, unsigned long long disk_size, unsigned 
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "FDT_RESCUE2");pte_curr++;
     // GPT PTE10
     start_lba += blk_size;
-    blk_size = ((32ULL<<20)>>9);
-    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "KERNEL_RESCUE2");pte_curr++;
-    // GPT PTE11 CONFIG
-    start_lba += blk_size;
-    blk_size = ((16ULL<<20)>>9);
-    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "CONFIG");pte_curr++;
-    // GPT PTE12
-    start_lba += blk_size;
     blk_size = ((4ULL<<20)>>9);
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "AFW2");pte_curr++;
     // --------------------------
-    // GPT PTE13
+    // GPT PTE11
     start_lba += blk_size;
     blk_size = ((1ULL<<20)>>9);
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BOOTCODE32");pte_curr++;
-    // GPT PTE14
+    // GPT PTE12
     start_lba += blk_size;
     blk_size = ((1ULL<<20)>>9);
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BOOTCODE64");pte_curr++;
-    // GPT PTE15
+    // GPT PTE13
     start_lba += blk_size;
     blk_size = ((1ULL<<20)>>9);
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BL31");pte_curr++;
-    // GPT PTE16
+    // GPT PTE14
     start_lba += blk_size;
     blk_size = ((1ULL<<20)>>9);
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BL32");pte_curr++;
+    // GPT PTE15
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "KERNEL_RESCUE2");pte_curr++;
+    // GPT PTE16 CONFIG
+    start_lba += blk_size;
+    blk_size = ((16ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "CONFIG");pte_curr++;
     // --------------------------
     // GPT PTE17 SYSTEM A
     start_lba += blk_size;
