@@ -308,8 +308,12 @@ void fill_GPT_PTES(gpt_entry * pte_curr, unsigned long long disk_size, unsigned 
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "CACHE");pte_curr++;
     // GPT PTE20
     start_lba += blk_size;
-    blk_size = (disk_size-4)-start_lba;
+    blk_size = ((2048ULL<<20)>>9);
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "DATA");pte_curr++;
+    // GPT PTE21
+    start_lba += blk_size;
+    blk_size = (disk_size-4)-start_lba;
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "DISKVOLUME1");pte_curr++;
 }
 #endif
 
