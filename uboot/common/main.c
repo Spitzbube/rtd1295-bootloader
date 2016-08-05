@@ -36,6 +36,8 @@
 #include <malloc.h>		/* for free() prototype */
 #endif
 #include <asm/arch/fw_info.h>
+#include <asm/arch/rbus/iso_reg.h>
+#include <asm/arch/io.h>
 
 #ifdef CONFIG_SYS_HUSH_PARSER
 #include <hush.h>
@@ -52,6 +54,19 @@
 #ifdef CONFIG_FT_TEST
 #include <ft_test.h>
 #endif
+
+/******* REBOOT ACTION, sync with kernel rtd129x_restart.c **********/
+#define REBOOT_ACTION_ADDR	(ISO_NORST_SWC)
+#define REBOOT_ACTION_MASK	(0xff)
+#define REBOOT_MAGIC		0xaabbcc00
+#define REBOOT_MAGIC_SHIFT	8
+#define REBOOT_ACTION_VALID(v)	!((REBOOT_MAGIC ^ (v)) >> REBOOT_MAGIC_SHIFT)
+
+typedef enum{
+	RESET_ACTION_NO_ACTION = 0,
+	RESET_ACTION_FASTBOOT,
+}RESET_ACTION;
+/****** REBOOT ACTION END *******/
 
 typedef struct _bootloader_message {
     char command[32];
@@ -695,6 +710,32 @@ start = get_timer(0);
 # endif	/* CONFIG_AUTOBOOT_KEYED */
 #endif	/* CONFIG_BOOTDELAY >= 0  */
 
+void check_reset_reason(void)
+{
+	unsigned int reboot_action;
+
+	reboot_action = rtd_inl(REBOOT_ACTION_ADDR);
+	if (REBOOT_ACTION_VALID(reboot_action)) {
+		printf("*** Reboot-Action : 0x%08x ***\n", reboot_action);
+	} else {
+		printf("*** Reboot-Action invalid ***\n");
+		return;
+	}
+
+	switch (reboot_action & REBOOT_ACTION_MASK) {
+		case RESET_ACTION_FASTBOOT:
+			printf("REBOOT_ACTION : ENTER fastboot mode\n");
+			setenv("bootcmd", "fastboot");
+			break;
+		case RESET_ACTION_NO_ACTION:
+			printf("REBOOT_ACTION : No Action\n");
+			break;
+		default:
+			break;
+	}
+
+	rtd_outl(REBOOT_ACTION_ADDR, REBOOT_MAGIC);
+}
 /****************************************************************************/
 
 void main_loop (void)
@@ -816,6 +857,8 @@ void main_loop (void)
 		printf("[WARN] bootcmd in env is NULL.\n");
 		printf("[WARN] you need to execute \"env default -f\" to reset env.\n");
 	}
+
+	check_reset_reason();
 
 	if (bootdelay >= 0 && s && !abortboot (bootdelay)) {
 #ifdef CONFIG_AUTOBOOT_KEYED
