@@ -145,6 +145,10 @@ static int usb_clk_enable(void) {
 
 	if (get_cpu_id() == RTK1296_CPU_ID) {
 		debug("Realtek-usb 1296 u3host clock\n");
+		if (get_rtd129x_cpu_revision() == RTD129x_CHIP_REVISION_A00) {
+			__raw_writel(0x00000F05, 0x98007FA0);
+			debug("Realtek-usb 1296 A00 enabled power\n");
+		}
 		reset2_pll_flag = rstn_usb_phy2 | rstn_usb_phy3 | rstn_usb3_phy1_pow;
 		reset2_usb_flag = rstn_usb3_p1_mdio;
 	}
@@ -202,12 +206,8 @@ static int usb_power_enable(void) {
 	int check, type_c_have_device = 0;
 
 	if (get_cpu_id() == RTK1294_CPU_ID) {
-		debug("Realtek-usb: Turn on 1294 usb power\n");
-		__raw_writel(0x2 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_POW_GPIO_DIR),
-				(volatile u32*) RTD1295_USB_TYPEC_POW_GPIO_DIR);
-		__raw_writel(0x2 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_POW_GPIO_DAT),
-				(volatile u32*) RTD1295_USB_TYPEC_POW_GPIO_DAT);
-		//__raw_writel(0x22400071, (volatile u32*)0x9801334c);
+		debug("Realtek-usb: Turn on 1294 usb port0 power\n");
+		setISOGPIO(1, 1);
 	} else {
 		__raw_writel(0x00000003, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC1_0);
 		__raw_writel(0x00000003, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC2_0);
@@ -217,62 +217,56 @@ static int usb_power_enable(void) {
 			debug("Realtek-usb: type_c cc status=0x%x\n", check);
 		if ((check & 0x7) != 0x0) {
 			debug("Realtek-usb: cc1 detect type_c have power\n");
-			//__raw_writel(0x22400071, (volatile u32*)0x9801334c);
 			goto out;
 		} else if ((check & 0x38) != 0x0) {
 			debug("Realtek-usb: cc2 detect type_c have power\n");
-			//__raw_writel(0x3A400071, (volatile u32*)0x9801334c);
 			goto out;
 		}
 
 		__raw_writel(0x02400071, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC1_0);
 		__raw_writel(0x00800071, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC2_0);
-		//__raw_writel(0x4 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_RD_CTRL_GPIO_DIR),
-		//		(volatile u32*) RTD1295_USB_TYPEC_RD_CTRL_GPIO_DIR);
-		//__raw_writel(0x4 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_RD_CTRL_GPIO_DAT),
-		//		(volatile u32*) RTD1295_USB_TYPEC_RD_CTRL_GPIO_DAT);
+
+		/* set type c rd gpio */
+		//setISOGPIO(34, 1);
+
 		mdelay(1);
 
 		check = __raw_readl((volatile u32*)RTD1295_USB_TYPEC_STS);
 		if ((check & 0x7) != 0x7) {
 			debug("Realtek-usb: cc1 detect\n");
-			//__raw_writel(0x22400071, (volatile u32*)0x9801334c);
 			type_c_have_device = 1;
 		} else if ((check & 0x38) != 0x38) {
 			debug("Realtek-usb: cc2 detect\n");
-			//__raw_writel(0x3A400071, (volatile u32*)0x9801334c);
 			type_c_have_device = 1;
 		}
+
 		//Type C 5V
 		if (type_c_have_device) {
-			debug("Realtek-usb: Turn on Type C power\n");
-			__raw_writel(0x80000 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_POW_GPIO_DIR),
-					(volatile u32*) RTD1295_USB_TYPEC_POW_GPIO_DIR);
-			__raw_writel(0x80000 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_POW_GPIO_DAT),
-					(volatile u32*) RTD1295_USB_TYPEC_POW_GPIO_DAT);
+			debug("Realtek-usb: Turn on port 0 power\n");
+			if (get_cpu_id() == RTK1296_CPU_ID)
+				setISOGPIO(26, 1);
+			else
+				setGPIO(19, 1);
 		} else {
-			debug("Realtek-usb: Type C port no device\n");
-			__raw_writel(0x80000 | __raw_readl((volatile u32*)RTD1295_USB_TYPEC_POW_GPIO_DIR),
-					(volatile u32*) RTD1295_USB_TYPEC_POW_GPIO_DIR);
-			__raw_writel(~0x80000 & __raw_readl((volatile u32*)RTD1295_USB_TYPEC_POW_GPIO_DAT),
-					(volatile u32*) RTD1295_USB_TYPEC_POW_GPIO_DAT);
+			debug("Realtek-usb: Type C port no device, turn off port 0 power\n");
+			if (get_cpu_id() == RTK1296_CPU_ID)
+				setISOGPIO(26, 0);
+			else
+				setGPIO(19, 0);
 		}
 	}
 
 out:
 	//Usb2 5V
-	//__raw_writel(0x80000 | __raw_readl((volatile u32*)RTD1295_USB_USB2_POW_GPIO_DIR),
-	//		(volatile u32*) RTD1295_USB_USB2_POW_GPIO_DIR);
-	//__raw_writel(0x80000 | __raw_readl((volatile u32*)RTD1295_USB_USB2_POW_GPIO_DAT),
-	//		(volatile u32*) RTD1295_USB_USB2_POW_GPIO_DAT);
+	// for 1294, 1295, 1296 QA board
+	//setGPIO(19, 1);
 
-	//if (get_cpu_id() == RTK1296_CPU_ID) {
-	//	debug("Realtek-usb: Turn on 1296 usb port1 and port2 power\n");
-	//	__raw_writel(0x80000000 | __raw_readl((volatile u32*)RTD1296_USB_USB2_POW_GPIO_DIR),
-	//			(volatile u32*) RTD1296_USB_USB2_POW_GPIO_DIR);
-	//	__raw_writel(0x80000000 | __raw_readl((volatile u32*)RTD1296_USB_USB2_POW_GPIO_DAT),
-	//			(volatile u32*) RTD1296_USB_USB2_POW_GPIO_DAT);
-	//}
+	if (get_cpu_id() == RTK1296_CPU_ID) {
+		//debug("Realtek-usb: Turn on 1296 usb port1 and port2 power\n");
+		//setISOGPIO(31, 1);
+		debug("Realtek-usb: Turn on 1296 usb port3 power\n");
+		setISOGPIO(34, 1);
+	}
 	return 0;
 
 }
