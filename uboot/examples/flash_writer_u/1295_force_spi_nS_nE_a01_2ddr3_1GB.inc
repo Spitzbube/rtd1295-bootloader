@@ -11,7 +11,7 @@ Board_Chip_Rev =            1295
 #DC1: 512MB x 2
 #Speed: 1600
 #####################################################################
-Board_HWSETTING =            RTD1295_hwsetting_BOOT_2DDR3_4Gb_s1600
+Board_HWSETTING =            RTD1295_hwsetting_BOOT_2DDR3_4Gb_s1600_DDRSS
 
 ##### QA Board Ver.A 4Layer HWSETTING selection note ##############
 #DC1: 512MB x 2

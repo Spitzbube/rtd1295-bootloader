@@ -73,7 +73,7 @@ REALTEK_BASE_DWC3(usb_xhci, USB_DWC3_XHCI_BASE)
 REALTEK_BASE(usb_otg,  USBOTG_BASE)
 
 // EHCI phy data
-#define ehci_u2phy_ehci_size_revA {19} //page0 + page1
+#define ehci_u2phy_ehci_size_revA {21} //page0 + page1
 #define ehci_u2phy_ehci_addr_revA {0xF4, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xF0, 0xF1, 0xF5, 0xF4, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7}
 #define ehci_u2phy_ehci_data_revA {0x9B, 0xE0, 0x30, 0x3A, 0x8D, 0x69, 0x65, 0x91, 0x81, 0xFC, 0x8C, 0x81, 0xBB, 0x25, 0xEF, 0x60, 0x00, 0x00, 0x0F, 0x18, 0xE3}
 
@@ -107,7 +107,7 @@ REALTEK_BASE(usb_otg,  USBOTG_BASE)
 #define dwc3_u3phy_drd_data_revA \
 	{0x4008, 0xE04A, 0x6046, 0x27F1, 0x72F5, 0x2AD3, 0x000E, 0x2E00, 0x3591, 0x521C, 0xA600, 0xA905, 0xC000, 0xEF1C, 0x2000, 0x0000, \
 	 0x000C, 0x4C00, 0xFC00, 0x0C81, 0xDE01, 0x0000, 0x0000, 0x0000, 0x0000, 0x4004, 0x1260, 0xFF00, 0xCB00, 0xA03F, 0xC2E0, 0x2807, \
-	 0x945A, 0x88AA, 0x0057, 0xAB66, 0x0800, 0x0000, 0x040A, 0x01D6, 0xF842, 0x3080, 0x3083, 0x2078, 0xFFFF, 0xFFFF, 0x0000, 0x0040, \
+	 0x945A, 0x88AA, 0x0057, 0xAB66, 0x0800, 0x0000, 0x040A, 0x01D6, 0xF802, 0x3080, 0x3082, 0x2078, 0xFFFF, 0xFFFF, 0x0000, 0x0040, \
 	 0x521C, 0x501C, 0x521C}
 
 #define dwc3_u3phy_drd_size_revB dwc3_u3phy_drd_size_revA
@@ -122,49 +122,54 @@ REALTEK_BASE(usb_otg,  USBOTG_BASE)
 #define dwc3_u2phy_u2h_size_revA {21} //page0 + page1
 #define dwc3_u2phy_u2h_addr_revA {0xF4, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xF0, 0xF1, 0xF5, 0xF4, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7}
 #define dwc3_u2phy_u2h_data_revA {0x9B, 0xE0, 0x30, 0x3A, 0x8D, 0x66, 0x65, 0x91, 0x81, 0xFC, 0x8C, 0x81, 0xBB, 0x25, 0xEF, 0x60, 0x00, 0x00, 0x0F, 0x18, 0xE3}
-
-#define dwc3_u2phy_u2h_size_revB dwc3_u2phy_drd_size_revB
-#define dwc3_u2phy_u2h_addr_revB dwc3_u2phy_drd_addr_revB
-#define dwc3_u2phy_u2h_data_revB dwc3_u2phy_drd_data_revB
-#define dwc3_u2phy_u2h_size_revA dwc3_u2phy_drd_size_revA
-#define dwc3_u2phy_u2h_size_revC dwc3_u2phy_drd_size_revC
-#define dwc3_u2phy_u2h_addr_revC dwc3_u2phy_drd_addr_revC
-#define dwc3_u2phy_u2h_data_revC dwc3_u2phy_drd_data_revC
+#define dwc3_u2phy_u2h_size_revB dwc3_u2phy_u2h_size_revA
+#define dwc3_u2phy_u2h_addr_revB dwc3_u2phy_u2h_addr_revA
+#define dwc3_u2phy_u2h_data_revB dwc3_u2phy_u2h_data_revA
+#define dwc3_u2phy_u2h_size_revC dwc3_u2phy_u2h_size_revB
+#define dwc3_u2phy_u2h_addr_revC dwc3_u2phy_u2h_addr_revB
+#define dwc3_u2phy_u2h_data_revC dwc3_u2phy_u2h_data_revB
 
 #define dwc3_u3phy_u2h_size_revA {0} //U2Host no u3phy
 #define dwc3_u3phy_u2h_addr_revA dwc3_u3phy_drd_addr_revA
 #define dwc3_u3phy_u2h_data_revA dwc3_u3phy_drd_data_revA
 #define dwc3_u3phy_u2h_size_revB {0} //U2Host no u3phy
-#define dwc3_u3phy_u2h_addr_revB dwc3_u3phy_drd_addr_revB
-#define dwc3_u3phy_u2h_data_revB dwc3_u3phy_drd_data_revB
+#define dwc3_u3phy_u2h_addr_revB dwc3_u3phy_u2h_addr_revA
+#define dwc3_u3phy_u2h_data_revB dwc3_u3phy_u2h_data_revA
 #define dwc3_u3phy_u2h_size_revC {0} //U2Host no u3phy
-#define dwc3_u3phy_u2h_addr_revC dwc3_u3phy_drd_addr_revC
-#define dwc3_u3phy_u2h_data_revC dwc3_u3phy_drd_data_revC
+#define dwc3_u3phy_u2h_addr_revC dwc3_u3phy_u2h_addr_revB
+#define dwc3_u3phy_u2h_data_revC dwc3_u3phy_u2h_data_revB
 
 // DWC3 U3Host phy data
-#define dwc3_u2phy_u3h_size_revA dwc3_u2phy_drd_size_revA
-#define dwc3_u2phy_u3h_addr_revA dwc3_u2phy_drd_addr_revA
-#define dwc3_u2phy_u3h_data_revA dwc3_u2phy_drd_data_revA
+#define dwc3_u2phy_u3h_size_revA {21} //page0 + page1
+#define dwc3_u2phy_u3h_addr_revA {0xF4, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xF0, 0xF1, 0xF5, 0xF4, 0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7}
+#define dwc3_u2phy_u3h_data_revA {0x9B, 0xE0, 0x30, 0x3A, 0x8D, 0x66, 0x65, 0x91, 0x81, 0xFC, 0x8C, 0x81, 0xBB, 0x25, 0xEF, 0x60, 0x00, 0x00, 0x0F, 0x18, 0xE3}
+#define dwc3_u2phy_u3h_size_revB dwc3_u2phy_u3h_size_revA
+#define dwc3_u2phy_u3h_addr_revB dwc3_u2phy_u3h_addr_revA
+#define dwc3_u2phy_u3h_data_revB dwc3_u2phy_u3h_data_revA
+#define dwc3_u2phy_u3h_size_revC dwc3_u2phy_u3h_size_revB
+#define dwc3_u2phy_u3h_addr_revC dwc3_u2phy_u3h_addr_revB
+#define dwc3_u2phy_u3h_data_revC dwc3_u2phy_u3h_data_revB
 
-#define dwc3_u2phy_u3h_size_revB dwc3_u2phy_drd_size_revB
-#define dwc3_u2phy_u3h_addr_revB dwc3_u2phy_drd_addr_revB
-#define dwc3_u2phy_u3h_data_revB dwc3_u2phy_drd_data_revB
+#define dwc3_u3phy_u3h_size_revA {0x33}
+#define dwc3_u3phy_u3h_addr_revA \
+	{  0x00,   0x01,   0x02,   0x03,   0x04,   0x05,   0x06,   0x07,   0x08,   0x09,   0x0A,   0x0B,   0x0C,   0x0D,   0x0E,   0x0F, \
+	   0x10,   0x11,   0x12,   0x13,   0x14,   0x15,   0x16,   0x17,   0x18,   0x19,   0x1A,   0x1B,   0x1C,   0x1D,   0x1E,   0x1F, \
+	   0x20,   0x21,   0x22,   0x23,   0x24,   0x25,   0x26,   0x27,   0x28,   0x29,   0x2A,   0x2B,   0x2C,   0x2D,   0x2E,   0x2F, \
+	   0x09,   0x09,   0x09}
 
-#define dwc3_u2phy_u3h_size_revC dwc3_u2phy_drd_size_revC
-#define dwc3_u2phy_u3h_addr_revC dwc3_u2phy_drd_addr_revC
-#define dwc3_u2phy_u3h_data_revC dwc3_u2phy_drd_data_revC
+#define dwc3_u3phy_u3h_data_revA \
+	{0x4008, 0xE04A, 0x6046, 0x27F1, 0x72F5, 0x2AD3, 0x000E, 0x2E00, 0x3591, 0x521C, 0xA600, 0xA905, 0xC000, 0xEF1C, 0x2000, 0x0000, \
+	 0x000C, 0x4C00, 0xFC00, 0x0C81, 0xDE01, 0x0000, 0x0000, 0x0000, 0x0000, 0x4004, 0x1260, 0xFF00, 0xCB00, 0xA03F, 0xC2E0, 0x2807, \
+	 0x9424, 0x284A, 0x0057, 0xAB66, 0x0800, 0x0000, 0x040A, 0x01D6, 0xF802, 0x3080, 0x3082, 0x2078, 0xFFFF, 0xFFFF, 0x0000, 0x0040, \
+	 0x521C, 0x501C, 0x521C}
 
-#define dwc3_u3phy_u3h_size_revA dwc3_u3phy_drd_size_revA
-#define dwc3_u3phy_u3h_addr_revA dwc3_u3phy_drd_addr_revA //default same with DRD
-#define dwc3_u3phy_u3h_data_revA dwc3_u3phy_drd_data_revA //default same with DRD
+#define dwc3_u3phy_u3h_size_revB dwc3_u3phy_u3h_size_revA
+#define dwc3_u3phy_u3h_addr_revB dwc3_u3phy_u3h_addr_revA
+#define dwc3_u3phy_u3h_data_revB dwc3_u3phy_u3h_data_revA
 
-#define dwc3_u3phy_u3h_size_revB dwc3_u3phy_drd_size_revB
-#define dwc3_u3phy_u3h_addr_revB dwc3_u3phy_drd_addr_revB //default same with DRD
-#define dwc3_u3phy_u3h_data_revB dwc3_u3phy_drd_data_revB //default same with DRD
-
-#define dwc3_u3phy_u3h_size_revC dwc3_u3phy_drd_size_revC
-#define dwc3_u3phy_u3h_addr_revC dwc3_u3phy_drd_addr_revC
-#define dwc3_u3phy_u3h_data_revC dwc3_u3phy_drd_data_revC
+#define dwc3_u3phy_u3h_size_revC dwc3_u3phy_u3h_size_revB
+#define dwc3_u3phy_u3h_addr_revC dwc3_u3phy_u3h_addr_revB
+#define dwc3_u3phy_u3h_data_revC dwc3_u3phy_u3h_data_revB
 
 
 //1295 no other revision
