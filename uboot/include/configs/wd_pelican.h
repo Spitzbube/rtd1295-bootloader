@@ -15,6 +15,7 @@
 #include <configs/rtd1295_customized_feature.h>
 
 
+
 /*
  * The followings were RTD1195 demo board specific configuration settings.
  */
@@ -180,6 +181,11 @@
 	#define CONFIG_LBA48
 	#define CONFIG_LIBATA
 #endif
+
+#undef USB_XHCI_CONTROLLER_COUNT
+#undef USB_MAX_CONTROLLER_COUNT
+#define USB_XHCI_CONTROLLER_COUNT 3
+#define USB_MAX_CONTROLLER_COUNT USB_EHCI_CONTROLLER_COUNT + USB_XHCI_CONTROLLER_COUNT
 
 #endif /* __CONFIG_RTK_RTD1295_QA_EMMC_H */
 
