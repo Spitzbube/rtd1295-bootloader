@@ -299,6 +299,121 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 	return RTK_PLAT_ERR_OK;
 }
 
+//adam 0729 start 
+//add a boot rescue function from dhcp tftp
+
+int boot_rescue_from_dhcp(void)
+{
+	char tmpbuf[128];
+	int ret = RTK_PLAT_ERR_OK;
+	char *filename;
+	char *dhcp_host_ip;
+	unsigned int secure_mode=0;
+	
+	secure_mode = rtk_get_secure_boot_type();
+
+	/* DTB */	
+	if ((filename = getenv("rescue_dtb")) == NULL) {
+		filename =(char*) CONFIG_RESCUE_FROM_USB_DTB;
+	}
+	if ((dhcp_host_ip = getenv("dhcp_host_ip")) == NULL) {
+		dhcp_host_ip =(char*) CONFIG_DHCP_HOST_IP;
+	}
+
+	sprintf(tmpbuf, "dhcp %s %s:%s", getenv("fdt_loadaddr"),dhcp_host_ip, filename);
+	if (run_command(tmpbuf, 0) != 0) {
+		goto loading_failed;
+	}
+
+	printf("Loading \"%s\" to %s is OK.\n\n", filename, getenv("fdt_loadaddr"));
+
+	/* Linux kernel */
+	if ((filename = getenv("rescue_vmlinux")) == NULL) {
+		filename =(char*) CONFIG_RESCUE_FROM_USB_VMLINUX;
+	}
+
+	if(secure_mode == RTK_SECURE_BOOT)
+	{	
+		if (rtk_decrypt_rescue_from_usb(filename,getenv_ulong("kernel_loadaddr", 16, 0)))
+		goto loading_failed;	
+	}	
+	else
+	{	
+
+		sprintf(tmpbuf, "dhcp %s %s:%s", getenv("kernel_loadaddr"),dhcp_host_ip, filename);
+		if (run_command(tmpbuf, 0) != 0) {
+			goto loading_failed;
+		}
+	}
+
+	printf("Loading \"%s\" to %s is OK.\n\n", filename, getenv("kernel_loadaddr"));
+
+	/* rootfs */
+	if ((filename = getenv("rescue_rootfs")) == NULL) {
+		filename =(char*) CONFIG_RESCUE_FROM_USB_ROOTFS;
+	}
+	if(secure_mode == RTK_SECURE_BOOT)
+	{	
+		if (rtk_decrypt_rescue_from_usb(filename, getenv_ulong("rootfs_loadaddr", 16, 0)))
+		goto loading_failed;	
+	}	
+	else
+	{
+		sprintf(tmpbuf, "dhcp %s %s:%s", getenv("rootfs_loadaddr"),dhcp_host_ip, filename);
+		if (run_command(tmpbuf, 0) != 0) {
+			goto loading_failed;
+		}
+	}
+
+	printf("Loading \"%s\" to %s is OK.\n\n", filename, getenv("rootfs_loadaddr"));
+
+
+	/* audio firmware */
+	if ((filename = getenv("rescue_audio")) == NULL) {
+		filename =(char*) CONFIG_RESCUE_FROM_USB_AUDIO_CORE;
+	}
+	if(secure_mode == RTK_SECURE_BOOT)
+	{	
+		if (!rtk_decrypt_rescue_from_usb(filename, MIPS_AUDIO_FW_ENTRY_ADDR))
+		{
+			printf("Loading \"%s\" to 0x%08x is OK.\n", filename, MIPS_AUDIO_FW_ENTRY_ADDR);
+			run_command("go a", 0);
+		}
+		else
+			printf("Loading \"%s\" from USB failed.\n", filename);
+			/* Go on without Audio firmware. */	
+	}	
+	else
+	{	
+		sprintf(tmpbuf, "dhcp 0x%08x %s:%s", MIPS_AUDIO_FW_ENTRY_ADDR, dhcp_host_ip, filename);
+
+		if (run_command(tmpbuf, 0) == 0) {
+			printf("Loading \"%s\" to 0x%08x is OK.\n", filename, MIPS_AUDIO_FW_ENTRY_ADDR);
+			run_command("go a", 0);
+		}
+		else {
+			printf("Loading \"%s\" from dhcp failed.\n", filename);
+			/* Go on without Audio firmware. */
+		}
+    }
+	boot_mode = BOOT_RESCUE_MODE;
+
+	/* Clear the HYP ADDR since we don't want rescue jump to HYP mode */
+	if (getenv("hyp_loadaddr"))
+		setenv("hyp_loadaddr", "");
+
+	ret = rtk_call_bootm();
+	/* Should not reach here */
+
+	return ret;
+
+loading_failed:
+	printf("Loading \"%s\" from dhcp host %s failed.\n", filename, dhcp_host_ip);
+	return RTK_PLAT_ERR_READ_RESCUE_IMG;	
+}
+//adam 0729 end
+
+
 int boot_rescue_from_usb(void)
 {
 	char tmpbuf[128];
@@ -306,6 +421,8 @@ int boot_rescue_from_usb(void)
 	char *filename;
 	unsigned int secure_mode=0;
 	
+	printf("==== %s =====\n", __func__);
+
 	secure_mode = rtk_get_secure_boot_type();
 
 	run_command("usb start", 0);	/* "usb start" always return 0 */
@@ -439,6 +556,45 @@ unsigned long do_go_exec (ulong (*entry)(int, char * const []), int argc, char *
 	return entry (argc, argv);
 }
 
+
+int reflash_bootloader(int argc, char * const argv[])
+{
+	char tmpbuf[128];
+	int ret = RTK_PLAT_ERR_OK;
+	char *filename;
+	unsigned int secure_mode = 0;
+	ulong	addr;
+
+	printf("==== %s =====\n", __func__);
+
+	secure_mode = rtk_get_secure_boot_type();
+
+	run_command("usb start", 0);	/* "usb start" always return 0 */
+	if (run_command("usb dev", 0) != 0) {
+		printf("No USB device found!\n");
+		return RTK_PLAT_ERR_READ_RESCUE_IMG;
+	}
+
+	/* load uboot.bin */
+	filename = "uboot.bin";
+	sprintf(tmpbuf, "fatload usb 0:1 %s %s", "0x01500000", filename);
+	if (run_command(tmpbuf, 0) != 0) {
+		goto loading_failed;
+	}
+
+	addr = simple_strtoul("0x1500000", NULL, 16);
+	do_go_exec((void *)addr, argc -1 , argv + 1 );
+
+
+	return ret;
+
+loading_failed:
+	printf("Loading \"%s\" from USB failed.\n", filename);
+	return RTK_PLAT_ERR_READ_RESCUE_IMG;
+}
+
+
+
 int do_go (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	ulong	addr, rc;
@@ -532,6 +688,10 @@ int do_go (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		{
 			boot_mode = BOOT_ANDROID_MODE;
 			return rtk_plat_boot_handler();					
+		}
+		else if (argv[1][1] == 'b')
+		{
+			return reflash_bootloader(argc, argv);
 		}
 #ifdef CONFIG_RESCUE_FROM_USB
 		else if (argv[1][1] == 'u') // rescue from usb
@@ -3883,6 +4043,13 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	}
 #endif /* CONFIG_RESCUE_FROM_USB */
 
+//adam 0729 start
+//add the boot dhcp function when rescue from usb fail	
+	if (ret != RTK_PLAT_ERR_OK) {
+		ret = boot_rescue_from_dhcp();
+	}
+//adam 0729 end	
+	
 	return CMD_RET_SUCCESS;
 }
 

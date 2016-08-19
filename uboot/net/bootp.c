@@ -341,6 +341,33 @@ BootpTimeout(void)
 	}
 }
 
+#define put_vci(e, str)						\
+	do {							\
+		size_t vci_strlen = strlen(str);		\
+		*e++ = 60;	/* Vendor Class Identifier */	\
+		*e++ = vci_strlen;				\
+		memcpy(e, str, vci_strlen);			\
+		e += vci_strlen;				\
+	} while (0)
+static u8 *add_vci(u8 *e)
+{
+	char *vci = NULL;
+	char *env_vci = getenv("bootp_vci");
+
+#if defined(CONFIG_SPL_BUILD) && defined(CONFIG_SPL_NET_VCI_STRING)
+	vci = CONFIG_SPL_NET_VCI_STRING;
+#elif defined(CONFIG_BOOTP_VCI_STRING)
+	vci = CONFIG_BOOTP_VCI_STRING;
+#endif
+
+	if (env_vci)
+		vci = env_vci;
+
+	if (vci)
+		put_vci(e, vci);
+
+	return e;
+}
 /*
  *	Initialize BOOTP extension fields in the request.
  */
@@ -410,12 +437,17 @@ static int DhcpExtended(u8 *e, int message_type, IPaddr_t ServerID,
 	}
 #endif
 
-#if defined(CONFIG_BOOTP_PXE)
+#ifdef CONFIG_BOOTP_PXE_CLIENTARCH
 	clientarch = CONFIG_BOOTP_PXE_CLIENTARCH;
+#endif
+	if (getenv("bootp_arch"))
+		clientarch = getenv_ulong("bootp_arch", 16, clientarch);
+	if (clientarch > 0) {
 	*e++ = 93;	/* Client System Architecture */
 	*e++ = 2;
 	*e++ = (clientarch >> 8) & 0xff;
 	*e++ = clientarch & 0xff;
+	}
 
 	*e++ = 94;	/* Client Network Interface Identifier */
 	*e++ = 3;
@@ -423,6 +455,7 @@ static int DhcpExtended(u8 *e, int message_type, IPaddr_t ServerID,
 	*e++ = 0;	/* major revision */
 	*e++ = 0;	/* minor revision */
 
+#ifdef CONFIG_LIB_UUID
 	uuid = getenv("pxeuuid");
 
 	if (uuid) {
@@ -431,19 +464,15 @@ static int DhcpExtended(u8 *e, int message_type, IPaddr_t ServerID,
 			*e++ = 17;
 			*e++ = 0;	/* type 0 - UUID */
 
-			uuid_str_to_bin(uuid, e);
+			uuid_str_to_bin(uuid, e, UUID_STR_FORMAT_STD);
 			e += 16;
 		} else {
 			printf("Invalid pxeuuid: %s\n", uuid);
 		}
 	}
-
-	*e++ = 60;	/* Vendor Class Identifier */
-	vci_strlen = strlen(CONFIG_BOOTP_VCI_STRING);
-	*e++ = vci_strlen;
-	memcpy(e, CONFIG_BOOTP_VCI_STRING, vci_strlen);
-	e += vci_strlen;
 #endif
+
+	e = add_vci(e);
 
 #if defined(CONFIG_BOOTP_VENDOREX)
 	x = dhcp_vendorex_prep(e);
