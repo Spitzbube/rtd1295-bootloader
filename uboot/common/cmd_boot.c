@@ -576,6 +576,14 @@ int do_go (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	return rcode;
 }
 
+int do_goru (cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
+{
+	//boot_mode = BOOT_CONSOLE_MODE;
+	WATCHDOG_DISABLE();
+	setenv("bootcmd", "bootr");
+	return boot_rescue_from_usb();
+}
+
 /* -------------------------------------------------------------------- */
 
 U_BOOT_CMD(
@@ -596,6 +604,14 @@ U_BOOT_CMD(
 	"\tsgboot - go golden rescue boot flow(BOOT_GOLD_MODE)\n"
 	"\tinfo   - show curren mode info\n"
 	"\t[arg]  - passing 'arg' as arguments\n"
+);
+
+/* -------------------------------------------------------------------- */
+
+U_BOOT_CMD(
+	goru, CONFIG_SYS_MAXARGS, 1,	do_goru,
+	"start rescue linux from usb",
+	""
 );
 
 #endif

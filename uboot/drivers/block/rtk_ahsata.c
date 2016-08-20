@@ -38,6 +38,8 @@
 #include "asm/arch/io.h"
 #include "crt_reg.h"
 
+#define SSCEN 1
+
 struct sata_port_regs {
 	u32 clb;
 	u32 clbu;
@@ -1026,14 +1028,104 @@ static void wr_reg(unsigned int val, unsigned int reg)
 	mdelay(1);
 }
 
-static void config_phy(unsigned int port)
+static void set_rx_sensitivity(unsigned int port, unsigned int rx_sens)
 {
-	rtd_outl(SATA_MDIO_CTR1, 0);
+	unsigned int base, port_base;
 
+	base = CONFIG_DWC_AHSATA_BASE_ADDR;
+	port_base = CONFIG_DWC_AHSATA_BASE_ADDR + port*0x80;
+	
+	rtd_outl(SATA_MDIO_CTR1, port);
+
+	wr_reg(0x5, SATA_SPD);
+	wr_reg(0x20, port_base + 0x12c);
+	if(rx_sens==1) {
+		wr_reg(0x73100911, SATA_MDIO_CTR);
+		wr_reg(0x73104911, SATA_MDIO_CTR);
+		wr_reg(0x73108911, SATA_MDIO_CTR);
+		wr_reg(0x27620311, SATA_MDIO_CTR);
+		wr_reg(0x27624311, SATA_MDIO_CTR);
+		wr_reg(0x27628311, SATA_MDIO_CTR);
+		wr_reg(0xfe400d11, SATA_MDIO_CTR);
+		wr_reg(0xfe404d11, SATA_MDIO_CTR);
+		wr_reg(0xfe408d11, SATA_MDIO_CTR);
+		wr_reg(0x40041911, SATA_MDIO_CTR);
+		wr_reg(0x40045911, SATA_MDIO_CTR);
+		wr_reg(0x40049911, SATA_MDIO_CTR);
+	} else {
+		wr_reg(0x521c0911, SATA_MDIO_CTR);
+		wr_reg(0x521c4911, SATA_MDIO_CTR);
+		wr_reg(0x521c8911, SATA_MDIO_CTR);
+		wr_reg(0x27710311, SATA_MDIO_CTR);
+		wr_reg(0x27714311, SATA_MDIO_CTR);
+		wr_reg(0x27718311, SATA_MDIO_CTR);
+		wr_reg(0xef1c0d11, SATA_MDIO_CTR);
+		wr_reg(0xef1c4d11, SATA_MDIO_CTR);
+		wr_reg(0xef1c8d11, SATA_MDIO_CTR);
+		wr_reg(0x20041911, SATA_MDIO_CTR);
+		wr_reg(0x20045911, SATA_MDIO_CTR);
+		wr_reg(0x20049911, SATA_MDIO_CTR);
+	}
+	wr_reg(0x21, port_base + 0x12c);
+	wr_reg(0x20, port_base + 0x12c);
+}
+
+static int phy_link_check(unsigned int port)
+{
+	unsigned int base, port_base;
+	unsigned int reg_ctl, reg_err;
+	int i;
+
+	base = CONFIG_DWC_AHSATA_BASE_ADDR;
+	port_base = CONFIG_DWC_AHSATA_BASE_ADDR + port*0x80;
+	for(i=0; i<3; i++) {
+		mdelay(200);
+		reg_ctl = readl(port_base+0x128);
+		reg_err = readl(port_base+0x130);
+		if( (reg_ctl&0xF)==0x3 && reg_err==0x04050002 ) {
+			printf("[SATA%d] Phy link OK\n", port);
+			return 0;
+		}
+	}
+	printf("[SATA%d] Set Phy parameter to 1\n");
+	set_rx_sensitivity(port, 1);
+
+	for(i=0; i<3; i++) {
+		mdelay(200);
+		reg_ctl = readl(port_base+0x128);
+		reg_err = readl(port_base+0x130);
+		if( (reg_ctl&0xF)==0x3 && reg_err==0x04050002 ) {
+			printf("[SATA%d] Phy link OK\n", port);
+			return 0;
+		}
+	}
+	return -1;
+}
+
+static void config_phy(unsigned int port, unsigned int rx_sens)
+{
+	rtd_outl(SATA_MDIO_CTR1, port);
+
+	wr_reg(0x00001111, SATA_MDIO_CTR);
+	wr_reg(0x00005111, SATA_MDIO_CTR);
+	wr_reg(0x00009111, SATA_MDIO_CTR);
+#if SSCEN
+	printf("[SATA] spread-spectrum enable\n");
+	wr_reg(0x738E0411, SATA_MDIO_CTR);
+	wr_reg(0x738E4411, SATA_MDIO_CTR);
+	wr_reg(0x738E8411, SATA_MDIO_CTR);
+	wr_reg(0x39910811, SATA_MDIO_CTR);
+	wr_reg(0x39914811, SATA_MDIO_CTR);
+	wr_reg(0x39918811, SATA_MDIO_CTR);
+	wr_reg(0x02342711, SATA_MDIO_CTR);
+	wr_reg(0x02346711, SATA_MDIO_CTR);
+	wr_reg(0x0234a711, SATA_MDIO_CTR);
+#else
+	printf("[SATA] spread-spectrum disable\n");
 	wr_reg(0x538E0411, SATA_MDIO_CTR);
 	wr_reg(0x538E4411, SATA_MDIO_CTR);
 	wr_reg(0x538E8411, SATA_MDIO_CTR);
-
+#endif
 	wr_reg(0x336a0511, SATA_MDIO_CTR);
 	wr_reg(0x336a4511, SATA_MDIO_CTR);
 	wr_reg(0x336a8511, SATA_MDIO_CTR);
@@ -1066,6 +1158,29 @@ static void config_phy(unsigned int port)
 	wr_reg(0x94aa6011, SATA_MDIO_CTR);
 	wr_reg(0x94aaA011, SATA_MDIO_CTR);
 	
+	wr_reg(0x72100911, SATA_MDIO_CTR);
+	wr_reg(0x72104911, SATA_MDIO_CTR);
+	wr_reg(0x72108911, SATA_MDIO_CTR);
+	wr_reg(0x27710311, SATA_MDIO_CTR);
+	wr_reg(0x27684311, SATA_MDIO_CTR);
+	wr_reg(0x27648311, SATA_MDIO_CTR);
+		
+	wr_reg(0x29001011, SATA_MDIO_CTR);
+	wr_reg(0x29005011, SATA_MDIO_CTR);
+	wr_reg(0x29009011, SATA_MDIO_CTR);
+
+	//tx driving set to level 2
+	wr_reg(0x94a72011, SATA_MDIO_CTR);
+	wr_reg(0x94a76011, SATA_MDIO_CTR);
+	wr_reg(0x94a7A011, SATA_MDIO_CTR);
+	wr_reg(0x587a2111, SATA_MDIO_CTR);
+	wr_reg(0x587a6111, SATA_MDIO_CTR);
+	wr_reg(0x587aa111, SATA_MDIO_CTR);
+	
+	wr_reg(0x40000c11, SATA_MDIO_CTR);
+	wr_reg(0x40004c11, SATA_MDIO_CTR);
+	wr_reg(0x40008c11, SATA_MDIO_CTR);
+	
 	wr_reg(0x00271711, SATA_MDIO_CTR);
 	wr_reg(0x00275711, SATA_MDIO_CTR);
 	wr_reg(0x00279711, SATA_MDIO_CTR);
@@ -1073,12 +1188,14 @@ static void config_phy(unsigned int port)
 
 static void config_mac(unsigned int port)
 {
-	unsigned int base, port_base, val, cnt;
+	unsigned int base, port_base, val;
 	
 	base = CONFIG_DWC_AHSATA_BASE_ADDR;
 	port_base = CONFIG_DWC_AHSATA_BASE_ADDR + port*0x80;
 
-	wr_reg(0x2, port_base + 0x144);
+	rtd_outl(SATA_MDIO_CTR1, port);
+
+//	wr_reg(0x2, port_base + 0x144);
 	wr_reg(0x6726ff81, base);
 	val = rtd_inl(base);
 	wr_reg(0x6737ff81, base);
@@ -1095,8 +1212,8 @@ static void config_mac(unsigned int port)
 	wr_reg(val, base + 0x18);
 	
 	wr_reg(0xffffffff, port_base + 0x114);
-	wr_reg(0x04040000, port_base + 0x100);
-	wr_reg(0x04040400, port_base + 0x108);
+//	wr_reg(0x04040000, port_base + 0x100);
+//	wr_reg(0x04040400, port_base + 0x108);
 
 	val = rtd_inl(port_base + 0x170);
 	wr_reg(0x88, port_base + 0x170);
@@ -1109,42 +1226,26 @@ static void config_mac(unsigned int port)
 	
 	wr_reg(0x3c300, base + 0xf20);
 
+	wr_reg(0x1700, base + 0xA4);
+
 //Set to Auto mode
-	wr_reg(0x0, port_base + 0x12c);
-	wr_reg(0x1, port_base + 0x12c);
-	wr_reg(0x0, port_base + 0x12c);
-	cnt=0;
+	wr_reg(0x5, SATA_SPD);
 }
 
-static int phyrdy_check(unsigned int port)
+static int send_oob(unsigned int port)
 {
-	unsigned int cnt=0, check;
 	unsigned int val;
 
 	if(port==0) {
-		check = 0x5;
 		val = rtd_inl(0x9801a980);
 		val |= 0x115;
 	} else if(port==1) {
-		check = 0xA;
 		val = rtd_inl(0x9801a980);
 		val |= 0x12A;
 	}
 
 	wr_reg(val, 0x9801a980);
 
-	while(1) {
-		val = rtd_inl(SATA_SATA_PHY_MON);
-		val &= val & check;
-		if(val==check) {
-			printf("sata phy check ready\n");
-			break;
-		}
-		cnt++;
-		if(cnt >= 0x100)
-			return -1;
-		mdelay(5);
-	}
 	return 0;
 }
 
@@ -1152,16 +1253,14 @@ void sata_init(int port)
 {
 	int ret, gpio;
 	unsigned int reg;
-
-#ifndef HDD0_POWER_GPIO
-    // This is for all Realtek reference board
-    #define HDD0_POWER_GPIO 16
-#endif
-    setGPIO(HDD0_POWER_GPIO,1);
-    printf("Sata Power GPIO number is 0x%x\n", HDD0_POWER_GPIO);
-    //ey: FIXME! Minimum of 6 second is required before enable the 2nd HDD
-    // Comment it out and turn it on in kernel instead of waiting
-
+#ifdef CONFIG_EN_POWER_ONLY
+	if(!getGPIO(CONFIG_PORT0_PRESENT_PIN)) {
+		printf("[SATA] Hardisk exist! turn on power\n");
+		setGPIO(CONFIG_PORT0_POWER_PIN, 1);
+	}
+#else
+	setGPIO(CONFIG_PORT0_POWER_PIN, 1);
+	printf("[SATA] enable SATA interface\n");
 	reg = rtd_inl(CLOCK_ENABLE1);
 	reg = reg | 1<<2 | 1<<7;
 	rtd_outl(CLOCK_ENABLE1, reg);
@@ -1170,15 +1269,15 @@ void sata_init(int port)
 	reg = reg | 1<<5 | 1<<7;// | 1<<10;
 	rtd_outl(SOFT_RESET1, reg);
 
-	config_phy(port);
+	config_mac(port);
+	config_phy(port, 0);
 
 	reg = rtd_inl(SOFT_RESET1);
 	reg = reg | 1<<10;
 	rtd_outl(SOFT_RESET1, reg);
+	send_oob(port);
 
-	if(phyrdy_check(port)<0)
-		printf("+++++ sata phy check fail +++++\n");
-	config_mac(port);
-
+//	phy_link_check(port);
+#endif
 }
 

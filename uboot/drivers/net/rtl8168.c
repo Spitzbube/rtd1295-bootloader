@@ -5549,6 +5549,38 @@ int rtl8168_initialize(bd_t *bis)
         mdio_write(tp, 0x1f, 0x0A43);
         mdio_write(tp, 0x1b, 0x8082);
         mdio_write(tp, 0x1c, 0xFE00);
+
+        // workaround to avoid empty efuse
+        // check RC-K in efuse
+        tmp = ((rtd_inl(0x980171c0) & BIT_0) << 3) | ((rtd_inl(0x980171bc) & (BIT_31 | BIT_30 | BIT_29)) >> 29);
+        if (tmp == 0) {
+            // set default value 0xB
+            mdio_write(tp, 0x1f, 0x0BCD);
+            mdio_write(tp, 22, 0xBBBB);
+            mdio_write(tp, 23, 0xBBBB);
+        }
+        // check R-K in efuse
+        tmp = (rtd_inl(0x980171bc) & (BIT_28 | BIT_27 | BIT_26 | BIT_25)) >> 25;
+        if (tmp == 0) {
+            // set default value 0x6
+            mdio_write(tp, 0x1f, 0x0BCE);
+            mdio_write(tp, 16, 0x6666);
+            mdio_write(tp, 17, 0x6666);
+        }
+        // check Amp-K in efuse
+        tmp = (rtd_inl(0x980171b8) & 0x03fffc00) >> 10;
+        if (tmp == 0) {
+            // set default value 0x7799
+            mdio_write(tp, 0x1f, 0x0BCA);
+            mdio_write(tp, 22, 0x7799);
+        }
+        // check Bias-K in efuse
+        tmp = ((rtd_inl(0x980171bc) & 0x3ff) << 6) | ((rtd_inl(0x980171b8) & 0xfc000000) >> 26);
+        if (tmp == 0) {
+            // set default value 0xA899
+            mdio_write(tp, 0x1f, 0x0BCF);
+            mdio_write(tp, 22, 0xA899);
+        }
     }
 
     return card_number;

@@ -26,6 +26,7 @@ include $(TOPDIR)/config.mk
 LIB 	:= $(obj)libpwm.o
 
 COBJS-$(CONFIG_REALTEK_PWM)	+= pwm.o
+COBJS-$(CONFIG_RTD129X_PWM)	+= pwm-rtd129x.o
 
 COBJS	:= $(COBJS-y)
 SRCS 	:= $(COBJS:.o=.c)
