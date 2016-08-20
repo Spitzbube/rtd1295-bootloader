@@ -96,9 +96,7 @@ void fill_one_pte(gpt_entry * pte_curr, int idx, unsigned long long start_lba, u
     }
 }
 
-#if 0 // for old install_a
-
-void fill_GPT_PTES(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
+void fill_GPT_PTES_0624(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
 {
     unsigned long long blk_size;
     int gpt_idx;
@@ -213,10 +211,7 @@ void fill_GPT_PTES(gpt_entry * pte_curr, unsigned long long disk_size, unsigned 
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "USER");pte_curr++;
 }
 
-#endif
-
-#if 1 // for new install_a - 20160716
-void fill_GPT_PTES(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
+void fill_GPT_PTES_0716(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
 {
     unsigned long long blk_size;
     int gpt_idx;
@@ -315,9 +310,8 @@ void fill_GPT_PTES(gpt_entry * pte_curr, unsigned long long disk_size, unsigned 
     blk_size = (disk_size-4)-start_lba;
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "DISKVOLUME1");pte_curr++;
 }
-#endif
 
-unsigned int rtkgpt_gen(int debug_mode)
+unsigned int rtkgpt_gen(int gpt_ver)
 {
     int dev, i;
     block_dev_desc_t * dev_desc;
@@ -397,7 +391,12 @@ unsigned int rtkgpt_gen(int debug_mode)
     }
 
     // update PTE first
-    fill_GPT_PTES(pte, disk_size, 34);
+    if( gpt_ver == 0x0624 )
+        fill_GPT_PTES_0624(pte, disk_size, 34);
+    else if( gpt_ver == 0x0716 )
+    	fill_GPT_PTES_0716(pte, disk_size, 34);
+
+    // update crc32
     pte_crc32 = crc32(0, pte, pad_count);
 
     // update MBR
@@ -444,13 +443,20 @@ unsigned int rtkgpt_gen(int debug_mode)
     return 0;
 }
 
-void run_rtkgpt_gen(int debug_mode)
+void run_rtkgpt_gen(int gpt_ver)
 {
-    unsigned int reg_val;
-
-    reg_val = rtkgpt_gen(debug_mode);
-
-    printf("ret val = 0x%08x(%s)\n", reg_val, reg_val == 0 ? "OK" : "FAIL" );
+    unsigned int ret_val;
+    
+    switch( gpt_ver ) {
+    	case 0x0624:
+        case 0x0716:
+    	    ret_val = rtkgpt_gen(gpt_ver);
+    	    break;
+    	default:
+            printf("Please give gpt ver. 0624 or 0716. curr input is %08x\n", gpt_ver );
+    	    ret_val = -1;
+    }
+    printf("ret val = 0x%08x(%s)\n", ret_val, ret_val == 0 ? "OK" : "FAIL" );
 }
 
 unsigned int rtkgpt_fwtable(int debug_mode)
@@ -620,6 +626,7 @@ void run_rtkgpt_fwtable(int debug_mode)
 int do_rtkgpt(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
     int cmd;
+    int gpt_ver;
 
     cmd = -1;
 
@@ -629,10 +636,22 @@ int do_rtkgpt(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
     if( argc > 1 ) {
         if( strncmp( argv[1], "gen", 3 ) == 0 ) {
             cmd = 0;
+            gpt_ver = 0;
             if( argc > 2 ) {
-                if( strncmp( argv[2], "debug", 5 ) == 0  ) {
+                if( strncmp( argv[2], "0624", 4 ) == 0  ) {
+                    gpt_ver = 0x0624;
+                }
+                else if( strncmp( argv[2], "0716", 4 ) == 0  ) {
+                    gpt_ver = 0x0716;
+                }
+            }
+            if( argc > 3 ) {
+                if( strncmp( argv[3], "debug", 5 ) == 0  ) {
                     debug = 1;
                 }
+            }
+            if( !gpt_ver ) {
+                cmd = -1;
             }
         }
         if( strncmp( argv[1], "fwtable", 3 ) == 0 ) {
@@ -652,7 +671,7 @@ int do_rtkgpt(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
     do {
         if( cmd == 0 ) {
-            run_rtkgpt_gen(debug);
+            run_rtkgpt_gen(gpt_ver);
             return 0;
         }
         if( cmd == 1 ) {
@@ -668,6 +687,6 @@ int do_rtkgpt(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 U_BOOT_CMD(
     rtkgpt, 5, 0,   do_rtkgpt,
     "rtkgpt utility",
-    "\nrtkgpt gen [debug]\n"
-    "\nrtkgpt fwtable [debug]\n"
+    "\n(1)rtkgpt gen [0624|0716] [debug]"
+    "\n(2)rtkgpt fwtable [debug]"
 );

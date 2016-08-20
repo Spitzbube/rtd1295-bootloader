@@ -192,6 +192,7 @@
 	#define CONFIG_DWC_AHSATA_BASE_ADDR     0x9803F000
 	#define CONFIG_LBA48
 	#define CONFIG_LIBATA
+	#define CONFIG_PORT0_POWER_PIN			18
 #endif
 
 #endif /* __CONFIG_RTK_RTD1295_QA_SPI_H */

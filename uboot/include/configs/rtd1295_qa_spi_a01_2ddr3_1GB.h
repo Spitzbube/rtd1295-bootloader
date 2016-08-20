@@ -192,7 +192,22 @@
 	#define CONFIG_DWC_AHSATA_BASE_ADDR     0x9803F000
 	#define CONFIG_LBA48
 	#define CONFIG_LIBATA
+	#define CONFIG_PORT0_POWER_PIN			18
 #endif
+
+/* PWM */
+#define CONFIG_RTD129X_PWM
+#ifdef CONFIG_RTD129X_PWM
+//#define CONFIG_CMD_PWM
+//#define PWM_0_PIN_0
+//#define PWM_0_PIN_1
+//#define PWM_1_PIN_0
+//#define PWM_1_PIN_1
+//#define PWM_2_PIN_0
+//#define PWM_2_PIN_1
+#define PWM_3_PIN_0
+//#define PWM_3_PIN_1
+#endif /* CONFIG_RTD129X_PWM */
 
 #endif /* __CONFIG_RTK_RTD1295_QA_SPI_H */
 

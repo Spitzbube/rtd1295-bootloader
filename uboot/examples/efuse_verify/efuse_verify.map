@@ -51,7 +51,7 @@ LOAD strstr.o
 LOAD strtoul.o
 LOAD ctype.o
 LOAD ../../static_lib/libefuse.verify.a
-LOAD /home/carolhsu/nas/svn/bootcode_20160801/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a32nt-150615/bin/../lib/gcc/arm-linux-gnueabi/4.9.3/armv8-a/libgcc.a
+LOAD /home/carolhsu/nas/svn/bootcode/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a32nt-150615/bin/../lib/gcc/arm-linux-gnueabi/4.9.3/armv8-a/libgcc.a
                 0x00010000                PROVIDE (__executable_start, 0x10000)
                 0x00010094                . = (0x10000 + SIZEOF_HEADERS)
 
@@ -528,19 +528,19 @@ LOAD /home/carolhsu/nas/svn/bootcode_20160801/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x522d
+.debug_info     0x00000000     0x5224
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000       0x75 start.o
- .debug_info    0x00000075       0xab strlen.o
- .debug_info    0x00000120       0xcb strstr.o
- .debug_info    0x000001eb      0x148 strtoul.o
- .debug_info    0x00000333       0x52 ctype.o
- .debug_info    0x00000385      0xc35 ../../static_lib/libefuse.verify.a(verifymain.o)
- .debug_info    0x00000fba      0x8f9 ../../static_lib/libefuse.verify.a(cache_v7.o)
- .debug_info    0x000018b3     0x1447 ../../static_lib/libefuse.verify.a(mcp.o)
- .debug_info    0x00002cfa      0x2ef ../../static_lib/libefuse.verify.a(timer.o)
- .debug_info    0x00002fe9      0xd54 ../../static_lib/libefuse.verify.a(util.o)
- .debug_info    0x00003d3d     0x14f0 ../../static_lib/libefuse.verify.a(efuse.o)
+ .debug_info    0x00000000       0x6c start.o
+ .debug_info    0x0000006c       0xab strlen.o
+ .debug_info    0x00000117       0xcb strstr.o
+ .debug_info    0x000001e2      0x148 strtoul.o
+ .debug_info    0x0000032a       0x52 ctype.o
+ .debug_info    0x0000037c      0xc35 ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_info    0x00000fb1      0x8f9 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_info    0x000018aa     0x1447 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_info    0x00002cf1      0x2ef ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_info    0x00002fe0      0xd54 ../../static_lib/libefuse.verify.a(util.o)
+ .debug_info    0x00003d34     0x14f0 ../../static_lib/libefuse.verify.a(efuse.o)
 
 .debug_abbrev   0x00000000     0x14d1
  *(.debug_abbrev)
@@ -556,19 +556,19 @@ LOAD /home/carolhsu/nas/svn/bootcode_20160801/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a
  .debug_abbrev  0x00000d61      0x376 ../../static_lib/libefuse.verify.a(util.o)
  .debug_abbrev  0x000010d7      0x3fa ../../static_lib/libefuse.verify.a(efuse.o)
 
-.debug_line     0x00000000     0x1028
+.debug_line     0x00000000     0x101f
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000       0x50 start.o
  .debug_line    0x00000050       0x3a strlen.o
  .debug_line    0x0000008a       0x59 strstr.o
- .debug_line    0x000000e3       0xdd strtoul.o
- .debug_line    0x000001c0       0x28 ctype.o
- .debug_line    0x000001e8      0x1ce ../../static_lib/libefuse.verify.a(verifymain.o)
- .debug_line    0x000003b6      0x1d9 ../../static_lib/libefuse.verify.a(cache_v7.o)
- .debug_line    0x0000058f      0x4b6 ../../static_lib/libefuse.verify.a(mcp.o)
- .debug_line    0x00000a45      0x119 ../../static_lib/libefuse.verify.a(timer.o)
- .debug_line    0x00000b5e      0x18e ../../static_lib/libefuse.verify.a(util.o)
- .debug_line    0x00000cec      0x33c ../../static_lib/libefuse.verify.a(efuse.o)
+ .debug_line    0x000000e3       0xd4 strtoul.o
+ .debug_line    0x000001b7       0x28 ctype.o
+ .debug_line    0x000001df      0x1ce ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_line    0x000003ad      0x1d9 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_line    0x00000586      0x4b6 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_line    0x00000a3c      0x119 ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_line    0x00000b55      0x18e ../../static_lib/libefuse.verify.a(util.o)
+ .debug_line    0x00000ce3      0x33c ../../static_lib/libefuse.verify.a(efuse.o)
 
 .debug_frame    0x00000000      0x958
  *(.debug_frame)
@@ -582,27 +582,27 @@ LOAD /home/carolhsu/nas/svn/bootcode_20160801/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a
  .debug_frame   0x00000540      0x1b0 ../../static_lib/libefuse.verify.a(util.o)
  .debug_frame   0x000006f0      0x268 ../../static_lib/libefuse.verify.a(efuse.o)
 
-.debug_str      0x00000000      0xee7
+.debug_str      0x00000000      0xede
  *(.debug_str)
- .debug_str     0x00000000      0x1b6 strlen.o
-                                0x1e6 (size before relaxing)
- .debug_str     0x000001b6       0x10 strstr.o
-                                0x1e6 (size before relaxing)
- .debug_str     0x000001c6       0x33 strtoul.o
-                                0x209 (size before relaxing)
- .debug_str     0x000001f9       0x11 ctype.o
-                                0x17c (size before relaxing)
- .debug_str     0x0000020a      0x1fe ../../static_lib/libefuse.verify.a(verifymain.o)
+ .debug_str     0x00000000      0x1ad strlen.o
+                                0x1dd (size before relaxing)
+ .debug_str     0x000001ad       0x10 strstr.o
+                                0x1dd (size before relaxing)
+ .debug_str     0x000001bd       0x33 strtoul.o
+                                0x200 (size before relaxing)
+ .debug_str     0x000001f0       0x11 ctype.o
+                                0x173 (size before relaxing)
+ .debug_str     0x00000201      0x1fe ../../static_lib/libefuse.verify.a(verifymain.o)
                                 0x3b1 (size before relaxing)
- .debug_str     0x00000408      0x2f9 ../../static_lib/libefuse.verify.a(cache_v7.o)
+ .debug_str     0x000003ff      0x2f9 ../../static_lib/libefuse.verify.a(cache_v7.o)
                                 0x51b (size before relaxing)
- .debug_str     0x00000701      0x1c9 ../../static_lib/libefuse.verify.a(mcp.o)
+ .debug_str     0x000006f8      0x1c9 ../../static_lib/libefuse.verify.a(mcp.o)
                                 0x4ab (size before relaxing)
- .debug_str     0x000008ca       0x83 ../../static_lib/libefuse.verify.a(timer.o)
+ .debug_str     0x000008c1       0x83 ../../static_lib/libefuse.verify.a(timer.o)
                                 0x259 (size before relaxing)
- .debug_str     0x0000094d      0x26d ../../static_lib/libefuse.verify.a(util.o)
+ .debug_str     0x00000944      0x26d ../../static_lib/libefuse.verify.a(util.o)
                                 0x54f (size before relaxing)
- .debug_str     0x00000bba      0x32d ../../static_lib/libefuse.verify.a(efuse.o)
+ .debug_str     0x00000bb1      0x32d ../../static_lib/libefuse.verify.a(efuse.o)
                                 0x5b1 (size before relaxing)
 
 .debug_loc      0x00000000     0x3982
@@ -656,4 +656,4 @@ LOAD /home/carolhsu/nas/svn/bootcode_20160801/tmp/asdk-4.9.3-a53-EL-3.10-g2.19-a
  *(.note.GNU-stack)
  *(.gnu_debuglink)
  *(.gnu.lto_*)
-OUTPUT(/home/carolhsu/nas/svn/bootcode_20160801/uboot/examples/efuse_verify/out/efuse_verify elf32-littlearm)
+OUTPUT(/home/carolhsu/nas/svn/bootcode/uboot/examples/efuse_verify/out/efuse_verify elf32-littlearm)
