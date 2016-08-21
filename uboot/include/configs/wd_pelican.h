@@ -171,6 +171,13 @@
 	#define CONFIG_RESCUE_FROM_USB_AUDIO_CORE	"bluecore.audio"
 #endif /* CONFIG_RESCUE_FROM_USB */
 
+#define CONFIG_RESCUE_FROM_DHCP
+#ifdef CONFIG_RESCUE_FROM_DHCP
+       #define CONFIG_CMD_DHCP
+       #define CONFIG_DHCP_HOST_IP             "192.168.2.144"
+#endif
+
+
 #define CONFIG_CMD_SATA
 #ifdef CONFIG_CMD_SATA
 	#define CONFIG_RTK_AHSATA
