@@ -302,6 +302,7 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 //adam 0729 start 
 //add a boot rescue function from dhcp tftp
 
+#ifdef CONFIG_RESCUE_FROM_DHCP
 int boot_rescue_from_dhcp(void)
 {
 	char tmpbuf[128];
@@ -412,7 +413,7 @@ loading_failed:
 	return RTK_PLAT_ERR_READ_RESCUE_IMG;	
 }
 //adam 0729 end
-
+#endif
 
 int boot_rescue_from_usb(void)
 {
@@ -4060,11 +4061,13 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif /* CONFIG_RESCUE_FROM_USB */
 
 //adam 0729 start
+#ifdef CONFIG_RESCUE_FROM_DHCP
 //add the boot dhcp function when rescue from usb fail	
 	if (ret != RTK_PLAT_ERR_OK) {
 		ret = boot_rescue_from_dhcp();
 	}
 //adam 0729 end	
+#endif
 	
 	return CMD_RET_SUCCESS;
 }
