@@ -308,7 +308,7 @@ int boot_rescue_from_dhcp(void)
 	char tmpbuf[128];
 	int ret = RTK_PLAT_ERR_OK;
 	char *filename;
-	char *dhcp_host_ip;
+	char *dhcp_server_ip;
 	unsigned int secure_mode=0;
 	
 	secure_mode = rtk_get_secure_boot_type();
@@ -317,11 +317,13 @@ int boot_rescue_from_dhcp(void)
 	if ((filename = getenv("rescue_dtb")) == NULL) {
 		filename =(char*) CONFIG_RESCUE_FROM_USB_DTB;
 	}
-	if ((dhcp_host_ip = getenv("dhcp_host_ip")) == NULL) {
-		dhcp_host_ip =(char*) CONFIG_DHCP_HOST_IP;
+
+
+	if ((dhcp_server_ip = getenv("serverip")) == NULL) {
+		dhcp_server_ip =(char*) CONFIG_BOOTP_SERVERIP;
 	}
 
-	sprintf(tmpbuf, "dhcp %s %s:%s", getenv("fdt_loadaddr"),dhcp_host_ip, filename);
+	sprintf(tmpbuf, "dhcp %s %s", getenv("fdt_loadaddr"), filename);
 	if (run_command(tmpbuf, 0) != 0) {
 		goto loading_failed;
 	}
@@ -340,8 +342,7 @@ int boot_rescue_from_dhcp(void)
 	}	
 	else
 	{	
-
-		sprintf(tmpbuf, "dhcp %s %s:%s", getenv("kernel_loadaddr"),dhcp_host_ip, filename);
+		sprintf(tmpbuf, "dhcp %s %s", getenv("kernel_loadaddr"), filename);
 		if (run_command(tmpbuf, 0) != 0) {
 			goto loading_failed;
 		}
@@ -353,6 +354,8 @@ int boot_rescue_from_dhcp(void)
 	if ((filename = getenv("rescue_rootfs")) == NULL) {
 		filename =(char*) CONFIG_RESCUE_FROM_USB_ROOTFS;
 	}
+
+
 	if(secure_mode == RTK_SECURE_BOOT)
 	{	
 		if (rtk_decrypt_rescue_from_usb(filename, getenv_ulong("rootfs_loadaddr", 16, 0)))
@@ -360,7 +363,8 @@ int boot_rescue_from_dhcp(void)
 	}	
 	else
 	{
-		sprintf(tmpbuf, "dhcp %s %s:%s", getenv("rootfs_loadaddr"),dhcp_host_ip, filename);
+
+		sprintf(tmpbuf, "dhcp %s %s", getenv("rootfs_loadaddr"), filename);
 		if (run_command(tmpbuf, 0) != 0) {
 			goto loading_failed;
 		}
@@ -386,7 +390,7 @@ int boot_rescue_from_dhcp(void)
 	}	
 	else
 	{	
-		sprintf(tmpbuf, "dhcp 0x%08x %s:%s", MIPS_AUDIO_FW_ENTRY_ADDR, dhcp_host_ip, filename);
+		sprintf(tmpbuf, "dhcp 0x%08x %s", MIPS_AUDIO_FW_ENTRY_ADDR, filename);
 
 		if (run_command(tmpbuf, 0) == 0) {
 			printf("Loading \"%s\" to 0x%08x is OK.\n", filename, MIPS_AUDIO_FW_ENTRY_ADDR);
@@ -409,7 +413,7 @@ int boot_rescue_from_dhcp(void)
 	return ret;
 
 loading_failed:
-	printf("Loading \"%s\" from dhcp host %s failed.\n", filename, dhcp_host_ip);
+	printf("Loading \"%s\" from dhcp host %s failed.\n", filename, dhcp_server_ip);
 	return RTK_PLAT_ERR_READ_RESCUE_IMG;	
 }
 //adam 0729 end
