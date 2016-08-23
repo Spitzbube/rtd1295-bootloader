@@ -56,6 +56,7 @@ COBJS-y += cmd_version.o
 COBJS-$(CONFIG_CMD_RTKSPI) += cmd_rtkspi.o
 COBJS-$(CONFIG_CMD_RTKRNG) += cmd_rtkrng.o
 COBJS-$(CONFIG_CMD_RTKGPT) += cmd_rtkgpt.o
+COBJS-$(CONFIG_CMD_RTKMKFAT) += cmd_rtkmkfat.o
 #COBJS-y += cmd_freecpu.o
 #COBJS-y += cmd_iotest.o
 COBJS-$(CONFIG_APPLY_CUSTOMIZED_FEATURE) += customized_feature.o
