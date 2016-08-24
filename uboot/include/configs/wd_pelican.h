@@ -174,7 +174,7 @@
 #define CONFIG_RESCUE_FROM_DHCP
 #ifdef CONFIG_RESCUE_FROM_DHCP
        #define CONFIG_CMD_DHCP
-       #define CONFIG_DHCP_HOST_IP             "192.168.2.144"
+       #define CONFIG_DHCP_SERVER_IP             "192.168.2.144"
 #endif
 
 
