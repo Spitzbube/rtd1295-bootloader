@@ -313,17 +313,20 @@ int boot_rescue_from_dhcp(void)
 	
 	secure_mode = rtk_get_secure_boot_type();
 
+	run_command("sata init", 0);	/* "sata init" always return 0 */
+
+	run_command("rtkgpt gen 0716", 0);
+
+	run_command("sata init", 0);	/* "sata init" always return 0 */
+
 	/* DTB */	
 	if ((filename = getenv("rescue_dtb")) == NULL) {
 		filename =(char*) CONFIG_RESCUE_FROM_USB_DTB;
 	}
 
+	dhcp_server_ip =(char*) CONFIG_BOOTP_SERVERIP;
 
-	if ((dhcp_server_ip = getenv("serverip")) == NULL) {
-		dhcp_server_ip =(char*) CONFIG_BOOTP_SERVERIP;
-	}
-
-	sprintf(tmpbuf, "dhcp %s %s", getenv("fdt_loadaddr"), filename);
+	sprintf(tmpbuf, "dhcp %s %s:%s", getenv("fdt_loadaddr"),dhcp_server_ip, filename);
 	if (run_command(tmpbuf, 0) != 0) {
 		goto loading_failed;
 	}
@@ -342,7 +345,7 @@ int boot_rescue_from_dhcp(void)
 	}	
 	else
 	{	
-		sprintf(tmpbuf, "dhcp %s %s", getenv("kernel_loadaddr"), filename);
+		sprintf(tmpbuf, "dhcp %s %s:%s", getenv("kernel_loadaddr"), dhcp_server_ip, filename);
 		if (run_command(tmpbuf, 0) != 0) {
 			goto loading_failed;
 		}
@@ -364,7 +367,7 @@ int boot_rescue_from_dhcp(void)
 	else
 	{
 
-		sprintf(tmpbuf, "dhcp %s %s", getenv("rootfs_loadaddr"), filename);
+		sprintf(tmpbuf, "dhcp %s %s:%s", getenv("rootfs_loadaddr"), dhcp_server_ip, filename);
 		if (run_command(tmpbuf, 0) != 0) {
 			goto loading_failed;
 		}
@@ -390,7 +393,7 @@ int boot_rescue_from_dhcp(void)
 	}	
 	else
 	{	
-		sprintf(tmpbuf, "dhcp 0x%08x %s", MIPS_AUDIO_FW_ENTRY_ADDR, filename);
+		sprintf(tmpbuf, "dhcp 0x%08x %s:%s", MIPS_AUDIO_FW_ENTRY_ADDR, dhcp_server_ip, filename);
 
 		if (run_command(tmpbuf, 0) == 0) {
 			printf("Loading \"%s\" to 0x%08x is OK.\n", filename, MIPS_AUDIO_FW_ENTRY_ADDR);
