@@ -174,7 +174,8 @@
 #define CONFIG_RESCUE_FROM_DHCP
 #ifdef CONFIG_RESCUE_FROM_DHCP
        #define CONFIG_CMD_DHCP
-       #define CONFIG_DHCP_SERVER_IP             "192.168.2.144"
+       //#define CONFIG_BOOTP_SERVERIP         "192.168.2.134" /* development */
+       #define CONFIG_BOOTP_SERVERIP           "192.168.137.2" /* factory release */
 #endif
 
 
