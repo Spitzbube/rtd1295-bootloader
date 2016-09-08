@@ -38,7 +38,7 @@
 #include "asm/arch/io.h"
 #include "crt_reg.h"
 
-#define SSCEN 1
+#define SSCEN 0
 
 struct sata_port_regs {
 	u32 clb;
@@ -879,6 +879,14 @@ u32 ata_low_level_rw_lba28(int dev, lbaint_t blknr, lbaint_t blkcnt,
 lbaint_t sata_read(int dev, lbaint_t blknr, lbaint_t blkcnt, void *buffer)
 {
 	lbaint_t rc;
+	
+	if( blkcnt == 0 ) {
+	    if( sizeof(lbaint_t) == 8 )
+	        printf("Warning: read blknr 0x%llx but blkcnt is 0\n", blknr);
+	    else
+	        printf("Warning: read blknr 0x%lx but blkcnt is 0\n", blknr);
+	    return 0;   
+	}
 
 	if (sata_dev_desc[dev].lba48) {
 		//printf("\n****** %s %d, dev %d, buffer 0x%08x\n", __FUNCTION__, __LINE__, dev, buffer);
@@ -905,6 +913,14 @@ lbaint_t sata_write(int dev, lbaint_t blknr, lbaint_t blkcnt, void *buffer)
 	struct ahci_probe_ent *probe_ent =
 		(struct ahci_probe_ent *)sata_dev_desc[dev].priv;
 	u32 flags = probe_ent->flags;
+
+	if( blkcnt == 0 ) {
+	    if( sizeof(lbaint_t) == 8 )
+	        printf("Warning: read blknr 0x%llx but blkcnt is 0\n", blknr);
+	    else
+	        printf("Warning: read blknr 0x%lx but blkcnt is 0\n", blknr);
+	    return 0;   
+	}
 
 	if (sata_dev_desc[dev].lba48) {
 		rc = ata_low_level_rw_lba48(dev, blknr, blkcnt,
@@ -1114,9 +1130,9 @@ static void config_phy(unsigned int port, unsigned int rx_sens)
 	wr_reg(0x738E0411, SATA_MDIO_CTR);
 	wr_reg(0x738E4411, SATA_MDIO_CTR);
 	wr_reg(0x738E8411, SATA_MDIO_CTR);
-	wr_reg(0x39910811, SATA_MDIO_CTR);
-	wr_reg(0x39914811, SATA_MDIO_CTR);
-	wr_reg(0x39918811, SATA_MDIO_CTR);
+	wr_reg(0x35910811, SATA_MDIO_CTR);
+	wr_reg(0x35914811, SATA_MDIO_CTR);
+	wr_reg(0x35918811, SATA_MDIO_CTR);
 	wr_reg(0x02342711, SATA_MDIO_CTR);
 	wr_reg(0x02346711, SATA_MDIO_CTR);
 	wr_reg(0x0234a711, SATA_MDIO_CTR);
