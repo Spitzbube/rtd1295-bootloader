@@ -140,6 +140,8 @@
 #define CONFIG_COMPANY_ID 		"0000"
 #define CONFIG_BOARD_ID         "0705"
 #define CONFIG_VERSION          "0000"
+#define CONFIG_VERSION_VARIABLE
+#define CONFIG_CMD_VERSION
 
 /*
  * SDRAM Memory Map
