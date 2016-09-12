@@ -63,6 +63,9 @@ COBJS-$(CONFIG_APPLY_CUSTOMIZED_FEATURE) += customized_feature.o
 COBJS-$(CONFIG_SECOND_BOOTCODE_SUPPORT) += cmd_boot2ndbootcode.o
 COBJS-$(CONFIG_GOLDENBOOT_SUPPORT) += goldenboot.o
 
+# WD pingpong
+COBJS-$(CONFIG_CMD_WDPP) += cmd_wdpp.o
+
 # environment
 COBJS-y += env_common.o
 COBJS-$(CONFIG_ENV_IS_IN_DATAFLASH) += env_dataflash.o
