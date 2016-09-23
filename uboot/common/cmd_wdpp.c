@@ -19,6 +19,10 @@
 
 extern int sata_curr_device;
 
+unsigned char g_wdpp_flag;
+
+int wdpp_set(unsigned char pp);
+
 int wdpp_usage(void)
 {
 	printf("usage:\n(1)wdpp set [A | B]\n(2)wdpp get\n");
@@ -42,8 +46,8 @@ int wdpp_get(void)
 
 	sprintf(tmpbuf, "fatls sata 0:12"); //CONFIG partition is at sata 0:12
 	if (run_command(tmpbuf, 0) != 0) {
-		printf("%s: Failed to list files in CONFIG partition, run \"wdpp set [A | B]\" manually\n",__func__);	
-		return -2;
+		printf("%s: Failed to list files in CONFIG partition, set ping pong flag to A\n",__func__);
+		wdpp_set('A');
 	}
 
 
@@ -60,11 +64,13 @@ int wdpp_get(void)
 	//printf("read_buf[1] = 0x%02x\n", read_buf[1]);
 	if( *read_buf == 'a' || *read_buf == 'A'){
 		printf("current_pp = A\n");
-		return 'A';
+		g_wdpp_flag = read_buf[0];
+		return 0;
 	}
 	else if( *read_buf == 'b' || *read_buf == 'B'){
 		printf("current_pp = B\n");
-		return 'B';
+		g_wdpp_flag = read_buf[0];
+		return 0;
 	}
 	else{
 		printf("Unknown ping pong flag...\n");
@@ -88,16 +94,12 @@ int wdpp_set(unsigned char pp)
 		}
 	}
 
-	sprintf(tmpbuf, "fatls sata 0:12"); //CONFIG partition is at sata 0:12 (0x12)
+	sprintf(tmpbuf, "rtkfat gen sata auto 12");
 	if (run_command(tmpbuf, 0) != 0) {
-		printf("%s: Failed to list files in CONFIG partition, formattimg sata 0:18 partition \n",__func__);
-
-		sprintf(tmpbuf, "rtkfat gen sata auto 12");
-		if (run_command(tmpbuf, 0) != 0) {
-			printf("%s: Failed to format sata 0:18 partition\n",__func__);	
-			return -2;
-		}
-	}	
+		printf("%s: Failed to format sata 0:18 partition\n",__func__);	
+		return -2;
+	}
+	
 
 	*(u_char *)addr = pp;
 	*(u_char *)(addr+1) = 0x0a;
@@ -107,6 +109,8 @@ int wdpp_set(unsigned char pp)
 		printf("%s: File %s does not exist, run \"wdpp set\" command manually\n",__func__, PING_PONG_FILENAME);	
 		return -3;
 	}	
+
+	g_wdpp_flag = pp;
 
 	printf("%s: set pp to %c\n",__func__, pp);
 
