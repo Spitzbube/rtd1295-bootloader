@@ -80,6 +80,7 @@ typedef enum{
 	BOOT_FROM_FLASH_MANUAL_MODE
 }BOOT_FROM_FLASH_T;
 
+
 #if defined(CONFIG_RTD1195) || defined(CONFIG_RTD1295)
 
 #ifdef CONFIG_CMD_SATA 
@@ -897,7 +898,7 @@ int decrypt_image(char *src, char *dst, uint length, uint *key)
 	return 0;
 }
 
-//#define DUBUG_FW_DESC_TABLE
+#define DUBUG_FW_DESC_TABLE
 #ifdef DUBUG_FW_DESC_TABLE
 void dump_fw_desc_table_v1(fw_desc_table_v1_t *fw_desc_table_v1)
 {
@@ -2040,6 +2041,15 @@ int rtk_plat_read_fw_image_from_SATA(
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
+#ifdef CONFIG_WD_AB
+	extern unsigned char g_wdpp_flag;
+
+	if(run_command("wdpp get", 0) < 0){	// read flag and assign to g_wdpp_flag
+		printf("Error! Get ping pong flag failed! Booting A image\n");
+		g_wdpp_flag = 'A';
+	}
+#endif
+
 	/* find fw_entry structure according to version */
 	switch (version)
 	{
@@ -2183,6 +2193,76 @@ int rtk_plat_read_fw_image_from_SATA(
 				//printf("****** %s %d, fw desc type 0x%02x\n", __FUNCTION__, __LINE__, this_entry->type);
 				switch(this_entry->type)
 				{
+#ifdef CONFIG_WD_AB
+					case FW_TYPE_KERNEL:
+						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+							printf("Kernel(A):\n");
+							//this_entry->offset = kernel_a_offset;
+						}
+
+						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+							printf("Kernel(B):\n");
+							this_entry->offset = 0x6700000;		//0x33800 * 0x200 = 0x6700000
+						}
+
+						memset(str, 0, sizeof(str));
+						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
+						setenv("kernel_loadaddr", str);
+						//printf("Kernel_B:\n");
+						break;
+
+					case FW_TYPE_KERNEL_DT:
+						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+							printf("DT(A):\n");
+							//this_entry->offset = dt_a_offset;
+						}
+
+						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+							printf("DT(B):\n");
+							this_entry->offset = 0x6200000;		//0x31000 * 0x200 = 0x6200000
+						}
+					
+						this_entry->target_addr = rtk_plat_get_dtb_target_address(this_entry->target_addr);
+						memset(str, 0, sizeof(str));
+						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
+						setenv("fdt_loadaddr", str);				
+
+						break;
+
+					case FW_TYPE_KERNEL_ROOTFS:
+						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+							printf("ROOTFS(A):\n");
+							//this_entry->offset = rootfs_a_offset;
+						}
+
+						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+							printf("ROOTFS(B):\n");
+							this_entry->offset = 0x4100000;		//0x20800 * 0x200 = 0x4100000
+						}
+
+						break;
+
+					case FW_TYPE_AUDIO:
+						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
+							continue;
+						else
+						{
+							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
+
+							if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+								printf("Audio FW(A):\n");
+								//this_entry->offset = dt_a_offset;
+							}
+
+							if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+								printf("Audio FW(B):\n");
+								this_entry->offset = 0xa800000;		//0x54000 * 0x200 = 0xa800000
+							}
+
+
+						}
+						break;
+#else
 					case FW_TYPE_KERNEL:
 						memset(str, 0, sizeof(str));
 						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
@@ -2202,15 +2282,6 @@ int rtk_plat_read_fw_image_from_SATA(
 						printf("ROOTFS:\n");
 						break;
 
-					case FW_TYPE_TEE:
-#ifdef CONFIG_TEE						
-						printf("TEE:\n");
-						tee_enable=1;
-						break;
-#else
-						continue;
-#endif
-					
 					case FW_TYPE_AUDIO:
 						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
 							continue;
@@ -2221,6 +2292,16 @@ int rtk_plat_read_fw_image_from_SATA(
 						}
 						break;
 
+#endif	//endif CONFIG_WD_AB
+					case FW_TYPE_TEE:
+#ifdef CONFIG_TEE						
+						printf("TEE:\n");
+						tee_enable=1;
+						break;
+#else
+						continue;
+#endif
+					
 					case FW_TYPE_IMAGE_FILE:
 						printf("IMAGE FILE:\n");
 						/* assign boot_av structure */
@@ -2289,7 +2370,6 @@ int rtk_plat_read_fw_image_from_SATA(
 				imageBlkSize = imageSize / 512;
 
 				block_no = (this_entry->offset) / 512;
-                                
 				if (!rtk_sata_read(block_no, imageBlkSize, (uint *)mem_layout.flash_to_ram_addr))
 				{
 					printf("[ERR] Read fw error (type:%d)!\n", this_entry->type);
@@ -2299,6 +2379,7 @@ int rtk_plat_read_fw_image_from_SATA(
 #ifndef BYPASS_CHECKSUM
 				/* Check checksum */
 				fw_checksum = get_checksum((uchar *)mem_layout.flash_to_ram_addr, this_entry->length);
+
 
 				if (this_entry->checksum != fw_checksum && secure_mode!= RTK_SECURE_BOOT)
 				{
@@ -2311,6 +2392,7 @@ int rtk_plat_read_fw_image_from_SATA(
 				/* if secure mode, do AES CBC decrypt */
 				if (mem_layout.bIsEncrypted)
 				{
+
 					if (secure_mode == RTK_SECURE_BOOT)
 					{       
 						unsigned int real_body_size = 0;
@@ -2352,6 +2434,7 @@ int rtk_plat_read_fw_image_from_SATA(
                         }
 
 #ifdef CONFIG_CMD_KEY_BURNING
+
                         OTP_Get_Byte(OTP_K_S, ks, 16);
                         OTP_Get_Byte(OTP_K_H, kh, 16);
                         sync();
@@ -2437,6 +2520,7 @@ int rtk_plat_read_fw_image_from_SATA(
 			// remove unusing code
 			printf("****** %s %d, not implement\n", __FUNCTION__, __LINE__);
 		}
+
 
 	/* set boot_av_info_ptr */
 	if (boot_av->dwMagicNumber == SWAPEND32(BOOT_AV_INFO_MAGICNO))

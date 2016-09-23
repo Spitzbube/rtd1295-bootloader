@@ -195,6 +195,7 @@
 
 
 #define CONFIG_CMD_WDPP
+#define CONFIG_WD_AB
 
 #define CONFIG_CMD_SATA
 #ifdef CONFIG_CMD_SATA
