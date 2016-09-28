@@ -197,7 +197,7 @@
 /* PWM */
 #define CONFIG_RTD129X_PWM
 #ifdef CONFIG_RTD129X_PWM
-//#define CONFIG_CMD_PWM
+#define CONFIG_CMD_PWM
 #define PWM_0_PIN_0
 //#define PWM_0_PIN_1
 //#define PWM_1_PIN_0
@@ -205,7 +205,7 @@
 //#define PWM_2_PIN_0
 //#define PWM_2_PIN_1
 //#define PWM_3_PIN_0
-//#define PWM_3_PIN_1
+#define PWM_3_PIN_1
 #endif /* CONFIG_RTD129X_PWM */
 
 #undef USB_XHCI_CONTROLLER_COUNT
