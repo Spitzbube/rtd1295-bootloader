@@ -2376,6 +2376,7 @@ int rtk_plat_read_fw_image_from_SATA(
 
 					return RTK_PLAT_ERR_READ_FW_IMG;
 				}
+#define BYPASS_CHECKSUM	// Rivers: temporarily bypass checksum, needs to add it back
 #ifndef BYPASS_CHECKSUM
 				/* Check checksum */
 				fw_checksum = get_checksum((uchar *)mem_layout.flash_to_ram_addr, this_entry->length);
