@@ -2050,6 +2050,9 @@ int rtk_plat_read_fw_image_from_SATA(
 	}
 #endif
 
+	if(run_command("env save", 0) < 0)
+		printf("Error! Failed to save env varialbes to uboot chip\n");
+	
 	/* find fw_entry structure according to version */
 	switch (version)
 	{

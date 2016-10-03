@@ -146,6 +146,11 @@ const uchar default_environment[] = {
 	"rescue_rootfs="	CONFIG_RESCUE_FROM_USB_ROOTFS		"\0"
 	"rescue_audio="		CONFIG_RESCUE_FROM_USB_AUDIO_CORE	"\0"
 #endif /* CONFIG_RESCUE_FROM_USB */
+
+#ifdef CONFIG_CMD_VERSION
+	"ver="			"4.0.2"			"\0"
+#endif
+
 #ifdef	CONFIG_EXTRA_ENV_SETTINGS
 	CONFIG_EXTRA_ENV_SETTINGS
 #endif
