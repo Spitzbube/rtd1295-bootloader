@@ -1456,6 +1456,9 @@ int rtk_plat_read_fw_image_from_eMMC(
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
+	if(run_command("env save", 0) < 0)
+		printf("Error! Failed to save env varialbes to uboot chip\n");
+
 	/* find fw_entry structure according to version */
 	switch (version)
 	{
