@@ -85,9 +85,6 @@ typedef enum{
 
 #if defined(CONFIG_RTD1195) || defined(CONFIG_RTD1295)
 
-#define BOOTARGS_A "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=kylin androidboot.heapgrowthlimit=128m \ 					androidboot.heapsize=192m androidboot.storage=sata loglevel=4 androidboot.selinux=permissive"
-
-#define BOOTARGS_B "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=kylin androidboot.heapgrowthlimit=128m \ 					androidboot.heapsize=192m androidboot.storage=sata_b loglevel=4 androidboot.selinux=permissive"
 
 #ifdef CONFIG_CMD_SATA 
 extern int sata_boot_debug;
@@ -3281,7 +3278,6 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 	uint fw_desc_table_blk;	// block no of firmware description table
 	uint checksum;
 	int i;
-	char cmd[256];
 	extern unsigned char g_wdpp_flag;
 	
 	if (sata_curr_device == -1) {
@@ -3293,8 +3289,6 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 			}
 		}
 	}
-
-	memset(cmd, '\0', sizeof(cmd)-1);	
 
     if(boot_mode==BOOT_GOLD_MODE)
     {
@@ -3471,12 +3465,7 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 
 #ifdef CONFIG_WD_AB
 
-
-
-	if(run_command("fdt addr 0x1f00000", 0) < 0)	
-		printf("Error! Failed to set fdt address\n");
-
-#if 1	// Rivers: overwrite bootarg for loading A/B partition
+	// Rivers: overwrite bootarg for loading A/B partition
 	// set bootarg using setenv
 	if(g_wdpp_flag == 'A'){
 		printf("Setting bootargs to A\n");
@@ -3491,13 +3480,6 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 		setenv("bootargs", "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=sata_b androidboot.selinux=permissive");
 
 	}
-
-
-#endif
-	
-	// turn on for debugging	
-	if(run_command("fdt print /chosen bootargs", 0) < 0)	
-		printf("Error! Failed to bootargs\n");		
 	
 #endif
 	
