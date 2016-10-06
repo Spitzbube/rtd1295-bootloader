@@ -53,8 +53,8 @@ int wdpp_get(void)
 
 	sprintf(tmpbuf, "fatload sata 0:12 0x4000000 %s 2", PING_PONG_FILENAME);
 	if (run_command(tmpbuf, 0) != 0) {
-		printf("%s: File %s does not exist, run \"wdpp set\" command manually\n",__func__, PING_PONG_FILENAME);	
-		return -3;
+		printf("%s: File %s does not exist, set ping pong flag to A\n",__func__, PING_PONG_FILENAME);
+		wdpp_set('A');
 	}	
 
 
