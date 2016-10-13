@@ -30,6 +30,9 @@
 
 #define HDD0_POWER_GPIO 18
 
+#define FACTORY_RST_BTN 34  // igpio34 is the factory reset button for Monarch
+#define SYS_LED_PWM_PORT_NUM 3  // system LED PWM Port Number is PWM3_0 for Monarch
+
 #if defined(CONFIG_SYS_RTK_EMMC_FLASH)
 	/* Flash writer setting:
 	*   The corresponding setting will be located at
