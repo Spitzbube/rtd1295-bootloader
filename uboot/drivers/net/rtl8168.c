@@ -5541,7 +5541,7 @@ int rtl8168_initialize(bd_t *bis)
         card_number++;
 		
         // LED setting
-        rtd_outl((REG_BASE+CustomLED),0x000670ca);			
+        rtd_outl((REG_BASE+CustomLED),0x00068048);			
 
         // fine tune embedded GPHY
         mdio_write(tp, 0x1f, 0x0BC0);
