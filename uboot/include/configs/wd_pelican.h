@@ -32,6 +32,7 @@
 #define HDD0_POWER_GPIO 60
 #define FACTORY_RST_BTN 20  // igpio20 is the factory reset button for pelican
 #define SYS_LED_PWM_PORT_NUM 0  // system LED PWM Port Number is PWM0_0 for Pelican
+#define FAN_PWM_PORT_NUM 3
 
 #if defined(CONFIG_SYS_RTK_EMMC_FLASH)
 	/* Flash writer setting:
