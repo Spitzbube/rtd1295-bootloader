@@ -903,13 +903,24 @@ void board_init_r(gd_t *id, ulong dest_addr)
 	load_addr = getenv_ulong("loadaddr", 16, load_addr);
 
     /**
-       @WD_Changes
+       @WD_Changes_begin
        Enable the LED at 50% at the beginning of uboot
      **/
     rtd129x_pwm_init();
+    // enable the LED at the earlier boot
     pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM,50);
-    pwm_enable(SYS_LED_PWM_PORT_NUM,1);            
-   
+    pwm_enable(SYS_LED_PWM_PORT_NUM,1);
+#ifdef CONFIG_BOARD_WD_PELICAN
+    // for pelican, turn on the FAN
+    pwm_set_duty_rate(FAN_PWM_PORT_NUM, 100);  // set the FAN speed to 100%
+    pwm_enable(FAN_PWM_PORT_NUM, 1);
+#endif    
+    /**
+       @WD_Changes_end
+       Enable the LED at 50% at the beginning of uboot
+     **/
+
+    
     
 #ifdef CONFIG_BOARD_LATE_INIT
 	board_late_init();
