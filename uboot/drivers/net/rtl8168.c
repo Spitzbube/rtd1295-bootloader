@@ -5540,8 +5540,35 @@ int rtl8168_initialize(bd_t *bis)
 
         card_number++;
 		
-        // LED setting
+        // WD LED setting
         rtd_outl((REG_BASE+CustomLED),0x00068048);			
+
+	// switch Mux to Ethernet LED RXTX/LINK mode.	
+	tmp = rtd_inl(0x98007310);
+	tmp |= (BIT_28 | BIT_26);
+	rtd_outl(0x98007310, tmp);
+
+        tmp = (rtd_inl(0x98007028) & BIT_11) >> 11;
+        if (tmp == 0) {
+            // 1295 switch IGPIO30 pin mux and out direction 
+            tmp = rtd_inl(0x98007100);
+            tmp |= BIT_30;
+            rtd_outl(0x98007100, tmp);
+
+            tmp = rtd_inl(0x98007104);
+            tmp |= BIT_30;
+            rtd_outl(0x98007104, tmp);
+        }
+	else{
+            // 1296 switch IGPIO32 pin mux and out direction
+            tmp = rtd_inl(0x98007118);
+            tmp |= BIT_0;
+            rtd_outl(0x98007118, tmp);
+
+            tmp = rtd_inl(0x9800711c);
+            tmp |= BIT_0;
+            rtd_outl(0x9800711c, tmp);
+        }		
 
         // fine tune embedded GPHY
         mdio_write(tp, 0x1f, 0x0BC0);
