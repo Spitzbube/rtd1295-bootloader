@@ -22,17 +22,14 @@
 /* Board config name */
 #define CONFIG_BOARD_FPGA_RTD1295
 //#define CONFIG_BOARD_FPGA_RTD1295_EMMC
-#define CONFIG_BOARD_WD_PELICAN
+
 
 /* Flash type is SPI or NAND or eMMC*/
 //#define CONFIG_SYS_RTK_SPI_FLASH
 //#define CONFIG_SYS_RTK_NAND_FLASH
 #define CONFIG_SYS_RTK_EMMC_FLASH
 
-#define HDD0_POWER_GPIO 60
-#define FACTORY_RST_BTN 20  // igpio20 is the factory reset button for pelican
-#define SYS_LED_PWM_PORT_NUM 0  // system LED PWM Port Number is PWM0_0 for Pelican
-#define FAN_PWM_PORT_NUM 3
+
 
 #if defined(CONFIG_SYS_RTK_EMMC_FLASH)
 	/* Flash writer setting:
@@ -130,8 +127,6 @@
 #define CONFIG_COMPANY_ID 		"0000"
 #define CONFIG_BOARD_ID         "0705"
 #define CONFIG_VERSION          "0000"
-#define CONFIG_VERSION_VARIABLE
-#define CONFIG_CMD_VERSION
 
 /*
  * SDRAM Memory Map
@@ -175,14 +170,6 @@
 	#define CONFIG_RESCUE_FROM_USB_ROOTFS		"rescue.root.emmc.cpio.gz_pad.img"
 	#define CONFIG_RESCUE_FROM_USB_AUDIO_CORE	"bluecore.audio"
 #endif /* CONFIG_RESCUE_FROM_USB */
-
-#define CONFIG_RESCUE_FROM_DHCP
-#ifdef CONFIG_RESCUE_FROM_DHCP
-       #define CONFIG_CMD_DHCP
-       //#define CONFIG_BOOTP_SERVERIP         "192.168.2.134" /* development */
-       #define CONFIG_BOOTP_SERVERIP           "192.168.137.2" /* factory release */
-#endif
-
 
 #define CONFIG_CMD_SATA
 #ifdef CONFIG_CMD_SATA
