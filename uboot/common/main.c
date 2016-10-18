@@ -425,7 +425,7 @@ start = get_timer(0);
 #endif
 
         /**
-           @WD_Changes
+           @WD_Changes_begin
            Power On reset to force the device enter
            Image Recover Mode which booting the device
            from USB stick
@@ -433,12 +433,16 @@ start = get_timer(0);
         if(!getISOGPIO(FACTORY_RST_BTN)) { // check if the reset button is pressed
             printf("\nPress USB-Install Button\n"); // print the message
             //            rtd129x_pwm_init();
-            pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM,100);
-            pwm_enable(SYS_LED_PWM_PORT_NUM,1);
+            pwm_set_freq(SYS_LED_PWM_PORT_NUM, 1);  // set the frequency to 1 HZ
+            pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
+            pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
             setenv("rescue_cmd", "go ru"); //set the environment variable rescue_cmd=go ru
             boot_mode = BOOT_RESCUE_MODE; // set the boot_mode
             abort = 1; // don't auto boot
         }
+        /**
+           @WD_Changes_end
+         **/
         
 #if 0//defined(CONFIG_SYS_IR_SUPPORT)		
 //		if( rtd_readbits(IR_SR_reg, _BIT0)){	
