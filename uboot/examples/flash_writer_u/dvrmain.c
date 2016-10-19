@@ -2277,7 +2277,7 @@ program_backup_copy_of_hwsetting:
 		        return -6;
 		    }
 		}
-
+#if 1
 	    // write parameter
 	    #ifdef FOR_ICE_LOAD
         prints("\nspi : write parameter, start=0x");
@@ -2289,6 +2289,9 @@ program_backup_copy_of_hwsetting:
 	    if ((*do_write)(device, (unsigned char *)&param, (unsigned int *)spi_param_addr, sizeof(t_extern_param), 0, 0)!= 0 ) {
 	        return -14;
 	    }
+#else
+		prints("\nspi : Not write parameter\n");
+#endif
 
 	    #ifdef FOR_ICE_LOAD
         prints("exit\n");
@@ -2301,7 +2304,7 @@ program_backup_copy_of_hwsetting:
 	{
 		unsigned char * read_buf;
 		unsigned int block_no;
-                unsigned int block_no_64;
+        unsigned int block_no_64;
 		unsigned int buf_start;
 		unsigned int data_length;
 
@@ -2550,15 +2553,21 @@ program_backup_copy_of_hwsetting:
  #ifdef Config_Uboot64_Mode_TRUE
 		// bootcode
 		//block_no += align_to_boundary(hwsetting_size, EMMC_BLOCK_SIZE);
+#ifdef Param_Uboot64_Blk_Base
+		block_no_64 = Param_Uboot64_Blk_Base; //0x29F80
+#else		
 		block_no_64 = 164133; //0x5024A00
+#endif
         #ifdef FOR_ICE_LOAD
-    	prints("write bootcode64: block 0x");
+    	prints("write bootcode64: byte offset 0x");
+		print_hex(block_no_64<<9);
+		prints(", block 0x");
         print_hex(block_no_64);
     	prints(", size 0x");
         print_hex(programmed_img64_size);
         prints("\n");
         #endif
-		rtprintf("write bootcode: block 0x%x, size 0x%x\n", block_no_64, programmed_img64_size);
+		rtprintf("write bootcode: byte offset 0x%08x, block 0x%08x, size 0x%x\n", (block_no_64<<9), block_no_64, programmed_img64_size);
 
 		if ((*do_write)( device, (unsigned char *)DATA_TMP_ADDR, &block_no_64, programmed_img64_size, 0, 0)) {
             #ifdef FOR_ICE_LOAD
