@@ -1459,9 +1459,6 @@ int rtk_plat_read_fw_image_from_eMMC(
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
-	if(run_command("env save", 0) < 0)
-		printf("Error! Failed to save env varialbes to uboot chip\n");
-
 	/* find fw_entry structure according to version */
 	switch (version)
 	{
@@ -2055,9 +2052,6 @@ int rtk_plat_read_fw_image_from_SATA(
 		g_wdpp_flag = 'A';
 	}
 #endif
-
-	if(run_command("env save", 0) < 0)
-		printf("Error! Failed to save env varialbes to uboot chip\n");
 	
 	/* find fw_entry structure according to version */
 	switch (version)
@@ -3049,6 +3043,9 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 	uint fw_desc_table_blk;	// block no of firmware description table
 	uint checksum;
 	int i;
+	extern char version_string[];
+	char cmdline[512];
+
 
     if(boot_mode==BOOT_GOLD_MODE)
     {
@@ -3252,6 +3249,12 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 			fw_desc_table_base, part_entry, part_count,
 			fw_entry, fw_entry_num,
 			fw_desc_table_v1.version);
+
+
+	
+	snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=emmc androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s",version_string);
+
+	setenv("bootargs", cmdline);
 	
 #endif
 
@@ -3279,6 +3282,8 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 	uint checksum;
 	int i;
 	extern unsigned char g_wdpp_flag;
+	extern char version_string[];
+	char cmdline[512];
 	
 	if (sata_curr_device == -1) {
 		if (sata_initialize()) {
@@ -3470,16 +3475,19 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 	if(g_wdpp_flag == 'A'){
 		printf("Setting bootargs to A\n");
 
-		setenv("bootargs", "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=sata androidboot.selinux=permissive");
-			
+                snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s","sata",version_string);
+
+		
 	}
 	else if (g_wdpp_flag == 'B')
 	{
 		printf("Setting bootargs to B\n");
-	
-		setenv("bootargs", "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=sata_b androidboot.selinux=permissive");
 
+                snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s","sata_b",version_string);
 	}
+
+	setenv("bootargs", cmdline);
+
 	
 #endif
 	
