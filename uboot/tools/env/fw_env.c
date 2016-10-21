@@ -200,6 +200,11 @@ int fw_printenv (int argc, char *argv[])
 	char *env, *nxt;
 	int i, n_flag;
 	int rc = 0;
+	FILE *file = NULL;
+	char str[512];
+	char *pch;
+	char *delim = " ";
+
 
 	if (fw_env_open())
 		return -1;
@@ -213,8 +218,27 @@ int fw_printenv (int argc, char *argv[])
 					return -1;
 				}
 			}
+			if (strncmp("ver", env, 3) == 0){
+				// read ver from /proc/cmdline
+				file = fopen("/proc/cmdline", "r");
+				if (file) {
+		    			fgets(str, sizeof(str), file);
+		   			fclose(file);
+				}
 
-			printf ("%s\n", env);
+				pch = strtok(str,delim);
+				while (pch != NULL)
+				{
+					if (strncmp("ver", pch, 3) == 0)
+						printf ("%s\n",pch);
+				
+					pch = strtok (NULL, delim);
+				} 
+
+				return 0;
+			}				
+			else
+				printf ("%s\n", env);
 		}
 		return 0;
 	}
@@ -236,6 +260,26 @@ int fw_printenv (int argc, char *argv[])
 		char *name = argv[i];
 		char *val = NULL;
 
+		if (strcmp("ver", name) == 0){
+			// read ver from /proc/cmdline
+			file = fopen("/proc/cmdline", "r");
+			if (file) {
+	    			fgets(str, sizeof(str), file);
+	   			fclose(file);
+			}
+
+			pch = strtok(str,delim);
+			while (pch != NULL)
+			{
+				if (strncmp("ver", pch, 3) == 0)
+					printf ("%s\n",pch);
+				
+				pch = strtok (NULL, delim);
+			} 
+
+			return 0;
+		}	
+
 		for (env = environment.data; *env; env = nxt + 1) {
 
 			for (nxt = env; *nxt; ++nxt) {
@@ -245,15 +289,22 @@ int fw_printenv (int argc, char *argv[])
 					return -1;
 				}
 			}
+
+
+
 			val = envmatch (name, env);
 			if (val) {
-				if (!n_flag) {
-					fputs (name, stdout);
-					putc ('=', stdout);
+
+				if (strcmp("ver", name) != 0){
+					if (!n_flag) {
+						fputs (name, stdout);
+						putc ('=', stdout);
+					}
+					puts (val);
+					break;
 				}
-				puts (val);
-				break;
 			}
+
 		}
 		if (!val) {
 			fprintf (stderr, "## Error: \"%s\" not defined\n", name);
