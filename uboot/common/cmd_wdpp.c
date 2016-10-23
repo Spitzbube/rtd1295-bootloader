@@ -35,7 +35,7 @@ int wdpp_get(void)
 	char read_buf[2];
 	ulong addr = 0x4000000;
 
-
+#ifdef CONFIG_BOARD_WD_MONARCH
 	if(sata_curr_device != 0){
 		sprintf(tmpbuf, "sata init");	
 		if (run_command(tmpbuf, 0) != 0) {
@@ -78,6 +78,47 @@ int wdpp_get(void)
 	}
 
 	return 0;
+#endif
+
+#ifdef CONFIG_BOARD_WD_PELICAN
+
+	sprintf(tmpbuf, "fatls mmc 0:1"); //CONFIG partition is at mmc 0:1
+	if (run_command(tmpbuf, 0) != 0) {
+		printf("%s: Failed to list files in CONFIG partition, set ping pong flag to A\n",__func__);
+		wdpp_set('A');
+	}
+
+
+	sprintf(tmpbuf, "fatload mmc 0:1 0x4000000 %s 2", PING_PONG_FILENAME);
+	if (run_command(tmpbuf, 0) != 0) {
+		printf("%s: File %s does not exist, set ping pong flag to A\n",__func__, PING_PONG_FILENAME);
+		wdpp_set('A');
+	}	
+
+
+	read_buf[0] = *(u_char *)addr;
+	read_buf[1] = *(u_char *)(addr+1);
+	//printf("read_buf[0] = 0x%02x\n", read_buf[0]);
+	//printf("read_buf[1] = 0x%02x\n", read_buf[1]);
+	if( *read_buf == 'a' || *read_buf == 'A'){
+		printf("current_pp = A\n");
+		g_wdpp_flag = read_buf[0];
+		return 0;
+	}
+	else if( *read_buf == 'b' || *read_buf == 'B'){
+		printf("current_pp = B\n");
+		g_wdpp_flag = read_buf[0];
+		return 0;
+	}
+	else{
+		printf("Unknown ping pong flag...\n");
+		return -4;	
+	}
+
+	return 0;
+#endif
+
+
 }
 
 int wdpp_set(unsigned char pp)
@@ -85,6 +126,9 @@ int wdpp_set(unsigned char pp)
 
 	char tmpbuf[128];
 	ulong addr = 0x4000000;
+
+
+#ifdef CONFIG_BOARD_WD_MONARCH
 	
 	if(sata_curr_device != 0){
 		sprintf(tmpbuf, "sata init");	
@@ -115,6 +159,29 @@ int wdpp_set(unsigned char pp)
 	printf("%s: set pp to %c\n",__func__, pp);
 
 	return 0;
+
+#endif
+
+#ifdef CONFIG_BOARD_WD_PELICAN
+
+	*(u_char *)addr = pp;
+	*(u_char *)(addr+1) = 0x0a;
+
+	sprintf(tmpbuf, "fatwrite mmc 0:1 0x4000000 %s 2", PING_PONG_FILENAME);
+	if (run_command(tmpbuf, 0) != 0) {
+		printf("%s: File %s does not exist, run \"wdpp set\" command manually\n",__func__, PING_PONG_FILENAME);	
+		return -3;
+	}	
+
+	g_wdpp_flag = pp;
+
+	printf("%s: set pp to %c\n",__func__, pp);
+
+	return 0;
+
+#endif
+
+
 }
 
 int do_wdpp(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
