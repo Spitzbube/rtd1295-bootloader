@@ -184,6 +184,8 @@
 #endif
 
 
+#define CONFIG_CMD_WDPP
+
 #define CONFIG_CMD_SATA
 #ifdef CONFIG_CMD_SATA
 	#define CONFIG_RTK_AHSATA
