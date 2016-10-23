@@ -1746,6 +1746,12 @@ REINIT:
 			(mmc->cid[1] >> 8) & 0xff, mmc->cid[1] & 0xff);
 	sprintf(mmc->block_dev.revision, "%d.%d", mmc->cid[2] >> 28,
 			(mmc->cid[2] >> 24) & 0xf);
+#if defined(CONFIG_SYS_RTK_EMMC_FLASH) && defined(USE_SIMPLIFY_READ_WRITE)
+	extern lbaint_t mmc_block_read(int dev, lbaint_t blknr, lbaint_t blkcnt, void *buffer);
+	extern lbaint_t mmc_block_write(int dev, lbaint_t blknr, lbaint_t blkcnt, void *buffer);
+	mmc->block_dev.block_read = mmc_block_read;
+	mmc->block_dev.block_write = mmc_block_write;	
+#endif
 	init_part(&mmc->block_dev);
 
 	return 0;

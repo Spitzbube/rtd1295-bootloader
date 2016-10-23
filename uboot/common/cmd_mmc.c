@@ -92,22 +92,94 @@ enum mmc_state {
 	MMC_READ,
 	MMC_WRITE,
 	MMC_ERASE,
+	MMC_INIT,
+	MMC_PART,
 };
 
 #ifdef USE_SIMPLIFY_READ_WRITE
+/*
+ * MMC interface between low level driver and command layer
+ */
+lbaint_t mmc_block_read(int dev, lbaint_t blknr, lbaint_t blkcnt, void *buffer)
+{
+	lbaint_t rc;
+	
+	rc = rtk_eMMC_read(blknr, blkcnt*512, buffer);
+
+	return rc;
+}
+
+lbaint_t mmc_block_write(int dev, lbaint_t blknr, lbaint_t blkcnt, void *buffer)
+{
+	lbaint_t rc;
+	
+	rc = rtk_eMMC_write(blknr, blkcnt*512, buffer);
+	
+	return rc;
+}
+
+
 int do_rtk_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	enum mmc_state state;
+	
+	state = MMC_INVALID;
+	
+	do {
+		if (argc == 2) {
+			if (strcmp(argv[1], "init") == 0)
+				state = MMC_INIT;
+			else if (strcmp(argv[1], "part") == 0)
+				state = MMC_PART;
+		}
 
-	if (argc != 5)
+		if (argc == 5) {
+			if (strcmp(argv[1], "read") == 0)
+				state = MMC_READ;
+			else if (strcmp(argv[1], "write") == 0)
+				state = MMC_WRITE;
+		}
+	}
+	while(0);
+	
+	if (state == MMC_INVALID) {
 		return CMD_RET_USAGE;
+	}
+		
+	if (state == MMC_INIT) {
+		extern int mmc_had_been_initialized;
+		mmc_had_been_initialized = 0;
+		return bringup_mmc_driver();
+	}
 
-	if (strcmp(argv[1], "read") == 0)
-		state = MMC_READ;
-	else if (strcmp(argv[1], "write") == 0)
-		state = MMC_WRITE;
-	else
-		state = MMC_INVALID;
+	if (state == MMC_PART) {
+		int curr_device;
+		block_dev_desc_t *mmc_dev;
+		struct mmc *mmc;
+
+		curr_device = 0;
+		mmc = find_mmc_device(curr_device);
+
+		if (!mmc) {
+			printf("no mmc device at slot %x\n", curr_device);
+			return 1;
+		}
+		//mmc_init(mmc);
+		mmc_dev = mmc_get_dev(curr_device);
+		if (mmc_dev != NULL &&	mmc_dev->type != DEV_TYPE_UNKNOWN) {
+			mmc_dev->block_read = mmc_block_read;
+			mmc_dev->block_write = mmc_block_write;	
+
+			if ( (mmc_dev->lba > 0) &&	(mmc_dev->blksz > 0)) {
+				init_part(mmc_dev);
+			}
+			print_part(mmc_dev);
+			return 0;
+		}
+
+		puts("get mmc type error!\n");
+		return 1;
+	}
 
 	if (state != MMC_INVALID) {
 		int idx = 2;
@@ -123,7 +195,7 @@ int do_rtk_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		cnt = simple_strtoul(argv[idx + 1], NULL, 16);
 
 		printf("MMC %s: block # %d, count %d ...\n",
-				argv[1], blk, cnt);
+                               argv[1], blk, cnt);
 
 		switch (state) {
 		case MMC_READ:
@@ -149,9 +221,10 @@ int do_rtk_mmcops(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 
 U_BOOT_CMD(
 	mmc, 6, 1, do_rtk_mmcops,
-	"MMC sub system (patch for rtd299x)",
+	"MMC sub system",
 	"read addr blk# cnt\n"
-	"mmc write addr blk# cnt\n");
+	"mmc write addr blk# cnt\n"
+	"mmc part\n");
 
 #else // use stand u-boot mmc driver path
 
