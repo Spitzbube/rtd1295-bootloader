@@ -901,7 +901,7 @@ int decrypt_image(char *src, char *dst, uint length, uint *key)
 	return 0;
 }
 
-#define DUBUG_FW_DESC_TABLE
+//#define DUBUG_FW_DESC_TABLE
 #ifdef DUBUG_FW_DESC_TABLE
 void dump_fw_desc_table_v1(fw_desc_table_v1_t *fw_desc_table_v1)
 {
@@ -1459,6 +1459,16 @@ int rtk_plat_read_fw_image_from_eMMC(
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
+#ifdef CONFIG_WD_AB
+	extern unsigned char g_wdpp_flag;
+
+	if(run_command("wdpp get", 0) < 0){	// read flag and assign to g_wdpp_flag
+		printf("Error! Get ping pong flag failed! Booting A image\n");
+		g_wdpp_flag = 'A';
+	}
+
+#endif
+
 	/* find fw_entry structure according to version */
 	switch (version)
 	{
@@ -1500,8 +1510,7 @@ int rtk_plat_read_fw_image_from_eMMC(
 	/* clear boot_av_info memory */
 	boot_av = (boot_av_info_t *) MIPS_BOOT_AV_INFO_ADDR;
 	memset(boot_av, 0, sizeof(boot_av_info_t));
-	
-	
+
 	/* parse each fw_entry */
 	for (i = 0; i < fw_count; i++)
 	{
@@ -1569,6 +1578,7 @@ int rtk_plat_read_fw_image_from_eMMC(
 			}
 			else if(boot_mode == BOOT_GOLD_MODE)
             {
+
                 switch(this_entry->type)
                 {
                     case FW_TYPE_GOLD_KERNEL:
@@ -1609,10 +1619,83 @@ int rtk_plat_read_fw_image_from_eMMC(
 			{
 				switch(this_entry->type)
 				{
+
 					case FW_TYPE_BOOTCODE:
 						printf("Boot Code:\n");
 						break;
+#ifdef CONFIG_WD_AB
+					case FW_TYPE_KERNEL:
+                        //this_entry->offset=this_entry->offset-1; //let load fw fail, and it can test enter to gold mode
+						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+							printf("Kernel(A):\n");
+							this_entry->offset = 0x02bb0000 - eMMC_fw_desc_table_start;
+						}
 
+						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+							printf("Kernel(B):\n");
+							this_entry->offset = 0x04cf0000 - eMMC_fw_desc_table_start;
+						}
+
+						memset(str, 0, sizeof(str));
+						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
+						setenv("kernel_loadaddr", str);
+
+						break;
+
+					case FW_TYPE_KERNEL_DT:					
+						this_entry->target_addr = rtk_plat_get_dtb_target_address(this_entry->target_addr);
+						//printf("this_entry->target_addr =%x\n",this_entry->target_addr);
+
+						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+							printf("DT(A):\n");
+							this_entry->offset = 0x02770000 - eMMC_fw_desc_table_start;
+						}
+
+						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+							printf("DT(B):\n");
+							this_entry->offset = 0x048b0000 - eMMC_fw_desc_table_start;
+						}
+
+						memset(str, 0, sizeof(str));
+						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
+						setenv("fdt_loadaddr", str);				;
+
+						break;
+
+					case FW_TYPE_KERNEL_ROOTFS:
+
+						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+							printf("ROOTFS(A):\n");
+							this_entry->offset = 0x03bb0000 - eMMC_fw_desc_table_start;
+						}
+
+						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+							printf("ROOTFS(B):\n");
+							this_entry->offset = 0x05cf0000 - eMMC_fw_desc_table_start;
+							//this_entry->offset = 0x03bb0000 - eMMC_fw_desc_table_start;	// for debugging
+						}
+
+						break;
+
+					case FW_TYPE_AUDIO:
+						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
+							continue;
+						else
+						{
+							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
+
+							if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
+								printf("Audio FW(A):\n");
+								this_entry->offset = 0x027b0000 - eMMC_fw_desc_table_start;
+							}
+
+							if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
+								printf("Audio FW(B):\n");
+								this_entry->offset = 0x048f0000 - eMMC_fw_desc_table_start;
+							}
+						}
+						break;
+#else
 					case FW_TYPE_KERNEL:
                         //this_entry->offset=this_entry->offset-1; //let load fw fail, and it can test enter to gold mode
 						memset(str, 0, sizeof(str));
@@ -1628,11 +1711,25 @@ int rtk_plat_read_fw_image_from_eMMC(
 						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
 						setenv("fdt_loadaddr", str);				
 						printf("DT:\n");
+
 						break;
 
 					case FW_TYPE_KERNEL_ROOTFS:
 						printf("ROOTFS:\n");
+						printf("offset = 0x%08x\n", this_entry->offset);
 						break;
+
+					case FW_TYPE_AUDIO:
+						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
+							continue;
+						else
+						{
+							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
+							printf("Audio FW:\n");
+							printf("offset = 0x%08x\n", this_entry->offset);
+						}
+						break;
+#endif
 
 					case FW_TYPE_TEE:
 #ifdef CONFIG_TEE						
@@ -1643,16 +1740,6 @@ int rtk_plat_read_fw_image_from_eMMC(
 						continue;
 #endif
 					
-					case FW_TYPE_AUDIO:
-						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
-							continue;
-						else
-						{
-							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
-							printf("Audio FW:\n");
-						}
-						break;
-
 					case FW_TYPE_JFFS2:
 						printf("JFFS2 Image:\n");
 						break;
@@ -1787,13 +1874,14 @@ int rtk_plat_read_fw_image_from_eMMC(
 				}
 								
 				block_no = (eMMC_fw_desc_table_start + this_entry->offset) / EMMC_BLOCK_SIZE ;
-                                
+                            
 				if (!rtk_eMMC_read(block_no, imageSize, (uint *)mem_layout.flash_to_ram_addr))
 				{
 					printf("[ERR] Read fw error (type:%d)!\n", this_entry->type);
 
 					return RTK_PLAT_ERR_READ_FW_IMG;
 				}
+#define BYPASS_CHECKSUM	// Rivers: temporarily bypass checksum, needs to add it back
 #ifndef BYPASS_CHECKSUM
 				/* Check checksum */
 				fw_checksum = get_checksum((uchar *)mem_layout.flash_to_ram_addr, this_entry->length);
@@ -2200,12 +2288,12 @@ int rtk_plat_read_fw_image_from_SATA(
 					case FW_TYPE_KERNEL:
 						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
 							printf("Kernel(A):\n");
-							//this_entry->offset = kernel_a_offset;
+							this_entry->offset = 0x00100000;
 						}
 
 						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
 							printf("Kernel(B):\n");
-							this_entry->offset = 0x6700000;		//0x33800 * 0x200 = 0x6700000
+							this_entry->offset = 0x06700000;		//0x33800 * 0x200 = 0x6700000
 						}
 
 						memset(str, 0, sizeof(str));
@@ -2217,12 +2305,12 @@ int rtk_plat_read_fw_image_from_SATA(
 					case FW_TYPE_KERNEL_DT:
 						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
 							printf("DT(A):\n");
-							//this_entry->offset = dt_a_offset;
+							this_entry->offset = 0x06100000;
 						}
 
 						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
 							printf("DT(B):\n");
-							this_entry->offset = 0x6200000;		//0x31000 * 0x200 = 0x6200000
+							this_entry->offset = 0x06200000;		//0x31000 * 0x200 = 0x6200000
 						}
 					
 						this_entry->target_addr = rtk_plat_get_dtb_target_address(this_entry->target_addr);
@@ -2235,12 +2323,12 @@ int rtk_plat_read_fw_image_from_SATA(
 					case FW_TYPE_KERNEL_ROOTFS:
 						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
 							printf("ROOTFS(A):\n");
-							//this_entry->offset = rootfs_a_offset;
+							this_entry->offset = 0x02100000;
 						}
 
 						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
 							printf("ROOTFS(B):\n");
-							this_entry->offset = 0x4100000;		//0x20800 * 0x200 = 0x4100000
+							this_entry->offset = 0x04100000;		//0x20800 * 0x200 = 0x4100000
 						}
 
 						break;
@@ -2254,12 +2342,12 @@ int rtk_plat_read_fw_image_from_SATA(
 
 							if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
 								printf("Audio FW(A):\n");
-								//this_entry->offset = dt_a_offset;
+								this_entry->offset = 0x06300000;
 							}
 
 							if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
 								printf("Audio FW(B):\n");
-								this_entry->offset = 0xa800000;		//0x54000 * 0x200 = 0xa800000
+								this_entry->offset = 0x0a800000;		//0x54000 * 0x200 = 0xa800000
 							}
 
 
@@ -3043,6 +3131,7 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 	uint fw_desc_table_blk;	// block no of firmware description table
 	uint checksum;
 	int i;
+	extern unsigned char g_wdpp_flag;
 	extern char version_string[];
 	char cmdline[512];
 
@@ -3055,9 +3144,9 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
     else
     {
         printf("---------------LOAD  NORMAL FW  TABLE ---------------\n");
-        eMMC_fw_desc_table_start = eMMC_bootcode_area_size + CONFIG_FACTORY_SIZE;
+        eMMC_fw_desc_table_start = eMMC_bootcode_area_size + CONFIG_FACTORY_SIZE;	/* 0x00240000*/
     }
-	fw_desc_table_base = FIRMWARE_DESCRIPTION_TABLE_ADDR;
+	fw_desc_table_base = FIRMWARE_DESCRIPTION_TABLE_ADDR;	/* 0x06400000*/
 
 	/* Firmware Description Table is right behind bootcode blocks */
 	fw_desc_table_blk = eMMC_fw_desc_table_start / EMMC_BLOCK_SIZE;
@@ -3250,9 +3339,16 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 			fw_entry, fw_entry_num,
 			fw_desc_table_v1.version);
 
-
+	if(g_wdpp_flag == 'A'){
 	
-	snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=emmc androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s",version_string);
+		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s", "emmc",version_string);
+
+	}else if(g_wdpp_flag == 'B'){
+	
+		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s","emmc_b",version_string);
+
+	}
+		
 
 	setenv("bootargs", cmdline);
 	
