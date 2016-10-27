@@ -5,7 +5,7 @@
 
 
 CURR=$PWD
-BIN_FOLDER="uboot_bins"
+BIN_FOLDER="uboot_bins_monarch"
 TAR_FILE_NAME="uboot.tar"
 
 HW_SETTING_HEADER="${CURR}/Bind/hwsetting_header.bin"

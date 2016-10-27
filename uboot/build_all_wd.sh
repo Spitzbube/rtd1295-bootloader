@@ -36,13 +36,13 @@ ls -l $TARGETDIR/129?_spi_*.bin $TARGETDIR/129?_emmc_*.bin $TARGETDIR/wd_*.bin
 
 pushd examples/flash_writer_u/
 if [ ! "$1" = "pelican" ] ;then
-./boottar_gen.sh
-cp ./uboot_bins/uboot.tar $TARGETDIR/wd_monarch_uboot.tar
+./boottar_gen_monarch.sh
+cp ./uboot_bins_monarch/uboot.tar $TARGETDIR/wd_monarch_uboot.tar
 fi
 
-#if [ ! "$1" = "monarch" ] ;then
-#./boottar_gen.sh
-#cp ./uboot_bins/uboot.tar $TARGETDIR/wd_pelican_uboot.tar
-#fi
+if [ ! "$1" = "monarch" ] ;then
+./boottar_gen_pelican.sh
+cp ./uboot_bins_pelican/uboot.tar $TARGETDIR/wd_pelican_uboot.tar
+fi
 popd
 
