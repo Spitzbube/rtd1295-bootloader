@@ -9,7 +9,8 @@ BIN_FOLDER="uboot_bins_pelican"
 TAR_FILE_NAME="uboot.tar"
 
 HW_SETTING_HEADER="${CURR}/Bind/hwsetting_header.bin"
-HW_SETTING="RTD1296_hwsetting_BOOT_2DDR3_4Gb_s1600_all.bin"
+#HW_SETTING="RTD1296_hwsetting_BOOT_2DDR3_4Gb_s1600_all.bin"
+HW_SETTING="RTD1296_hwsetting_BOOT_2DDR3_4Gb_s1600_DDRSS_all.bin"
 HW_SETTING_BIN="${BIN_FOLDER}/hwsetting.bin"
 
 BOOTCODE="uboot_packed_padding.bin"
