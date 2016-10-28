@@ -7,7 +7,8 @@ Board_CPU =                 RTD1295
 ##Board_Chip_Rev =          [1295]
 Board_Chip_Rev =            1295
 
-Board_HWSETTING =           RTD1296_hwsetting_BOOT_2DDR3_4Gb_s1600
+# Board_HWSETTING =           RTD1296_hwsetting_BOOT_2DDR3_4Gb_s1600
+Board_HWSETTING =           RTD1296_hwsetting_BOOT_2DDR3_4Gb_s1600_DDRSS
 
 
 # ********************************************************************
