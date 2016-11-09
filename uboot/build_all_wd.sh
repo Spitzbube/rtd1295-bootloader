@@ -2,6 +2,8 @@
 SCRIPTDIR=$PWD
 TARGETDIR=$PWD/out
 DVRBOOTEXE=$SCRIPTDIR/examples/flash_writer_u/dvrboot.exe.bin
+DVRBOOTDIR=$SCRIPTDIR/examples/flash_writer_u
+
 
 if [ $# == 0 ]
 then
@@ -23,6 +25,10 @@ mkdir -p $PWD/out
 if [ ! "$1" = "pelican" ] ;then
     make distclean;make wd_monarch_config;make clean;make
     cp $DVRBOOTEXE      $TARGETDIR/wd_monarch.uboot32.fb.dvrboot.exe.bin
+    echo "making factory checksum image..."
+    pushd examples/flash_writer_u/
+    cat uboot_packed_padding.bin signature.bin fsbl_padding.bin fsbl_sha256_digest.bin bl31_padding.bin bl31_sha256_digest.bin bootimage/u-boot64.bin > $TARGETDIR/monarch_uboot_checksum.bin
+    popd
 fi
 # Pelican
 #
@@ -30,6 +36,10 @@ fi
 if [ ! "$1" = "monarch" ]; then
     make distclean;make wd_pelican_config;make clean;make
     cp $DVRBOOTEXE      $TARGETDIR/wd_pelican.uboot32.fb.dvrboot.exe.bin
+    echo "making factory checksum image..."
+    pushd examples/flash_writer_u/
+    cat uboot_packed_padding.bin signature.bin fsbl_padding.bin fsbl_sha256_digest.bin fsbl_os_padding.bin fsbl_os_sha256_digest.bin bl31_padding.bin bl31_sha256_digest.bin bootimage/u-boot64.bin > $TARGETDIR/pelican_uboot_checksum.bin
+    popd
 fi
 
 ls -l $TARGETDIR/129?_spi_*.bin $TARGETDIR/129?_emmc_*.bin $TARGETDIR/wd_*.bin
@@ -44,5 +54,6 @@ if [ ! "$1" = "monarch" ] ;then
 ./boottar_gen_pelican.sh
 cp ./uboot_bins_pelican/uboot.tar $TARGETDIR/wd_pelican_uboot.tar
 fi
+
 popd
 
