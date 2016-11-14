@@ -1189,9 +1189,11 @@ static void config_phy(unsigned int port, unsigned int rx_sens)
 	wr_reg(0x94a72011, SATA_MDIO_CTR);
 	wr_reg(0x94a76011, SATA_MDIO_CTR);
 	wr_reg(0x94a7A011, SATA_MDIO_CTR);
-	wr_reg(0x587a2111, SATA_MDIO_CTR);
-	wr_reg(0x587a6111, SATA_MDIO_CTR);
-	wr_reg(0x587aa111, SATA_MDIO_CTR);
+
+	wr_reg(0x487a2111, SATA_MDIO_CTR);
+	wr_reg(0x487a6111, SATA_MDIO_CTR);
+	wr_reg(0x487aa111, SATA_MDIO_CTR);
+
 	
 	wr_reg(0x40000c11, SATA_MDIO_CTR);
 	wr_reg(0x40004c11, SATA_MDIO_CTR);
