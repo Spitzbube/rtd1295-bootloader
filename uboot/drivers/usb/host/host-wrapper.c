@@ -10,6 +10,8 @@
 #include "xhci.h"
 #endif
 
+#define WD_USB_POWER
+
 #ifdef CONFIG_USB_EHCI
 extern int ehci_lowlevel_init(int index, void **controller);
 extern int ehci_lowlevel_stop(int index);
@@ -209,8 +211,13 @@ static int usb_power_enable(void) {
 		debug("Realtek-usb: Turn on 1294 usb port0 power\n");
 		setISOGPIO(1, 1);
 	} else {
+#ifdef WD_USB_POWER
 		__raw_writel(0x00000003, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC1_0);
 		__raw_writel(0x00000003, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC2_0);
+#else        
+		__raw_writel(0x00000001, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC1_0);
+		__raw_writel(0x00000001, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC2_0);
+#endif       
 		mdelay(1);
 
 		check = __raw_readl((volatile u32*)RTD1295_USB_TYPEC_STS);
@@ -227,8 +234,9 @@ static int usb_power_enable(void) {
 		__raw_writel(0x00800071, (volatile u32*) RTD1295_USB_TYPEC_CTRL_CC2_0);
 
 		/* set type c rd gpio */
-		//setISOGPIO(34, 1);
-
+#ifndef WD_USB_POWER
+		setISOGPIO(34, 1);
+#endif
 		mdelay(1);
 
 		check = __raw_readl((volatile u32*)RTD1295_USB_TYPEC_STS);
@@ -243,29 +251,45 @@ static int usb_power_enable(void) {
 		//Type C 5V
 		if (type_c_have_device) {
 			debug("Realtek-usb: Turn on port 0 power\n");
+#ifdef WD_USB_POWER
 			if (get_cpu_id() == RTK1296_CPU_ID)
 				setISOGPIO(26, 1);
 			else
 				setGPIO(19, 1);
+#else
+            setISOGPIO(1, 1);
+#endif
 		} else {
 			debug("Realtek-usb: Type C port no device, turn off port 0 power\n");
+#ifdef WD_USB_POWER
 			if (get_cpu_id() == RTK1296_CPU_ID)
 				setISOGPIO(26, 0);
 			else
 				setGPIO(19, 0);
+#else
+            setISOGPIO(1, 0);
+#endif
 		}
 	}
 
 out:
 	//Usb2 5V
 	// for 1294, 1295, 1296 QA board
-	//setGPIO(19, 1);
+#ifndef WD_USB_POWER
+	setGPIO(19, 1);
+#endif
 
 	if (get_cpu_id() == RTK1296_CPU_ID) {
-		//debug("Realtek-usb: Turn on 1296 usb port1 and port2 power\n");
-		//setISOGPIO(31, 1);
+#ifndef WD_USB_POWER
+		debug("Realtek-usb: Turn on 1296 usb port1 and port2 power\n");
+		setISOGPIO(31, 1);
+#endif
 		debug("Realtek-usb: Turn on 1296 usb port3 power\n");
+#ifdef WD_USB_POWER
 		setISOGPIO(34, 1);
+#else      
+		setISOGPIO(32, 1);
+#endif
 	}
 	return 0;
 

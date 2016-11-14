@@ -39,6 +39,7 @@
 unsigned int spi_flash_id_idx;
 s_device_type * pspi_flash_type;
 unsigned int spi_flash_min_erase_size;
+unsigned int spi_flash_max_erase_size;
 
 static void spi_switch_read_mode(void)
 {
@@ -107,6 +108,36 @@ static unsigned int rtkspi_get_min_erase_size( s_device_type * _pspi_flash_type 
 	return 0; // flash_wp or not support erase
 }
 
+static unsigned int rtkspi_get_max_erase_size( s_device_type * _pspi_flash_type )
+{
+	unsigned int _max_erase_blk_size;
+
+	_max_erase_blk_size = 0;
+
+	if( _pspi_flash_type->sec_256k_en == 1 )
+	{
+		_max_erase_blk_size = (256UL<<10);
+	}
+	else if( _pspi_flash_type->sec_64k_en == 1 )
+	{
+		_max_erase_blk_size = (64UL<<10);
+	}
+	else if( _pspi_flash_type->sec_32k_en == 1 )
+	{
+		_max_erase_blk_size = (32UL<<10);
+	}
+	else if( _pspi_flash_type->sec_4k_en == 1 )
+	{
+		_max_erase_blk_size = (4UL<<10);
+	}
+
+	if( _max_erase_blk_size ) {
+		return _max_erase_blk_size;
+	}
+
+	return 0; // flash_wp or not support erase
+}
+
 int rtkspi_identify( void )
 {
     unsigned int id;
@@ -117,6 +148,7 @@ int rtkspi_identify( void )
     spi_flash_id_idx = 0;
     pspi_flash_type = NULL;
     spi_flash_min_erase_size = 0;
+    spi_flash_max_erase_size = 0;
 
     // configure spi flash controller register
     rtd_outl(SB2_SFC_POS_LATCH,0x00000001);   //set serial flash controller latch data at rising edge
@@ -158,6 +190,7 @@ int rtkspi_identify( void )
             pspi_flash_type = &s_device[idx];
             spi_flash_id_idx = (idx | SPI_FLASH_ID_FOUND);
             spi_flash_min_erase_size = rtkspi_get_min_erase_size(pspi_flash_type);
+            spi_flash_max_erase_size = rtkspi_get_max_erase_size(pspi_flash_type);
 
             // show flash info
             printf("sector 256k en: %d\n", pspi_flash_type->sec_256k_en);
@@ -381,6 +414,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
     unsigned int end_address;
     unsigned int curr_address;
     unsigned int tmp_cnt;
+    unsigned int erase_size;
 
     if( !spi_flash_min_erase_size ) {
     	printf("*** unknown SPI flash erase size, DO NOTHING ***\n");
@@ -391,7 +425,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
     end_address   = spi_offset_address + byte_length;
 
     //printf("*** start addr : 0x%08x\n", start_address);
-    //printf("*** e n d addr : 0x%08x\n", end_address);
+    //printf("*** end addr : 0x%08x\n", end_address);
 
     // set aligment
     start_address &= ~(spi_flash_min_erase_size-1);
@@ -399,8 +433,9 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
     end_address   += (spi_flash_min_erase_size-1);
     end_address   &= ~(spi_flash_min_erase_size-1);
 
-    //printf("*** start addr : 0x%08x\n", start_address);
-    //printf("*** e n d addr : 0x%08x\n", end_address);
+    printf("min erase size : 0x%08x\n", spi_flash_min_erase_size);
+    printf("*** adjust start addr : 0x%08x\n", start_address);
+    printf("*** adjust end addr : 0x%08x\n", end_address);
 
     //disable auto-prog
 	rtd_outl(SB2_SFC_EN_WR,    0x00000006);
@@ -410,6 +445,15 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
 
 	while( curr_address < end_address )
     {
+        // addr align max erase size
+        if (((curr_address & (spi_flash_max_erase_size - 1)) == 0)  &&  
+            ((curr_address + spi_flash_max_erase_size) <= end_address)) {
+            erase_size = spi_flash_max_erase_size;
+        }
+        else {
+            erase_size = spi_flash_min_erase_size;
+        }
+    
         printf("e");
 
         // write enable
@@ -420,28 +464,28 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
         tmp_sts = rtd_inb(curr_address);
 
 		do {
-			if( spi_flash_min_erase_size == (256UL<<10) )
+			if( erase_size == (256UL<<10) )
             {
                 rtd_outl(SB2_SFC_OPCODE,0x000000d8);
                 rtd_outl(SB2_SFC_CTL,0x00000008);
                 tmp_sts = rtd_inb(curr_address);
                 break;
             }
-			else if( spi_flash_min_erase_size == (64UL<<10) )
+			else if( erase_size == (64UL<<10) )
             {
                 rtd_outl(SB2_SFC_OPCODE,0x000000d8);
             	rtd_outl(SB2_SFC_CTL,0x00000008);
             	tmp_sts = rtd_inb(curr_address);
                 break;
             }
-			else if( spi_flash_min_erase_size == (32UL<<10) )
+			else if( erase_size == (32UL<<10) )
             {
             	rtd_outl(SB2_SFC_OPCODE,0x00000052);
                 rtd_outl(SB2_SFC_CTL,0x00000008);
                 tmp_sts = rtd_inb(curr_address);
                 break;
             }
-			else if( spi_flash_min_erase_size == (4UL<<10) )
+			else if( erase_size == (4UL<<10) )
             {
             	if (pspi_flash_type->id==PMC_4Mbit) {
                     rtd_outl(SB2_SFC_OPCODE,0x000000d7);
@@ -454,7 +498,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
                 break;
             }
 
-		    printf("*** erase size(0x%08x) not support\n", spi_flash_min_erase_size);
+		    printf("*** erase size(0x%08x) not support\n", erase_size);
 			//enable auto-prog
 			rtd_outl(SB2_SFC_EN_WR,    0x00000106);
         	rtd_outl(SB2_SFC_WAIT_WR,    0x00000105);
@@ -477,7 +521,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
             tmp_sts = rtd_inb(curr_address);
         } while(tmp_sts&0x1);
 
-        curr_address += spi_flash_min_erase_size;
+        curr_address += erase_size;
     }
 
     printf("\n");
