@@ -80,11 +80,7 @@ typedef enum{
 	BOOT_FROM_FLASH_MANUAL_MODE
 }BOOT_FROM_FLASH_T;
 
-
-
-
 #if defined(CONFIG_RTD1195) || defined(CONFIG_RTD1295)
-
 
 #ifdef CONFIG_CMD_SATA 
 extern int sata_boot_debug;
@@ -1510,7 +1506,8 @@ int rtk_plat_read_fw_image_from_eMMC(
 	/* clear boot_av_info memory */
 	boot_av = (boot_av_info_t *) MIPS_BOOT_AV_INFO_ADDR;
 	memset(boot_av, 0, sizeof(boot_av_info_t));
-
+	
+	
 	/* parse each fw_entry */
 	for (i = 0; i < fw_count; i++)
 	{
@@ -1578,7 +1575,6 @@ int rtk_plat_read_fw_image_from_eMMC(
 			}
 			else if(boot_mode == BOOT_GOLD_MODE)
             {
-
                 switch(this_entry->type)
                 {
                     case FW_TYPE_GOLD_KERNEL:
@@ -1619,7 +1615,6 @@ int rtk_plat_read_fw_image_from_eMMC(
 			{
 				switch(this_entry->type)
 				{
-
 					case FW_TYPE_BOOTCODE:
 						printf("Boot Code:\n");
 						break;
@@ -1874,7 +1869,7 @@ int rtk_plat_read_fw_image_from_eMMC(
 				}
 								
 				block_no = (eMMC_fw_desc_table_start + this_entry->offset) / EMMC_BLOCK_SIZE ;
-                            
+                                
 				if (!rtk_eMMC_read(block_no, imageSize, (uint *)mem_layout.flash_to_ram_addr))
 				{
 					printf("[ERR] Read fw error (type:%d)!\n", this_entry->type);
@@ -2461,6 +2456,7 @@ int rtk_plat_read_fw_image_from_SATA(
 				imageBlkSize = imageSize / 512;
 
 				block_no = (this_entry->offset) / 512;
+                                
 				if (!rtk_sata_read(block_no, imageBlkSize, (uint *)mem_layout.flash_to_ram_addr))
 				{
 					printf("[ERR] Read fw error (type:%d)!\n", this_entry->type);
@@ -2471,7 +2467,6 @@ int rtk_plat_read_fw_image_from_SATA(
 #ifndef BYPASS_CHECKSUM
 				/* Check checksum */
 				fw_checksum = get_checksum((uchar *)mem_layout.flash_to_ram_addr, this_entry->length);
-
 
 				if (this_entry->checksum != fw_checksum && secure_mode!= RTK_SECURE_BOOT)
 				{
@@ -2484,7 +2479,6 @@ int rtk_plat_read_fw_image_from_SATA(
 				/* if secure mode, do AES CBC decrypt */
 				if (mem_layout.bIsEncrypted)
 				{
-
 					if (secure_mode == RTK_SECURE_BOOT)
 					{       
 						unsigned int real_body_size = 0;
@@ -2526,7 +2520,6 @@ int rtk_plat_read_fw_image_from_SATA(
                         }
 
 #ifdef CONFIG_CMD_KEY_BURNING
-
                         OTP_Get_Byte(OTP_K_S, ks, 16);
                         OTP_Get_Byte(OTP_K_H, kh, 16);
                         sync();
@@ -2612,7 +2605,6 @@ int rtk_plat_read_fw_image_from_SATA(
 			// remove unusing code
 			printf("****** %s %d, not implement\n", __FUNCTION__, __LINE__);
 		}
-
 
 	/* set boot_av_info_ptr */
 	if (boot_av->dwMagicNumber == SWAPEND32(BOOT_AV_INFO_MAGICNO))
