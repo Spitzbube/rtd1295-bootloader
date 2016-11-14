@@ -7,7 +7,15 @@
 #define EDID_LENGTH 128
 #define DDC_ADDR 0x50
 
+//Tag Code
+#define AUDIO_BLOCK	0x01
 #define VIDEO_BLOCK     0x02
+#define VENDOR_BLOCK    0x03
+#define SPEAKER_BLOCK	0x04
+#define VESA_DISPLAY_TRANSFER_BLOCK	0x05
+#define USE_EXTENDED_TAG	0x07
+
+#define HDMI_2P0_IDENTIFIER 0xC45DD8
 
 #define CEA_EXT	    0x02
 #define VTB_EXT	    0x10
@@ -172,7 +180,18 @@ struct edid {
 	u8 checksum;
 } __attribute__((packed));
 
+struct edid_hdmi2p0_info {
+	u32 hdmi_id;
+	u32 max_tmds_char_rate;
+	u8 scdc_capable;
+	u8 dc_420;//Deep Color420, [Bit2]DC_48bit_420;[Bit1]DC_36bit_420;[Bit0]:DC_30bit_420
+} __attribute__((packed));
 
-
+// HDMI Forum Vendor Specific Data Block Byte6
+enum SCDC_CAPABLES {
+	SCDC_PRESENT = 0x80, /* Bit7 */
+	SCDC_RR_CAPABLE = 0x40, /* Bit6*/
+	SCDC_340M_SCRAMBLE = 0x08, /* Bit3 */
+};
 
 #endif /* __RTK_EDID_H__ */

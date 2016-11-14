@@ -5,8 +5,9 @@
 
 #include <asm/arch/io.h>
 #include <asm/arch/rbus/iso_reg.h>
+#include <asm/arch/rbus/sb2_reg.h>
 
-unsigned char i2c_init_rdy = 0;
+unsigned char i2c_init_rdy[RTK_I2C_CNT] = {0};
 unsigned int  spd;
 
 
@@ -19,43 +20,6 @@ unsigned int  spd;
 #define i2c_pprint(fmt,args...)		
 #define i2c_ppprint(fmt,args...)	 	printf(fmt,## args)
 
-/*======================================================================
- * Func : I2C_Init
- *
- * Desc : Init I2C
- *
- * Parm : N/A
- *
- * Retn : N/A
- *======================================================================*/
-void I2C_Init(void)
-{
-    int i;
-    unsigned char rx_fifo_depth;
-    i2c_pprint("%s %d\n", __FUNCTION__, __LINE__);		
-    if (i2c_init_rdy==0)
-    {
-        for (i=0; i<RTK_I2C_CNT; i++ )
-        {
-			if (i==0){
-				rtd_maskl(ISO_MUXPAD0_reg, ~(ISO_MUXPAD0_i2c_sda_0_mask | ISO_MUXPAD0_i2c_scl_0_mask),
-				ISO_MUXPAD0_i2c_sda_0(0x1) | ISO_MUXPAD0_i2c_scl_0(0x1));
-			} else if (i==1) {
-				rtd_maskl(ISO_MUXPAD1_reg, ~(ISO_MUXPAD1_i2c_sda_1_mask | ISO_MUXPAD1_i2c_scl_1_mask),
-				ISO_MUXPAD1_i2c_sda_1(0x1) | ISO_MUXPAD1_i2c_scl_1(0x1));
-			}
-
-            rx_fifo_depth = ((GET_IC_COMP_PARAM_1(i) >>  8) & 0xFF)+1;
-            SET_IC_ENABLE(i, 0);
-            SET_IC_INTR_MASK(i, 0);                // disable all interrupt
-            SET_IC_CON(i, IC_SLAVE_DISABLE | IC_RESTART_EN | SPEED_SS | IC_MASTER_MODE);
-            //SET_IC_TX_TL(i, FIFO_THRESHOLD);
-            //SET_IC_RX_TL(i, rx_fifo_depth - FIFO_THRESHOLD);
-            I2C_SetSpeed(i, DEFAULT_SPEED);
-        }
-        i2c_init_rdy = 1;
-    }
-}
 
 /*======================================================================
  * Func : I2CN_Init
@@ -70,30 +34,121 @@ void I2CN_Init(int Bus_ID)
 {
     int i = Bus_ID;
     unsigned char rx_fifo_depth;
-   	
-	//set pinmux 0x98007310
-    if(Bus_ID==0){
-	rtd_maskl(ISO_MUXPAD0_reg, ~(ISO_MUXPAD0_i2c_sda_0_mask | ISO_MUXPAD0_i2c_scl_0_mask),
-		ISO_MUXPAD0_i2c_sda_0(0x1) | ISO_MUXPAD0_i2c_scl_0(0x1));
-    }
-    else if(Bus_ID==1) {
-	rtd_maskl(ISO_MUXPAD1_reg, ~(ISO_MUXPAD1_i2c_sda_1_mask | ISO_MUXPAD1_i2c_scl_1_mask),
-		ISO_MUXPAD1_i2c_sda_1(0x1) | ISO_MUXPAD1_i2c_scl_1(0x1));
-    }
-    if (i2c_init_rdy==0)
-    {
 
-        rx_fifo_depth = ((GET_IC_COMP_PARAM_1(i) >>  8) & 0xFF)+1;
-        SET_IC_ENABLE(i, 0);
-        SET_IC_INTR_MASK(i, 0);                // disable all interrupt
-        SET_IC_CON(i, IC_SLAVE_DISABLE | IC_RESTART_EN | SPEED_SS | IC_MASTER_MODE);
-        SET_IC_TX_TL(i, FIFO_THRESHOLD);
-        SET_IC_RX_TL(i, rx_fifo_depth - FIFO_THRESHOLD);
-        I2C_SetSpeed(i, DEFAULT_SPEED);
-		SET_IC_SDA_DEL(i,0xff000101);	//adjust I2c timing.
+	if(Bus_ID >= RTK_I2C_CNT)
+		return;
 
-        i2c_init_rdy = 1;
-    }
+	if(i2c_init_rdy[i] == 1)
+		return;
+
+	//Set I2C pinmux
+	switch(Bus_ID)
+	{
+		case 0:
+			rtd_maskl(ISO_MUXPAD0_reg, ~(ISO_MUXPAD0_i2c_sda_0_mask | ISO_MUXPAD0_i2c_scl_0_mask),
+					ISO_MUXPAD0_i2c_sda_0(0x1) | ISO_MUXPAD0_i2c_scl_0(0x1));
+			break;
+		case 1:
+			rtd_maskl(ISO_MUXPAD1_reg, ~(ISO_MUXPAD1_i2c_sda_1_mask | ISO_MUXPAD1_i2c_scl_1_mask),
+					ISO_MUXPAD1_i2c_sda_1(0x1) | ISO_MUXPAD1_i2c_scl_1(0x1));
+			break;
+		case 2:
+			rtd_maskl(SB2_MUXPAD2_reg, ~(SB2_MUXPAD2_tp1_clk_mask | SB2_MUXPAD2_tp1_sync_mask),
+					SB2_MUXPAD2_tp1_clk(0x3) | SB2_MUXPAD2_tp1_sync(0x3));
+			break;
+		case 3:
+			rtd_maskl(SB2_MUXPAD2_reg, ~(SB2_MUXPAD2_tp1_valid_mask | SB2_MUXPAD2_tp1_data_mask),
+					SB2_MUXPAD2_tp1_valid(0x3) | SB2_MUXPAD2_tp1_data(0x3));
+			break;
+		case 4:
+			rtd_maskl(SB2_MUXPAD3_reg, ~(SB2_MUXPAD3_i2c_sda_4_mask | SB2_MUXPAD3_i2c_scl_4_mask),
+					SB2_MUXPAD3_i2c_sda_4(0x1) | SB2_MUXPAD3_i2c_scl_4(0x1));
+			break;
+		default:
+			break;
+	}
+
+	rx_fifo_depth = ((GET_IC_COMP_PARAM_1(Bus_ID) >>  8) & 0xFF)+1;
+	SET_IC_ENABLE(Bus_ID, 0);
+	SET_IC_INTR_MASK(Bus_ID, 0);                // disable all interrupt
+	SET_IC_CON(Bus_ID, IC_SLAVE_DISABLE | IC_RESTART_EN | SPEED_SS | IC_MASTER_MODE);
+	SET_IC_TX_TL(Bus_ID, FIFO_THRESHOLD);
+	SET_IC_RX_TL(Bus_ID, rx_fifo_depth - FIFO_THRESHOLD);
+	I2C_SetSpeed(Bus_ID, DEFAULT_SPEED);
+	SET_IC_SDA_DEL(Bus_ID,0xff000101);	//adjust I2c timing.
+
+	i2c_init_rdy[Bus_ID] = 1;
+}
+
+/*======================================================================
+ * Func : I2C_Init
+ *
+ * Desc : Init I2C
+ *
+ * Parm : N/A
+ *
+ * Retn : N/A
+ *======================================================================*/
+void I2C_Init(void)
+{
+    int i;
+
+	for (i=0; i<RTK_I2C_CNT; i++ )
+	{
+		I2CN_Init(i);
+	}
+
+}
+
+
+/*======================================================================
+ * Func : I2CN_UnInit
+ *
+ * Desc : Uninit I2CN
+ *
+ * Parm : Bus_ID
+ *
+ * Retn : N/A
+ *======================================================================*/
+void I2CN_UnInit(int Bus_ID)
+{
+	if(Bus_ID >= RTK_I2C_CNT)
+		return;
+
+	if(i2c_init_rdy[Bus_ID] == 0)
+		return;
+
+	SET_IC_ENABLE(Bus_ID, 0);
+	SET_IC_INTR_MASK(Bus_ID, 0);
+
+	//Set I2C pinmux
+	switch(Bus_ID)
+	{
+		case 0:
+			rtd_maskl(ISO_MUXPAD0_reg, ~(ISO_MUXPAD0_i2c_sda_0_mask | ISO_MUXPAD0_i2c_scl_0_mask),
+					ISO_MUXPAD0_i2c_sda_0(0x0) | ISO_MUXPAD0_i2c_scl_0(0x0));
+			break;
+		case 1:
+			rtd_maskl(ISO_MUXPAD1_reg, ~(ISO_MUXPAD1_i2c_sda_1_mask | ISO_MUXPAD1_i2c_scl_1_mask),
+					ISO_MUXPAD1_i2c_sda_1(0x0) | ISO_MUXPAD1_i2c_scl_1(0x0));
+			break;
+		case 2:
+			rtd_maskl(SB2_MUXPAD2_reg, ~(SB2_MUXPAD2_tp1_clk_mask | SB2_MUXPAD2_tp1_sync_mask),
+					SB2_MUXPAD2_tp1_clk(0x0) | SB2_MUXPAD2_tp1_sync(0x0));
+			break;
+		case 3:
+			rtd_maskl(SB2_MUXPAD2_reg, ~(SB2_MUXPAD2_tp1_valid_mask | SB2_MUXPAD2_tp1_data_mask),
+					SB2_MUXPAD2_tp1_valid(0x0) | SB2_MUXPAD2_tp1_data(0x0));
+			break;
+		case 4:
+			rtd_maskl(SB2_MUXPAD3_reg, ~(SB2_MUXPAD3_i2c_sda_4_mask | SB2_MUXPAD3_i2c_scl_4_mask),
+					SB2_MUXPAD3_i2c_sda_4(0x0) | SB2_MUXPAD3_i2c_scl_4(0x0));
+			break;
+		default:
+			break;
+	}
+
+    i2c_init_rdy[Bus_ID] = 0;
 }
 
 
@@ -110,51 +165,11 @@ void I2C_UnInit(void)
 {
     int i;
 
-    if (i2c_init_rdy)
-    {
-        for (i=0; i<RTK_I2C_CNT; i++ )
-        {
-            SET_IC_ENABLE(i, 0);
-            SET_IC_INTR_MASK(i, 0);
-        }
-        i2c_init_rdy = 0;
-    }
-		
+	for (i=0; i<RTK_I2C_CNT; i++ )
+	{
+		I2CN_UnInit(i);
+	}	
 }
-
-
-/*======================================================================
- * Func : I2CN_UnInit
- *
- * Desc : Uninit I2CN
- *
- * Parm : Bus_ID
- *
- * Retn : N/A
- *======================================================================*/
-void I2CN_UnInit(int Bus_ID)
-{
-    int i = Bus_ID;
-
-    if (i2c_init_rdy)
-    {
-        for (i=0; i<RTK_I2C_CNT; i++ )
-        {
-            SET_IC_ENABLE(i, 0);
-            SET_IC_INTR_MASK(i, 0);
-        }
-        i2c_init_rdy = 0;
-    }
-    if(Bus_ID==0) {
-	rtd_maskl(ISO_MUXPAD0_reg, ~(ISO_MUXPAD0_i2c_sda_0_mask | ISO_MUXPAD0_i2c_scl_0_mask),
-		ISO_MUXPAD0_i2c_sda_0(0) | ISO_MUXPAD0_i2c_scl_0(0));
-    }
-    else if(Bus_ID==1) {
-	rtd_maskl(ISO_MUXPAD1_reg, ~(ISO_MUXPAD1_i2c_sda_1_mask | ISO_MUXPAD1_i2c_scl_1_mask),
-		ISO_MUXPAD1_i2c_sda_1(0) | ISO_MUXPAD1_i2c_scl_1(0));
-    }
-}
-
 
 /*======================================================================
  * Func : I2C_Write_EX
