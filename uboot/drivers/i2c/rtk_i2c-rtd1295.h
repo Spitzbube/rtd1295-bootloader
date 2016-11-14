@@ -4,7 +4,7 @@
 #include "asm/arch/rbus/misc_reg.h"
 #include "asm/arch/rbus/iso_reg.h"
 
-#define RTK_I2C_CNT               2 // I2C1 for HDMITx
+#define RTK_I2C_CNT               5 // I2C1 for HDMITx
 
 /*
 #define IC0_SDA_DEL                     0x18007084
@@ -86,43 +86,45 @@
 */
 
 // I2C
-unsigned int IC_SDA_DEL[]         = {ISO_I2C0_SDA_DEL       , ISO_I2C1_SDA_DEL       , MIS_I2C2_SDA_DEL         };
-unsigned int IC_CON[]             = {ISO_IC0_CON            , ISO_IC1_CON            , MIS_IC2_CON              };
-unsigned int IC_TAR[]             = {ISO_IC0_TAR            , ISO_IC1_TAR            , MIS_IC2_TAR              };
-unsigned int IC_SAR[]             = {ISO_IC0_SAR            , ISO_IC1_SAR            , MIS_IC2_SAR              };
-unsigned int IC_HS_MADDR[]        = {ISO_IC0_HS_MADDR       , ISO_IC1_HS_MADDR       , MIS_IC2_HS_MADDR         };
-unsigned int IC_DATA_CMD[]        = {ISO_IC0_DATA_CMD       , ISO_IC1_DATA_CMD       , MIS_IC2_DATA_CMD         };
-unsigned int IC_SS_SCL_HCNT[]     = {ISO_IC0_SS_SCL_HCNT    , ISO_IC1_SS_SCL_HCNT    , MIS_IC2_SS_SCL_HCNT      };
-unsigned int IC_SS_SCL_LCNT[]     = {ISO_IC0_SS_SCL_LCNT    , ISO_IC1_SS_SCL_LCNT    , MIS_IC2_SS_SCL_LCNT      };
-unsigned int IC_FS_SCL_HCNT[]     = {ISO_IC0_FS_SCL_HCNT    , ISO_IC1_FS_SCL_HCNT    , MIS_IC2_FS_SCL_HCNT      };
-unsigned int IC_FS_SCL_LCNT[]     = {ISO_IC0_FS_SCL_LCNT    , ISO_IC1_FS_SCL_LCNT    , MIS_IC2_FS_SCL_LCNT      };
-unsigned int IC_INTR_STAT[]       = {ISO_IC0_INTR_STAT      , ISO_IC1_INTR_STAT      , MIS_IC2_INTR_STAT        };
-unsigned int IC_INTR_MASK[]       = {ISO_IC0_INTR_MASK      , ISO_IC1_INTR_MASK      , MIS_IC2_INTR_MASK        };
-unsigned int IC_RAW_INTR_STAT[]   = {ISO_IC0_RAW_INTR_STAT  , ISO_IC1_RAW_INTR_STAT  , MIS_IC2_RAW_INTR_STAT    };
-unsigned int IC_RX_TL[]           = {ISO_IC0_RX_TL          , ISO_IC1_RX_TL          , MIS_IC2_RX_TL            };
-unsigned int IC_TX_TL[]           = {ISO_IC0_TX_TL          , ISO_IC1_TX_TL          , MIS_IC2_TX_TL            };
-unsigned int IC_CLR_INTR[]        = {ISO_IC0_CLR_INTR       , ISO_IC1_CLR_INTR       , MIS_IC2_CLR_INTR         };
-unsigned int IC_CLR_RX_UNDER[]    = {ISO_IC0_CLR_RX_UNDER   , ISO_IC1_CLR_RX_UNDER   , MIS_IC2_CLR_RX_UNDER     };
-unsigned int IC_CLR_RX_OVER[]     = {ISO_IC0_CLR_RX_OVER    , ISO_IC1_CLR_RX_OVER    , MIS_IC2_CLR_RX_OVER      };
-unsigned int IC_CLR_TX_OVER[]     = {ISO_IC0_CLR_TX_OVER    , ISO_IC1_CLR_TX_OVER    , MIS_IC2_CLR_TX_OVER      };
-unsigned int IC_CLR_RD_REQ[]      = {ISO_IC0_CLR_RD_REQ     , ISO_IC1_CLR_RD_REQ     , MIS_IC2_CLR_RD_REQ       };
-unsigned int IC_CLR_TX_ABRT[]     = {ISO_IC0_CLR_TX_ABRT    , ISO_IC1_CLR_TX_ABRT    , MIS_IC2_CLR_TX_ABRT      };
-unsigned int IC_CLR_RX_DONE[]     = {ISO_IC0_CLR_RX_DONE    , ISO_IC1_CLR_RX_DONE    , MIS_IC2_CLR_RX_DONE      };
-unsigned int IC_CLR_ACTIVITY[]    = {ISO_IC0_CLR_ACTIVITY   , ISO_IC1_CLR_ACTIVITY   , MIS_IC2_CLR_ACTIVITY     };
-unsigned int IC_CLR_STOP_DET[]    = {ISO_IC0_CLR_STOP_DET   , ISO_IC1_CLR_STOP_DET   , MIS_IC2_CLR_STOP_DET     };
-unsigned int IC_CLR_START_DET[]   = {ISO_IC0_CLR_START_DET  , ISO_IC1_CLR_START_DET  , MIS_IC2_CLR_START_DET    };
-unsigned int IC_CLR_GEN_CALL[]    = {ISO_IC0_CLR_GEN_CALL   , ISO_IC1_CLR_GEN_CALL   , MIS_IC2_CLR_GEN_CALL     };
-unsigned int IC_ENABLE[]          = {ISO_IC0_ENABLE         , ISO_IC1_ENABLE         , MIS_IC2_ENABLE           };
-unsigned int IC_STATUS[]          = {ISO_IC0_STATUS         , ISO_IC1_STATUS         , MIS_IC2_STATUS           };
-unsigned int IC_TXFLR[]           = {ISO_IC0_TXFLR          , ISO_IC1_TXFLR          , MIS_IC2_TXFLR            };
-unsigned int IC_RXFLR[]           = {ISO_IC0_RXFLR          , ISO_IC1_RXFLR          , MIS_IC2_RXFLR            };
-unsigned int IC_TX_ABRT_SOURCE[]  = {ISO_IC0_TX_ABRT_SOURCE , ISO_IC1_TX_ABRT_SOURCE , MIS_IC2_TX_ABRT_SOURCE   };
-unsigned int IC_DMA_CR[]          = {ISO_IC0_DMA_CR         , ISO_IC1_DMA_CR         , MIS_IC2_DMA_CR           };
-unsigned int IC_DMA_TDLR[]        = {ISO_IC0_DMA_TDLR       , ISO_IC1_DMA_TDLR       , MIS_IC2_DMA_TDLR         };
-unsigned int IC_DMA_RDLR[]        = {ISO_IC0_DMA_RDLR       , ISO_IC1_DMA_RDLR       , MIS_IC2_DMA_RDLR         };
-unsigned int IC_COMP_PARAM_1[]    = {ISO_IC0_COMP_PARAM_1   , ISO_IC1_COMP_PARAM_1   , MIS_IC2_COMP_PARAM_1     };
-unsigned int IC_COMP_VERSION[]    = {ISO_IC0_COMP_VERSION   , ISO_IC1_COMP_VERSION   , MIS_IC2_COMP_VERSION     };
-unsigned int IC_COMP_TYPE[]       = {ISO_IC0_COMP_TYPE      , ISO_IC1_COMP_TYPE      , MIS_IC2_COMP_TYPE        };
+unsigned int IC_SDA_DEL[]         = {ISO_I2C0_SDA_DEL       , ISO_I2C1_SDA_DEL       , MIS_I2C2_SDA_DEL       , MIS_I2C3_SDA_DEL       , MIS_I2C4_SDA_DEL       };
+unsigned int IC_CON[]             = {ISO_IC0_CON            , ISO_IC1_CON            , MIS_IC2_CON            , MIS_IC3_CON            , MIS_IC4_CON            };
+unsigned int IC_TAR[]             = {ISO_IC0_TAR            , ISO_IC1_TAR            , MIS_IC2_TAR            , MIS_IC3_TAR            , MIS_IC4_TAR            };
+unsigned int IC_SAR[]             = {ISO_IC0_SAR            , ISO_IC1_SAR            , MIS_IC2_SAR            , MIS_IC3_SAR            , MIS_IC4_SAR            };
+unsigned int IC_HS_MADDR[]        = {ISO_IC0_HS_MADDR       , ISO_IC1_HS_MADDR       , MIS_IC2_HS_MADDR       , MIS_IC3_HS_MADDR       , MIS_IC4_HS_MADDR       };
+unsigned int IC_DATA_CMD[]        = {ISO_IC0_DATA_CMD       , ISO_IC1_DATA_CMD       , MIS_IC2_DATA_CMD       , MIS_IC3_DATA_CMD       , MIS_IC4_DATA_CMD       };
+unsigned int IC_SS_SCL_HCNT[]     = {ISO_IC0_SS_SCL_HCNT    , ISO_IC1_SS_SCL_HCNT    , MIS_IC2_SS_SCL_HCNT    , MIS_IC3_SS_SCL_HCNT    , MIS_IC4_SS_SCL_HCNT    };
+unsigned int IC_SS_SCL_LCNT[]     = {ISO_IC0_SS_SCL_LCNT    , ISO_IC1_SS_SCL_LCNT    , MIS_IC2_SS_SCL_LCNT    , MIS_IC3_SS_SCL_LCNT    , MIS_IC4_SS_SCL_LCNT    };
+unsigned int IC_FS_SCL_HCNT[]     = {ISO_IC0_FS_SCL_HCNT    , ISO_IC1_FS_SCL_HCNT    , MIS_IC2_FS_SCL_HCNT    , MIS_IC3_FS_SCL_HCNT    , MIS_IC4_FS_SCL_HCNT    };
+unsigned int IC_FS_SCL_LCNT[]     = {ISO_IC0_FS_SCL_LCNT    , ISO_IC1_FS_SCL_LCNT    , MIS_IC2_FS_SCL_LCNT    , MIS_IC3_FS_SCL_LCNT    , MIS_IC4_FS_SCL_LCNT    };
+unsigned int IC_INTR_STAT[]       = {ISO_IC0_INTR_STAT      , ISO_IC1_INTR_STAT      , MIS_IC2_INTR_STAT      , MIS_IC3_INTR_STAT      , MIS_IC4_INTR_STAT      };
+unsigned int IC_INTR_MASK[]       = {ISO_IC0_INTR_MASK      , ISO_IC1_INTR_MASK      , MIS_IC2_INTR_MASK      , MIS_IC3_INTR_MASK      , MIS_IC4_INTR_MASK      };
+unsigned int IC_RAW_INTR_STAT[]   = {ISO_IC0_RAW_INTR_STAT  , ISO_IC1_RAW_INTR_STAT  , MIS_IC2_RAW_INTR_STAT  , MIS_IC3_RAW_INTR_STAT  , MIS_IC4_RAW_INTR_STAT  };
+unsigned int IC_RX_TL[]           = {ISO_IC0_RX_TL          , ISO_IC1_RX_TL          , MIS_IC2_RX_TL          , MIS_IC3_RX_TL          , MIS_IC4_RX_TL          };
+unsigned int IC_TX_TL[]           = {ISO_IC0_TX_TL          , ISO_IC1_TX_TL          , MIS_IC2_TX_TL          , MIS_IC3_TX_TL          , MIS_IC4_TX_TL          };
+unsigned int IC_CLR_INTR[]        = {ISO_IC0_CLR_INTR       , ISO_IC1_CLR_INTR       , MIS_IC2_CLR_INTR       , MIS_IC3_CLR_INTR       , MIS_IC4_CLR_INTR       };
+unsigned int IC_CLR_RX_UNDER[]    = {ISO_IC0_CLR_RX_UNDER   , ISO_IC1_CLR_RX_UNDER   , MIS_IC2_CLR_RX_UNDER   , MIS_IC3_CLR_RX_UNDER   , MIS_IC4_CLR_RX_UNDER   };
+unsigned int IC_CLR_RX_OVER[]     = {ISO_IC0_CLR_RX_OVER    , ISO_IC1_CLR_RX_OVER    , MIS_IC2_CLR_RX_OVER    , MIS_IC3_CLR_RX_OVER    , MIS_IC4_CLR_RX_OVER    };
+unsigned int IC_CLR_TX_OVER[]     = {ISO_IC0_CLR_TX_OVER    , ISO_IC1_CLR_TX_OVER    , MIS_IC2_CLR_TX_OVER    , MIS_IC3_CLR_TX_OVER    , MIS_IC4_CLR_TX_OVER    };
+unsigned int IC_CLR_RD_REQ[]      = {ISO_IC0_CLR_RD_REQ     , ISO_IC1_CLR_RD_REQ     , MIS_IC2_CLR_RD_REQ     , MIS_IC3_CLR_RD_REQ     , MIS_IC4_CLR_RD_REQ     };
+unsigned int IC_CLR_TX_ABRT[]     = {ISO_IC0_CLR_TX_ABRT    , ISO_IC1_CLR_TX_ABRT    , MIS_IC2_CLR_TX_ABRT    , MIS_IC3_CLR_TX_ABRT    , MIS_IC4_CLR_TX_ABRT    };
+unsigned int IC_CLR_RX_DONE[]     = {ISO_IC0_CLR_RX_DONE    , ISO_IC1_CLR_RX_DONE    , MIS_IC2_CLR_RX_DONE    , MIS_IC3_CLR_RX_DONE    , MIS_IC4_CLR_RX_DONE    };
+unsigned int IC_CLR_ACTIVITY[]    = {ISO_IC0_CLR_ACTIVITY   , ISO_IC1_CLR_ACTIVITY   , MIS_IC2_CLR_ACTIVITY   , MIS_IC3_CLR_ACTIVITY   , MIS_IC4_CLR_ACTIVITY   };
+unsigned int IC_CLR_STOP_DET[]    = {ISO_IC0_CLR_STOP_DET   , ISO_IC1_CLR_STOP_DET   , MIS_IC2_CLR_STOP_DET   , MIS_IC3_CLR_STOP_DET   , MIS_IC4_CLR_STOP_DET   };
+unsigned int IC_CLR_START_DET[]   = {ISO_IC0_CLR_START_DET  , ISO_IC1_CLR_START_DET  , MIS_IC2_CLR_START_DET  , MIS_IC3_CLR_START_DET  , MIS_IC4_CLR_START_DET  };
+unsigned int IC_CLR_GEN_CALL[]    = {ISO_IC0_CLR_GEN_CALL   , ISO_IC1_CLR_GEN_CALL   , MIS_IC2_CLR_GEN_CALL   , MIS_IC3_CLR_GEN_CALL   , MIS_IC4_CLR_GEN_CALL   };
+unsigned int IC_ENABLE[]          = {ISO_IC0_ENABLE         , ISO_IC1_ENABLE         , MIS_IC2_ENABLE         , MIS_IC3_ENABLE         , MIS_IC4_ENABLE         };
+unsigned int IC_STATUS[]          = {ISO_IC0_STATUS         , ISO_IC1_STATUS         , MIS_IC2_STATUS         , MIS_IC3_STATUS         , MIS_IC4_STATUS         };
+unsigned int IC_TXFLR[]           = {ISO_IC0_TXFLR          , ISO_IC1_TXFLR          , MIS_IC2_TXFLR          , MIS_IC3_TXFLR          , MIS_IC4_TXFLR          };
+unsigned int IC_RXFLR[]           = {ISO_IC0_RXFLR          , ISO_IC1_RXFLR          , MIS_IC2_RXFLR          , MIS_IC3_RXFLR          , MIS_IC4_RXFLR          };
+unsigned int IC_TX_ABRT_SOURCE[]  = {ISO_IC0_TX_ABRT_SOURCE , ISO_IC1_TX_ABRT_SOURCE , MIS_IC2_TX_ABRT_SOURCE , MIS_IC3_TX_ABRT_SOURCE , MIS_IC4_TX_ABRT_SOURCE };
+unsigned int IC_DMA_CR[]          = {ISO_IC0_DMA_CR         , ISO_IC1_DMA_CR         , MIS_IC2_DMA_CR         , MIS_IC3_DMA_CR         , MIS_IC4_DMA_CR         };
+unsigned int IC_DMA_TDLR[]        = {ISO_IC0_DMA_TDLR       , ISO_IC1_DMA_TDLR       , MIS_IC2_DMA_TDLR       , MIS_IC3_DMA_TDLR       , MIS_IC4_DMA_TDLR       };
+unsigned int IC_DMA_RDLR[]        = {ISO_IC0_DMA_RDLR       , ISO_IC1_DMA_RDLR       , MIS_IC2_DMA_RDLR       , MIS_IC3_DMA_RDLR       , MIS_IC4_DMA_RDLR       };
+unsigned int IC_COMP_PARAM_1[]    = {ISO_IC0_COMP_PARAM_1   , ISO_IC1_COMP_PARAM_1   , MIS_IC2_COMP_PARAM_1   , MIS_IC3_COMP_PARAM_1   , MIS_IC4_COMP_PARAM_1   };
+unsigned int IC_COMP_VERSION[]    = {ISO_IC0_COMP_VERSION   , ISO_IC1_COMP_VERSION   , MIS_IC2_COMP_VERSION   , MIS_IC3_COMP_VERSION   , MIS_IC4_COMP_VERSION   };
+unsigned int IC_COMP_TYPE[]       = {ISO_IC0_COMP_TYPE      , ISO_IC1_COMP_TYPE      , MIS_IC2_COMP_TYPE      , MIS_IC3_COMP_TYPE      , MIS_IC4_COMP_TYPE      };
+
+
 
 //IC_CON
 #define IC_SLAVE_DISABLE    0x0040

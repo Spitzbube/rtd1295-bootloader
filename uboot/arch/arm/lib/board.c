@@ -137,6 +137,9 @@ inline void __blue_led_off(void) {}
 void blue_led_off(void) __attribute__((weak, alias("__blue_led_off")));
 
 extern int init_customize_func(void);
+#ifdef CONFIG_HDMITX_OFF
+extern void set_hdmi_off(void);
+#endif
 extern int sink_capability_handler(int set);
 extern int rtl8168_initialize(bd_t *bis);
 /*
@@ -851,9 +854,13 @@ void board_init_r(gd_t *id, ulong dest_addr)
     IR_init();
 #endif
 
-#if defined(CONFIG_SYS_AUTO_DETECT)
-	sink_capability_handler(1);
-#endif	
+#ifdef CONFIG_HDMITX_OFF
+	set_hdmi_off();
+#else
+	#ifdef CONFIG_SYS_AUTO_DETECT
+		sink_capability_handler(1);
+	#endif
+#endif
 
 #ifdef CONFIG_SYS_LOGO_DISP
 	puts("Logo: ");

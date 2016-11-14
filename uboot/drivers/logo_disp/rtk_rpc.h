@@ -112,10 +112,10 @@ struct VIDEO_RPC_VOUT_CONFIG_HDMI_INFO_FRAME {
      u_char dataByte4;
      u_char dataByte5;
      u_int dataInt0;	//see Note 1
-     long reserved1;
-     long reserved2;
-     long reserved3;
-     long reserved4;
+     u_int hdmi2p0_feature;//[Bit0]HDMI 2.0 [Bit1]Scrabmle
+     u_int reserved2;
+     u_int reserved3;
+     u_int reserved4;
 };
 typedef struct VIDEO_RPC_VOUT_CONFIG_HDMI_INFO_FRAME VIDEO_RPC_VOUT_CONFIG_HDMI_INFO_FRAME;
 

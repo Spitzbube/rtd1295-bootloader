@@ -405,6 +405,8 @@
 	//#define CONFIG_IR_KK_Y261_PROTOCOL
 #endif
 
+/* Turn off hdmi tx */
+#define CONFIG_HDMITX_OFF
 /* Auto detect sink*/
 #define CONFIG_SYS_AUTO_DETECT
 #define CONFIG_DEFAULT_TV_SYSTEM    	30 //1080P_59

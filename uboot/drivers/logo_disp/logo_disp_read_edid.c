@@ -44,6 +44,7 @@ unsigned char EDID[EDID_LENGTH*2];
 uchar checksum_128=0;
 uchar checksum_256=0;
 
+struct edid_hdmi2p0_info hdmi2p0_info;
 
 #define MHL_DEBUG 0
 
@@ -99,7 +100,7 @@ void dump_VIDEO_RPC_VOUT_CONFIG_TV_SYSTEM(struct VIDEO_RPC_VOUT_CONFIG_TV_SYSTEM
 	printf( "hdmiInfo.dataByte4          =0x%x\n", arg-> hdmiInfo.dataByte4);
 	printf( "hdmiInfo.dataByte5          =0x%x\n", arg-> hdmiInfo.dataByte5);		
 	printf( "hdmiInfo.dataInt0           =0x%x\n", arg-> hdmiInfo.dataInt0);
-	//printf( "hdmiInfo.reserved1          =0x%lx\n",arg-> hdmiInfo.reserved1);
+	printf( "hdmiInfo.hdmi2p0_feature    =0x%lx\n",arg-> hdmiInfo.hdmi2p0_feature);
 	//printf( "hdmiInfo.reserved2          =0x%lx\n",arg-> hdmiInfo.reserved2);
 	//printf( "hdmiInfo.reserved3          =0x%lx\n",arg-> hdmiInfo.reserved3);
 	//printf( "hdmiInfo.reserved4          =0x%lx\n",arg-> hdmiInfo.reserved4);
@@ -208,6 +209,30 @@ u8 *rtk_find_cea_extension(struct edid *edid)
 	return edid_ext;
 }
 
+static bool cea_db_is_hdmi_forum_vsdb(const u8 *db)
+{
+	int hdmi_id;
+
+	if (cea_db_tag(db) != VENDOR_BLOCK)
+		return false;
+
+	if (cea_db_payload_len(db) < 7)
+		return false;
+
+	hdmi_id = db[1] | (db[2] << 8) | (db[3] << 16);
+
+	hdmi2p0_info.hdmi_id = hdmi_id;
+
+	return hdmi_id == HDMI_2P0_IDENTIFIER;
+}
+
+static void parse_hdmi_forum_vsdb(const u8 *db)
+{
+	hdmi2p0_info.max_tmds_char_rate = db[5]*5;
+	hdmi2p0_info.scdc_capable = db[6];
+	hdmi2p0_info.dc_420 = db[7]&0x7;
+}
+
 #define for_each_cea_db(cea, i, start, end) \
 	for ((i) = (start); (i) < (end) && (i) + cea_db_payload_len(&(cea)[(i)]) < (end); (i) += cea_db_payload_len(&(cea)[(i)]) + 1)
 
@@ -227,8 +252,17 @@ int add_cea_modes(struct edid *edid)
 			db = &cea[i];
 			dbl = cea_db_payload_len(db);
 
-			if (cea_db_tag(db) == VIDEO_BLOCK)
-				modes = do_cea_modes (db+1, dbl);			
+			switch (cea_db_tag(db)) {
+				case VIDEO_BLOCK:
+					modes = do_cea_modes (db+1, dbl);
+					break;
+				case VENDOR_BLOCK:
+					if(cea_db_is_hdmi_forum_vsdb(db))//HDMI 2.0
+						parse_hdmi_forum_vsdb(db);
+					break;
+				default:
+					break;
+			}
 				
 		}
 	}
@@ -583,14 +617,42 @@ void set_AVI_Infoframe_Aspect_Ratio(struct AVI_InfoFrame_Format *format, int vid
 	debug("avi_info->Data_Byte3=0x%x\n",format-> Data_Byte3);		
 }
 
-void send_SCDC_cmd(unsigned int standard)
+#define SCDC_I2C_ADDR	0x54
+
+//Status and Control Data Channel Structure
+#define SCDCS_TMDS_Config	0x20
+#define SCDCS_Config_0		0x30
+#define SCDCS_Status_Flag_0	0x40
+static int hdmitx_write_scdc_port(unsigned char offset, unsigned char value)
 {
-	int bus_id;
+	int ret_val;
+	unsigned char bus_id =1;
 	unsigned char data[2];
 
-	bus_id = 1;
+	data[0]= offset;
+	data[1]= value;
 
-	data[0]= 0x20;//Offset TMDS_Config
+	I2CN_Init(bus_id);
+
+	ret_val = I2C_Write_EX(bus_id, SCDC_I2C_ADDR, 2, &data, NO_READ);
+	if (ret_val != S_OK)
+		printf("Write SCDC port fail, offset(0x%02x) value(0x%02x)\n",offset,value);
+
+	I2CN_UnInit(bus_id);
+	return ret_val;
+}
+
+
+static int hdmitx_send_scdc_TmdsConfig(unsigned int standard, unsigned int dataInt0)
+{
+	unsigned char config_data;
+	unsigned char deep_color,depp_depth;
+
+	deep_color = (dataInt0>>1)&0x1;
+	depp_depth = (dataInt0>>2)&0xF;
+
+	if((depp_depth!=5)&&(depp_depth!=6))
+		deep_color = 0;
 
 	switch(standard)
 	{
@@ -599,59 +661,103 @@ void send_SCDC_cmd(unsigned int standard)
 		case VO_STANDARD_HDTV_2160P_60:
 		case VO_STANDARD_HDTV_4096_2160P_50:
 		case VO_STANDARD_HDTV_4096_2160P_60:
-			data[1] = 0x3;
+		{
+			config_data = 0x3;
 			break;
+		}
 
-		//Scramble, 1/10 data rate
-		case VO_STANDARD_HDTV_2160P_60_420:
+		//Scramble, 1/40 data rate
+		case VO_STANDARD_HDTV_2160P_23:
+		case VO_STANDARD_HDTV_2160P_24:
+		case VO_STANDARD_HDTV_2160P_25:
+		case VO_STANDARD_HDTV_2160P_29:
+		case VO_STANDARD_HDTV_2160P_30:
+		case VO_STANDARD_HDTV_4096_2160P_24:
+		case VO_STANDARD_HDTV_4096_2160P_25:
+		case VO_STANDARD_HDTV_4096_2160P_30:
+		{
+			if(deep_color)
+				config_data = 0x3;
+			else
+				config_data = 0x0;
+
+			break;
+		}
+
+		//Depends on 340M_SCRAMBLE support
 		case VO_STANDARD_HDTV_2160P_50_420:
-		case VO_STANDARD_HDTV_4096_2160P_60_420:
+		case VO_STANDARD_HDTV_2160P_60_420:
 		case VO_STANDARD_HDTV_4096_2160P_50_420:
-			data[1] = 0x1;
-			break;
+		case VO_STANDARD_HDTV_4096_2160P_60_420:
+		{
+			if(deep_color)
+				config_data = 0x3;
+			else if(hdmi2p0_info.scdc_capable&SCDC_340M_SCRAMBLE)
+				config_data = 0x1;// Scramble, 1/10
+			else
+				config_data = 0x0;
 
+			break;
+		}
 		//No Scramble, 1/10 data rate
 		default:
-			data[1] = 0x0;
-			printf("Skip send SCDC command\n");
-			return;
+			config_data = 0x0;
 	}
 
-	I2CN_Init(bus_id);
-	if ( I2C_Write_EX(bus_id, 0x54, 2, &data, NO_READ) != S_OK)
-		printf("Send SCDC command fail\n");
+	if(hdmi2p0_info.scdc_capable&SCDC_PRESENT)
+	{
+		if(hdmitx_write_scdc_port(SCDCS_TMDS_Config, config_data)!= S_OK)
+		{
+			printf("Error: Send SCDC command fail, skip one step\n");
+			return -1;
+		}
+		else
+			printf("Send SCDC TMDS_Config(0x%02x) standard(%u) deep_color(%u)\n",config_data,standard,deep_color);
+	}
+	else if(config_data!=0)
+	{
+		printf("Error: Sink not support SCDC_PRESENT, but need scramble, skip one step\n");
+		return -1;
+	}
 	else
-		printf("Send SCDC command TMDS_Config(0x%01x)\n", data[1]);
+		printf("Skip send SCDC command\n");
 
-	I2CN_UnInit(bus_id);
+	return config_data;
 }
 
 static int set_resolution(int video_format)
 {
 	struct _BOOT_TV_STD_INFO boot_info;
 	struct AVI_InfoFrame_Format avi={0};
-	
+	int ret_val;
+	unsigned int hdmi2p0_feature=0;
+
 	if(get_one_step_info())
 	{
 		//compare current sink with one step info.
 		memset(&boot_info, 0x0, sizeof(struct _BOOT_TV_STD_INFO));
 		memcpy(&boot_info, VO_RESOLUTION,sizeof(struct _BOOT_TV_STD_INFO));
 		
-		if(SWAPEND32(boot_info.tv_sys.videoInfo.standard) > VO_STANDARD_HDTV_4096_2160P_24)
-		{
-			printf("Skip one step \n");
-		}
-		else if( SWAPEND32(boot_info.tv_sys.hdmiInfo.hdmiMode)== vo_hdmi_mode 
+		if( SWAPEND32(boot_info.tv_sys.hdmiInfo.hdmiMode)== vo_hdmi_mode 
 			&& EDID[EDID_LENGTH-1] == checksum_128 
 			&& EDID[2*EDID_LENGTH-1] == checksum_256)
-	    {				
-			printf("One step resolution, standard(%d) mode(%d)\n", SWAPEND32(boot_info.tv_sys.videoInfo.standard), SWAPEND32(boot_info.tv_sys.hdmiInfo.hdmiMode));
-			dump_VIDEO_RPC_VOUT_CONFIG_TV_SYSTEM(&boot_info.tv_sys);
-			send_SCDC_cmd(SWAPEND32(boot_info.tv_sys.videoInfo.standard));
-			return S_OK;			
-		}	
+	    {
+	    	ret_val = hdmitx_send_scdc_TmdsConfig(SWAPEND32(boot_info.tv_sys.videoInfo.standard), SWAPEND32(boot_info.tv_sys.hdmiInfo.dataInt0));
+	    	if(ret_val>=0)
+	    	{
+	    		if(hdmi2p0_info.hdmi_id==HDMI_2P0_IDENTIFIER)
+	    			hdmi2p0_feature |= 0x1;//[Bit0] HDMI2.0
+	    		if(ret_val>=1)
+	    			hdmi2p0_feature |= 0x2;//[Bit1]Scrabmle
+
+				boot_info.tv_sys.hdmiInfo.hdmi2p0_feature = SWAPEND32(hdmi2p0_feature);
+				printf("One step resolution, standard(%d) mode(%d)\n", SWAPEND32(boot_info.tv_sys.videoInfo.standard), SWAPEND32(boot_info.tv_sys.hdmiInfo.hdmiMode));
+				dump_VIDEO_RPC_VOUT_CONFIG_TV_SYSTEM(&boot_info.tv_sys);
+				return S_OK;
+			}
+		}
 		else
-			printf("Sink changed \n");
+			printf("Sink changed, skip one step\n");
 	}
 	
 	memset(&boot_info, 0x0, sizeof(struct _BOOT_TV_STD_INFO));
@@ -705,6 +811,23 @@ static int set_resolution(int video_format)
 	flush_cache(VO_RESOLUTION, sizeof(struct _BOOT_TV_STD_INFO));
 	
 	return S_OK;
+}
+
+void set_hdmi_off(void)
+{
+	struct _BOOT_TV_STD_INFO boot_info;
+	memset(&boot_info, 0x0, sizeof(struct _BOOT_TV_STD_INFO));
+	boot_info.dwMagicNumber = SWAPEND32(0xC0DE0BEE); /* set magic pattern in first word */
+
+	boot_info.tv_sys.videoInfo.standard  = SWAPEND32(VO_STANDARD_NTSC_J);
+	boot_info.tv_sys.videoInfo.enProg    =  1;
+	boot_info.tv_sys.videoInfo.pedType   = SWAPEND32(1);	// ignored.
+	boot_info.tv_sys.videoInfo.dataInt0  = SWAPEND32(4);	// related to deep color.
+	boot_info.tv_sys.hdmiInfo.hdmiMode	 = SWAPEND32(VO_HDMI_OFF);
+
+	memcpy(VO_RESOLUTION, & boot_info, sizeof(struct _BOOT_TV_STD_INFO) );
+	flush_cache(VO_RESOLUTION, sizeof(struct _BOOT_TV_STD_INFO));
+	printf("Set HDMI TX OFF\n");
 }
 
 int sink_capability_handler(int set)
