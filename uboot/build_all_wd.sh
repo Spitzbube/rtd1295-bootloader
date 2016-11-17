@@ -27,7 +27,7 @@ if [ ! "$1" = "pelican" ] ;then
     cp $DVRBOOTEXE      $TARGETDIR/wd_monarch.uboot32.fb.dvrboot.exe.bin
     echo "making factory checksum image..."
     pushd examples/flash_writer_u/
-    cat uboot_packed_padding.bin signature.bin fsbl_padding.bin fsbl_sha256_digest.bin bl31_padding.bin bl31_sha256_digest.bin bootimage/u-boot64.bin > $TARGETDIR/monarch_uboot_checksum.bin
+    cat Bind/hwsetting_header.bin Bind/hwsetting.bin Bind/uboot.bin Bind/fsbl.bin Bind/bl31.bin Bind/uboot64.bin > $TARGETDIR/monarch_uboot_checksum.bin
     popd
 fi
 # Pelican
@@ -38,7 +38,9 @@ if [ ! "$1" = "monarch" ]; then
     cp $DVRBOOTEXE      $TARGETDIR/wd_pelican.uboot32.fb.dvrboot.exe.bin
     echo "making factory checksum image..."
     pushd examples/flash_writer_u/
-    cat uboot_packed_padding.bin signature.bin fsbl_padding.bin fsbl_sha256_digest.bin fsbl_os_padding.bin fsbl_os_sha256_digest.bin bl31_padding.bin bl31_sha256_digest.bin bootimage/u-boot64.bin > $TARGETDIR/pelican_uboot_checksum.bin
+    ./pelican_uboot_checksum.sh
+    cp bootcode_checksum.bin $TARGETDIR/pelican_bootcode_checksum.bin
+    cp uboot64_checksum.bin $TARGETDIR/pelican_uboot64_checksum.bin
     popd
 fi
 
