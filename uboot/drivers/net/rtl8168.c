@@ -5541,7 +5541,7 @@ int rtl8168_initialize(bd_t *bis)
         card_number++;
 		
         // WD LED setting
-        rtd_outl((REG_BASE+CustomLED),0x00068048);			
+        rtd_outl((REG_BASE+CustomLED),0x0006804F);			
 
 	// switch Mux to Ethernet LED RXTX/LINK mode.	
 	tmp = rtd_inl(0x98007310);
