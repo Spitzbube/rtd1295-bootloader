@@ -66,6 +66,8 @@ typedef struct _bootloader_message {
 //#define BYPASS_CHECKSUM
 //#define EMMC_BLOCK_LOG
 
+#define DEFAULT_SN "FFFFFFFFFFFF"
+
 DECLARE_GLOBAL_DATA_PTR;
 
 
@@ -3126,7 +3128,8 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 	extern unsigned char g_wdpp_flag;
 	extern char version_string[];
 	char cmdline[512];
-
+    char wd_sn[64];
+    char *psn;
 
     if(boot_mode==BOOT_GOLD_MODE)
     {
@@ -3331,13 +3334,18 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 			fw_entry, fw_entry_num,
 			fw_desc_table_v1.version);
 
+    if ( (psn = getenv("serial")) == NULL )
+      strcpy(wd_sn,DEFAULT_SN);
+    else
+      strcpy(wd_sn,psn);
+
 	if(g_wdpp_flag == 'A'){
 	
-		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s", "emmc",version_string);
+		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s", "emmc",version_string,wd_sn);
 
 	}else if(g_wdpp_flag == 'B'){
 	
-		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s","emmc_b",version_string);
+		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s","emmc_b",version_string,wd_sn);
 
 	}
 		
@@ -3372,7 +3380,9 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 	extern unsigned char g_wdpp_flag;
 	extern char version_string[];
 	char cmdline[512];
-	
+	char wd_sn[64];
+    char *psn;
+    
 	if (sata_curr_device == -1) {
 		if (sata_initialize()) {
 			printf("---------------SATA init fail, try again ---------------\n");
@@ -3557,13 +3567,17 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 
 
 #ifdef CONFIG_WD_AB
+    if ( (psn = getenv("serial")) == NULL )
+      strcpy(wd_sn,DEFAULT_SN);
+    else
+      strcpy(wd_sn,psn);
 
 	// Rivers: overwrite bootarg for loading A/B partition
 	// set bootarg using setenv
 	if(g_wdpp_flag == 'A'){
 		printf("Setting bootargs to A\n");
 
-                snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s","sata",version_string);
+                snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s sn=%s","sata",version_string,wd_sn);
 
 		
 	}
@@ -3571,7 +3585,7 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 	{
 		printf("Setting bootargs to B\n");
 
-                snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s","sata_b",version_string);
+                snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s sn=%s","sata_b",version_string,wd_sn);
 	}
 
 	setenv("bootargs", cmdline);
