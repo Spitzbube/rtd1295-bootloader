@@ -28,7 +28,7 @@
 
 //const char __weak version_string[] = U_BOOT_VERSION_STRING;
 
-const char version_string[] = "4.0.7";
+const char version_string[] = "4.0.8";
 
 #ifdef CONFIG_CMD_VERSION
 int do_version(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
