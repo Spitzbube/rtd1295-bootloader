@@ -1457,15 +1457,6 @@ int rtk_plat_read_fw_image_from_eMMC(
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
-#ifdef CONFIG_WD_AB
-	extern unsigned char g_wdpp_flag;
-
-	if(run_command("wdpp get", 0) < 0){	// read flag and assign to g_wdpp_flag
-		printf("Error! Get ping pong flag failed! Booting A image\n");
-		g_wdpp_flag = 'A';
-	}
-
-#endif
 
 	/* find fw_entry structure according to version */
 	switch (version)
@@ -1523,11 +1514,11 @@ int rtk_plat_read_fw_image_from_eMMC(
 			{
 				switch(this_entry->type)
 				{
-					case FW_TYPE_KERNEL:
+					case FW_TYPE_RESCUE_KERNEL:
 						memset(str, 0, sizeof(str));
 						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
 						setenv("kernel_loadaddr", str);
-						printf("Kernel:\n");
+						printf("Rescue Kernel:\n");
 						break;
 
 					case FW_TYPE_RESCUE_DT:
@@ -1560,13 +1551,13 @@ int rtk_plat_read_fw_image_from_eMMC(
 #else
 						continue;
 #endif
-					case FW_TYPE_AUDIO:
+					case FW_TYPE_RESCUE_AUDIO:
 						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
 							continue;
 						else
 						{
 							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
-							printf("Audio FW:\n");
+							printf("Rescue Audio FW:\n");
 						}	
 						break;
 
@@ -1620,79 +1611,7 @@ int rtk_plat_read_fw_image_from_eMMC(
 					case FW_TYPE_BOOTCODE:
 						printf("Boot Code:\n");
 						break;
-#ifdef CONFIG_WD_AB
-					case FW_TYPE_KERNEL:
-                        //this_entry->offset=this_entry->offset-1; //let load fw fail, and it can test enter to gold mode
-						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-							printf("Kernel(A):\n");
-							this_entry->offset = 0x02bb0000 - eMMC_fw_desc_table_start;
-						}
 
-						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-							printf("Kernel(B):\n");
-							this_entry->offset = 0x04cf0000 - eMMC_fw_desc_table_start;
-						}
-
-						memset(str, 0, sizeof(str));
-						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
-						setenv("kernel_loadaddr", str);
-
-						break;
-
-					case FW_TYPE_KERNEL_DT:					
-						this_entry->target_addr = rtk_plat_get_dtb_target_address(this_entry->target_addr);
-						//printf("this_entry->target_addr =%x\n",this_entry->target_addr);
-
-						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-							printf("DT(A):\n");
-							this_entry->offset = 0x02770000 - eMMC_fw_desc_table_start;
-						}
-
-						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-							printf("DT(B):\n");
-							this_entry->offset = 0x048b0000 - eMMC_fw_desc_table_start;
-						}
-
-						memset(str, 0, sizeof(str));
-						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
-						setenv("fdt_loadaddr", str);				;
-
-						break;
-
-					case FW_TYPE_KERNEL_ROOTFS:
-
-						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-							printf("ROOTFS(A):\n");
-							this_entry->offset = 0x03bb0000 - eMMC_fw_desc_table_start;
-						}
-
-						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-							printf("ROOTFS(B):\n");
-							this_entry->offset = 0x05cf0000 - eMMC_fw_desc_table_start;
-							//this_entry->offset = 0x03bb0000 - eMMC_fw_desc_table_start;	// for debugging
-						}
-
-						break;
-
-					case FW_TYPE_AUDIO:
-						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
-							continue;
-						else
-						{
-							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
-
-							if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-								printf("Audio FW(A):\n");
-								this_entry->offset = 0x027b0000 - eMMC_fw_desc_table_start;
-							}
-
-							if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-								printf("Audio FW(B):\n");
-								this_entry->offset = 0x048f0000 - eMMC_fw_desc_table_start;
-							}
-						}
-						break;
-#else
 					case FW_TYPE_KERNEL:
                         //this_entry->offset=this_entry->offset-1; //let load fw fail, and it can test enter to gold mode
 						memset(str, 0, sizeof(str));
@@ -1708,25 +1627,11 @@ int rtk_plat_read_fw_image_from_eMMC(
 						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
 						setenv("fdt_loadaddr", str);				
 						printf("DT:\n");
-
 						break;
 
 					case FW_TYPE_KERNEL_ROOTFS:
 						printf("ROOTFS:\n");
-						printf("offset = 0x%08x\n", this_entry->offset);
 						break;
-
-					case FW_TYPE_AUDIO:
-						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
-							continue;
-						else
-						{
-							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
-							printf("Audio FW:\n");
-							printf("offset = 0x%08x\n", this_entry->offset);
-						}
-						break;
-#endif
 
 					case FW_TYPE_TEE:
 #ifdef CONFIG_TEE						
@@ -1737,6 +1642,16 @@ int rtk_plat_read_fw_image_from_eMMC(
 						continue;
 #endif
 					
+					case FW_TYPE_AUDIO:
+						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
+							continue;
+						else
+						{
+							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
+							printf("Audio FW:\n");
+						}
+						break;
+
 					case FW_TYPE_JFFS2:
 						printf("JFFS2 Image:\n");
 						break;
@@ -1878,7 +1793,6 @@ int rtk_plat_read_fw_image_from_eMMC(
 
 					return RTK_PLAT_ERR_READ_FW_IMG;
 				}
-#define BYPASS_CHECKSUM	// Rivers: temporarily bypass checksum, needs to add it back
 #ifndef BYPASS_CHECKSUM
 				/* Check checksum */
 				fw_checksum = get_checksum((uchar *)mem_layout.flash_to_ram_addr, this_entry->length);
@@ -2129,14 +2043,6 @@ int rtk_plat_read_fw_image_from_SATA(
 	
 	unsigned char str[16];// old array size is 5, change to 16. To avoid the risk in memory overlap.
 
-#ifdef CONFIG_WD_AB
-	extern unsigned char g_wdpp_flag;
-
-	if(run_command("wdpp get", 0) < 0){	// read flag and assign to g_wdpp_flag
-		printf("Error! Get ping pong flag failed! Booting A image\n");
-		g_wdpp_flag = 'A';
-	}
-#endif
 	
 	/* find fw_entry structure according to version */
 	switch (version)
@@ -2197,11 +2103,11 @@ int rtk_plat_read_fw_image_from_SATA(
 				//printf("****** %s %d\n", __FUNCTION__, __LINE__);
 				switch(this_entry->type)
 				{
-					case FW_TYPE_KERNEL:
+					case FW_TYPE_RESCUE_KERNEL:
 						memset(str, 0, sizeof(str));
 						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
 						setenv("kernel_loadaddr", str);
-						printf("Kernel:\n");
+						printf("Rescue Kernel:\n");
 						break;
 
 					case FW_TYPE_RESCUE_DT:
@@ -2224,13 +2130,13 @@ int rtk_plat_read_fw_image_from_SATA(
 #else
 						continue;
 #endif
-					case FW_TYPE_AUDIO:
+					case FW_TYPE_RESCUE_AUDIO:
 						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
 							continue;
 						else
 						{
 							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
-							printf("Audio FW:\n");
+							printf("Rescue Audio FW:\n");
 						}	
 						break;
 
@@ -2281,76 +2187,6 @@ int rtk_plat_read_fw_image_from_SATA(
 				//printf("****** %s %d, fw desc type 0x%02x\n", __FUNCTION__, __LINE__, this_entry->type);
 				switch(this_entry->type)
 				{
-#ifdef CONFIG_WD_AB
-					case FW_TYPE_KERNEL:
-						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-							printf("Kernel(A):\n");
-							this_entry->offset = 0x00100000;
-						}
-
-						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-							printf("Kernel(B):\n");
-							this_entry->offset = 0x06700000;		//0x33800 * 0x200 = 0x6700000
-						}
-
-						memset(str, 0, sizeof(str));
-						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
-						setenv("kernel_loadaddr", str);
-						//printf("Kernel_B:\n");
-						break;
-
-					case FW_TYPE_KERNEL_DT:
-						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-							printf("DT(A):\n");
-							this_entry->offset = 0x06100000;
-						}
-
-						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-							printf("DT(B):\n");
-							this_entry->offset = 0x06200000;		//0x31000 * 0x200 = 0x6200000
-						}
-					
-						this_entry->target_addr = rtk_plat_get_dtb_target_address(this_entry->target_addr);
-						memset(str, 0, sizeof(str));
-						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
-						setenv("fdt_loadaddr", str);				
-
-						break;
-
-					case FW_TYPE_KERNEL_ROOTFS:
-						if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-							printf("ROOTFS(A):\n");
-							this_entry->offset = 0x02100000;
-						}
-
-						if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-							printf("ROOTFS(B):\n");
-							this_entry->offset = 0x04100000;		//0x20800 * 0x200 = 0x4100000
-						}
-
-						break;
-
-					case FW_TYPE_AUDIO:
-						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
-							continue;
-						else
-						{
-							ipc_shm.audio_fw_entry_pt = CPU_TO_BE32(this_entry->target_addr | MIPS_KSEG0BASE);
-
-							if(g_wdpp_flag == 'a' || g_wdpp_flag == 'A'){
-								printf("Audio FW(A):\n");
-								this_entry->offset = 0x06300000;
-							}
-
-							if(g_wdpp_flag == 'b' || g_wdpp_flag == 'B'){
-								printf("Audio FW(B):\n");
-								this_entry->offset = 0x0a800000;		//0x54000 * 0x200 = 0xa800000
-							}
-
-
-						}
-						break;
-#else
 					case FW_TYPE_KERNEL:
 						memset(str, 0, sizeof(str));
 						sprintf(str, "%x", this_entry->target_addr); /* write entry-point into string */
@@ -2370,6 +2206,15 @@ int rtk_plat_read_fw_image_from_SATA(
 						printf("ROOTFS:\n");
 						break;
 
+					case FW_TYPE_TEE:
+#ifdef CONFIG_TEE						
+						printf("TEE:\n");
+						tee_enable=1;
+						break;
+#else
+						continue;
+#endif
+					
 					case FW_TYPE_AUDIO:
 						if(boot_mode == BOOT_KERNEL_ONLY_MODE)
 							continue;
@@ -2380,16 +2225,6 @@ int rtk_plat_read_fw_image_from_SATA(
 						}
 						break;
 
-#endif	//endif CONFIG_WD_AB
-					case FW_TYPE_TEE:
-#ifdef CONFIG_TEE						
-						printf("TEE:\n");
-						tee_enable=1;
-						break;
-#else
-						continue;
-#endif
-					
 					case FW_TYPE_IMAGE_FILE:
 						printf("IMAGE FILE:\n");
 						/* assign boot_av structure */
@@ -2465,7 +2300,6 @@ int rtk_plat_read_fw_image_from_SATA(
 
 					return RTK_PLAT_ERR_READ_FW_IMG;
 				}
-#define BYPASS_CHECKSUM	// Rivers: temporarily bypass checksum, needs to add it back
 #ifndef BYPASS_CHECKSUM
 				/* Check checksum */
 				fw_checksum = get_checksum((uchar *)mem_layout.flash_to_ram_addr, this_entry->length);
@@ -4247,9 +4081,27 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	int ret = RTK_PLAT_ERR_OK;
 
+#ifdef CONFIG_WD_AB
+	extern unsigned char g_wdpp_flag;
+
+	if(run_command("wdpp get", 0) < 0){	// read flag and assign to g_wdpp_flag
+		printf("Error! Get ping pong flag failed! Booting A image\n");
+		g_wdpp_flag = 'A';
+	}
+
+
+	if(g_wdpp_flag == 'A' || g_wdpp_flag == 'a')
+		boot_mode = BOOT_NORMAL_MODE;
+	else if(g_wdpp_flag == 'B' || g_wdpp_flag == 'b')
+		boot_mode = BOOT_RESCUE_MODE;
+	else
+		boot_mode = BOOT_NORMAL_MODE;
+#endif
 	/* reset boot flags */
 	boot_from_flash = BOOT_FROM_FLASH_NORMAL_MODE;
 	boot_from_usb = BOOT_FROM_USB_DISABLE;
+
+
 
 	/* parse option */
 	if (argc == 1)
@@ -4281,14 +4133,48 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	}
 
 	WATCHDOG_KICK();
+	
+	// load fw image from SATA or EMMC 
 	ret = rtk_plat_boot_handler();
-    
-    if (ret != RTK_PLAT_ERR_OK) {
-        /*   LOAD GOLD FW   */
-        ret = RTK_PLAT_ERR_OK;
-        boot_mode=BOOT_GOLD_MODE;
-        ret = rtk_plat_boot_handler();
-    }
+
+#ifdef CONFIG_WD_AB    
+	if (ret != RTK_PLAT_ERR_OK) {
+
+		ret = RTK_PLAT_ERR_OK;
+
+		//boot_mode=BOOT_GOLD_MODE;
+		//@@@ WD change for A/B ping-pong
+
+		if(boot_mode == BOOT_NORMAL_MODE){
+			printf("Boot A failed, switch to rescue(B)\n");
+			boot_mode = BOOT_RESCUE_MODE;
+
+			if(run_command("wdpp set B", 0) < 0){	// read flag and assign to g_wdpp_flag
+				printf("Error! Set ping pong flag failed!\n");
+			}
+
+		}else if(boot_mode == BOOT_RESCUE_MODE){
+			printf("Boot B failed, switch to normal(A)\n");
+			boot_mode = BOOT_NORMAL_MODE;
+
+			if(run_command("wdpp set A", 0) < 0){	// read flag and assign to g_wdpp_flag
+				printf("Error! Set ping pong flag failed!\n");
+			}
+		}		
+		ret = rtk_plat_boot_handler();
+	}
+#endif
+
+
+#if 0	/** WD change: 
+	River: KAM-8762: Skip boot golden image
+	**/	
+	if (ret != RTK_PLAT_ERR_OK) {
+		/*   LOAD GOLD FW   */
+		boot_mode = BOOT_GOLD_MODE;
+		ret = rtk_plat_boot_handler();
+	}	
+#endif
 
 #ifdef CONFIG_RESCUE_FROM_USB
 	if (ret != RTK_PLAT_ERR_OK) {
