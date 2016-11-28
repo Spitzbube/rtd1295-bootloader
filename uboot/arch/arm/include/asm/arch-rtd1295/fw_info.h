@@ -104,6 +104,12 @@ typedef enum {
    FW_TYPE_UBOOT,
    FW_TYPE_BL31,		
    FW_TYPE_HYP,
+   FW_TYPE_GOLD_BL31,           // 40
+   FW_TYPE_RSA_KEY_FW,
+   FW_TYPE_RSA_KEY_TEE,
+   FW_TYPE_RESCUE_KERNEL,       // 41 (0x2c)
+   FW_TYPE_RESCUE_AUDIO,        // 42 (0x2b)
+   FW_TYPE_RESCUE_CONFIG,       // 43
    FW_TYPE_UNKNOWN
 } fw_type_code_t;
 
