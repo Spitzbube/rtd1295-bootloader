@@ -15,6 +15,8 @@
 #include <part_efi.h>
 #include <fat.h>
 
+#define msleep(a)	udelay(a * 1000)
+
 #define PING_PONG_FILENAME "current_pp"
 
 extern int sata_curr_device;
@@ -35,13 +37,21 @@ int wdpp_get(void)
 	char read_buf[2];
 	ulong addr = 0x4000000;
 
+	printf("=== %s ===\n",__func__);
+
 #ifdef CONFIG_BOARD_WD_MONARCH
 	if(sata_curr_device != 0){
 		sprintf(tmpbuf, "sata init");	
 		if (run_command(tmpbuf, 0) != 0) {
-			printf("%s: Failed to init sata devices\n",__func__);	
-			return -1;
-		}
+			printf("%s: Failed to init sata devices, try again!\n",__func__);	
+			
+			msleep(1000);
+
+			sprintf(tmpbuf, "sata init");
+			if (run_command(tmpbuf, 0) != 0) {
+				printf("%s: Failed to init sata devices...\n",__func__);	
+			}
+		}				
 	}
 
 	sprintf(tmpbuf, "fatls sata 0:12"); //CONFIG partition is at sata 0:12
@@ -192,12 +202,13 @@ int do_wdpp(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	if(argc < 2 || argc > 3)
 		wdpp_usage();	
 
-	if(argc == 2)
+	if(argc == 2){
 		if( strncmp( argv[1], "get", 3 ) == 0 )
 			return wdpp_get();
 		else
 			return wdpp_usage();	
-	
+	}
+
 	if(argc == 3){
 
 		if((argv[2][0] == 'a') || (argv[2][0] == 'A')){
