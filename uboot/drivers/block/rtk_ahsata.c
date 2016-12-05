@@ -1177,23 +1177,29 @@ static void config_phy(unsigned int port, unsigned int rx_sens)
 	wr_reg(0x72100911, SATA_MDIO_CTR);
 	wr_reg(0x72104911, SATA_MDIO_CTR);
 	wr_reg(0x72108911, SATA_MDIO_CTR);
-	wr_reg(0x27710311, SATA_MDIO_CTR);
+	wr_reg(0x27750311, SATA_MDIO_CTR);
 	wr_reg(0x27684311, SATA_MDIO_CTR);
 	wr_reg(0x27648311, SATA_MDIO_CTR);
 		
 	wr_reg(0x29001011, SATA_MDIO_CTR);
 	wr_reg(0x29005011, SATA_MDIO_CTR);
 	wr_reg(0x29009011, SATA_MDIO_CTR);
+	
+	wr_reg(0x17171511, SATA_MDIO_CTR);
+	wr_reg(0x17175511, SATA_MDIO_CTR);
+	wr_reg(0x17179511, SATA_MDIO_CTR);
+	
+	wr_reg(0x07701611, SATA_MDIO_CTR);
+	wr_reg(0x07705611, SATA_MDIO_CTR);
+	wr_reg(0x07709611, SATA_MDIO_CTR);
 
 	//tx driving set to level 2
 	wr_reg(0x94a72011, SATA_MDIO_CTR);
 	wr_reg(0x94a76011, SATA_MDIO_CTR);
 	wr_reg(0x94a7A011, SATA_MDIO_CTR);
-
 	wr_reg(0x487a2111, SATA_MDIO_CTR);
 	wr_reg(0x487a6111, SATA_MDIO_CTR);
 	wr_reg(0x487aa111, SATA_MDIO_CTR);
-
 	
 	wr_reg(0x40000c11, SATA_MDIO_CTR);
 	wr_reg(0x40004c11, SATA_MDIO_CTR);
@@ -1244,7 +1250,7 @@ static void config_mac(unsigned int port)
 	
 	wr_reg(0x3c300, base + 0xf20);
 
-	wr_reg(0x1700, base + 0xA4);
+	wr_reg(0x700, base + 0xA4);
 
 //Set to Auto mode
 	wr_reg(0x5, SATA_SPD);
