@@ -41,9 +41,9 @@
  */
 DECLARE_GLOBAL_DATA_PTR;
 
-static int fdt_valid(void);
-static int fdt_parse_prop(char *const*newval, int count, char *data, int *len);
-static int fdt_print(const char *pathp, char *prop, int depth);
+/*static*/ int fdt_valid(void);
+/*static*/ int fdt_parse_prop(char *const*newval, int count, char *data, int *len);
+/*static*/ int fdt_print(const char *pathp, char *prop, int depth);
 
 /*
  * The working_fdt points to our working flattened device tree.
@@ -446,7 +446,7 @@ int do_fdt (cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
 
 /****************************************************************************/
 
-static int fdt_valid(void)
+/*static*/ int fdt_valid(void)
 {
 	int  err;
 
@@ -503,7 +503,7 @@ static int fdt_valid(void)
  * data: A bytestream to be placed in the property
  * len: The length of the resulting bytestream
  */
-static int fdt_parse_prop(char * const *newval, int count, char *data, int *len)
+/*static*/ int fdt_parse_prop(char * const *newval, int count, char *data, int *len)
 {
 	char *cp;		/* temporary char pointer */
 	char *newp;		/* temporary newval char pointer */
@@ -683,7 +683,7 @@ static void print_data(const void *data, int len)
  * Recursively print (a portion of) the working_fdt.  The depth parameter
  * determines how deeply nested the fdt is printed.
  */
-static int fdt_print(const char *pathp, char *prop, int depth)
+/*static*/ int fdt_print(const char *pathp, char *prop, int depth)
 {
 	static char tabs[MAX_LEVEL+1] =
 		"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
