@@ -213,7 +213,7 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 			 * spec says 500 msecs for each bit, so
 			 * this is slightly incorrect.
 			 */
-			mdelay(500);
+			mdelay(1000); //mdelay(500); //Jack.20161229
 
 			timeout = 1000;
 			while ((readl(&(port_mmio->cmd)) & SATA_PORT_CMD_CR)
@@ -229,6 +229,8 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 		/* Spin-up device */
 		tmp = readl(&(port_mmio->cmd));
 		writel((tmp | SATA_PORT_CMD_SUD), &(port_mmio->cmd));
+
+        mdelay(3000); //Jack.20161229 wait for spin up time 
 
 		/* Wait for spin-up to finish */
 		timeout = 1000;
