@@ -315,6 +315,8 @@ int boot_rescue_from_dhcp(void)
 	
 	secure_mode = rtk_get_secure_boot_type();
 
+	/* Wait River check in , Please add LED off when sata init fail */
+
 	run_command("sata init", 0);	/* "sata init" always return 0 */
 
 	run_command("rtkgpt gen 0716", 0);
