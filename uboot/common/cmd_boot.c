@@ -315,13 +315,21 @@ int boot_rescue_from_dhcp(void)
 	
 	secure_mode = rtk_get_secure_boot_type();
 
-	/* Wait River check in , Please add LED off when sata init fail */
+	if (sata_curr_device == -1) {
+		if (sata_initialize() != 0) {
+			printf("Error, ---------------SATA init fail, try again ---------------\n");
+            printf("Error, ---------------No SATA device ---------------\n");
+            pwm_enable(SYS_LED_PWM_PORT_NUM, 0);            
+            // Ok, the hdd is having issue, change the LED to tell the end user.
+            pwm_set_freq(SYS_LED_PWM_PORT_NUM, 10);  // set the frequency to 1 HZ
+            pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
+            pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
+            return RTK_PLAT_ERR_BOOT;
+		}
+	}
 
-	run_command("sata init", 0);	/* "sata init" always return 0 */
-
+    // generate the partition table
 	run_command("rtkgpt gen 0716", 0);
-
-	run_command("sata init", 0);	/* "sata init" always return 0 */
 
 	/* DTB */	
 	if ((filename = getenv("rescue_dtb")) == NULL) {

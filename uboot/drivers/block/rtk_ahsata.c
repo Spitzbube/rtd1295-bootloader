@@ -485,6 +485,7 @@ static void ahci_set_feature(u8 dev, u8 port)
 	ahci_exec_ata_cmd(probe_ent, port, cfis, NULL, 0, READ_CMD);
 }
 
+#define SATA_DRIVE_SPIN_UP_READY_TIMEOUT_IN_SECONDS 100 
 static int ahci_port_start(struct ahci_probe_ent *probe_ent,
 					u8 port)
 {
@@ -493,7 +494,7 @@ static int ahci_port_start(struct ahci_probe_ent *probe_ent,
 		(struct sata_port_regs *)pp->port_mmio;
 	u32 port_status;
 	u32 mem;
-	int timeout = 50000000;
+	int timeout = 0;
 
 	debug("Enter start port: %d\n", port);
 	port_status = readl(&(port_mmio->ssts));
@@ -545,14 +546,14 @@ static int ahci_port_start(struct ahci_probe_ent *probe_ent,
 	writel_with_flush((SATA_PORT_CMD_FRE | readl(&(port_mmio->cmd))),
 			&(port_mmio->cmd));
 
-	/* Wait device ready */
-	for (timeout=0;timeout<100;timeout++) {
+	/* Wait device ready for 100 * 1 = 100 seconds = 1.5 minutes*/
+	for (timeout=0; timeout < SATA_DRIVE_SPIN_UP_READY_TIMEOUT_IN_SECONDS ; timeout++) {
         if( readl(&(port_mmio->tfd)) & (SATA_PORT_TFD_STS_ERR | SATA_PORT_TFD_STS_DRQ | SATA_PORT_TFD_STS_BSY) ) {
-          printf("Wait device ready %d\n",timeout);
-          mdelay(1000);
-        }
-        else
+          debug("Wait device ready %d\n", timeout);
+          mdelay(1000);  // wait for 1 second 
+        }else {
           break;
+        }
     }
 
 	/* while ((readl(&(port_mmio->tfd)) & (SATA_PORT_TFD_STS_ERR |
@@ -560,9 +561,8 @@ static int ahci_port_start(struct ahci_probe_ent *probe_ent,
 		&& --timeout)
 		; */
 
-	if (timeout >= 600) {
-		debug("Device not ready for BSY, DRQ and"
-			"ERR in TFD!\n");
+	if (timeout >= SATA_DRIVE_SPIN_UP_READY_TIMEOUT_IN_SECONDS) {
+		printf("Error, Device not ready for BSY, DRQ and ERR in TFD!\n", __func__);
 		return -1;
 	}
 
