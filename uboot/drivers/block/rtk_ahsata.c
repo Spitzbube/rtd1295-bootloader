@@ -213,7 +213,7 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 			 * spec says 500 msecs for each bit, so
 			 * this is slightly incorrect.
 			 */
-			mdelay(1000); //mdelay(500); //Jack.20161229
+			mdelay(500);
 
 			timeout = 1000;
 			while ((readl(&(port_mmio->cmd)) & SATA_PORT_CMD_CR)
@@ -229,8 +229,6 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 		/* Spin-up device */
 		tmp = readl(&(port_mmio->cmd));
 		writel((tmp | SATA_PORT_CMD_SUD), &(port_mmio->cmd));
-
-        mdelay(3000); //Jack.20161229 wait for spin up time 
 
 		/* Wait for spin-up to finish */
 		timeout = 1000;
@@ -548,11 +546,21 @@ static int ahci_port_start(struct ahci_probe_ent *probe_ent,
 			&(port_mmio->cmd));
 
 	/* Wait device ready */
-	while ((readl(&(port_mmio->tfd)) & (SATA_PORT_TFD_STS_ERR |
+	for (timeout=0;timeout<100;timeout++) {
+        if( readl(&(port_mmio->tfd)) & (SATA_PORT_TFD_STS_ERR | SATA_PORT_TFD_STS_DRQ | SATA_PORT_TFD_STS_BSY) ) {
+          printf("Wait device ready %d\n",timeout);
+          mdelay(1000);
+        }
+        else
+          break;
+    }
+
+	/* while ((readl(&(port_mmio->tfd)) & (SATA_PORT_TFD_STS_ERR |
 		SATA_PORT_TFD_STS_DRQ | SATA_PORT_TFD_STS_BSY))
 		&& --timeout)
-		;
-	if (timeout <= 0) {
+		; */
+
+	if (timeout >= 600) {
 		debug("Device not ready for BSY, DRQ and"
 			"ERR in TFD!\n");
 		return -1;
