@@ -556,13 +556,8 @@ static int ahci_port_start(struct ahci_probe_ent *probe_ent,
         }
     }
 
-	/* while ((readl(&(port_mmio->tfd)) & (SATA_PORT_TFD_STS_ERR |
-		SATA_PORT_TFD_STS_DRQ | SATA_PORT_TFD_STS_BSY))
-		&& --timeout)
-		; */
-
 	if (timeout >= SATA_DRIVE_SPIN_UP_READY_TIMEOUT_IN_SECONDS) {
-		printf("Error, Device not ready for BSY, DRQ and ERR in TFD!\n", __func__);
+		printf("%s: Error, Device not ready for BSY, DRQ and ERR in TFD!\n", __func__);
 		return -1;
 	}
 
