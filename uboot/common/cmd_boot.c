@@ -450,6 +450,18 @@ int boot_rescue_from_usb(void)
 		return RTK_PLAT_ERR_READ_RESCUE_IMG;
 	}
 
+    filename = "wd_uboot.bin";
+	sprintf(tmpbuf, "fatload usb 0:1 0x1500000 %s", filename);
+	if (run_command(tmpbuf, 0) == 0){
+        pwm_set_freq(SYS_LED_PWM_PORT_NUM, 20);  // set the frequency to 1 HZ
+        pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
+        pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
+		printf("Loading \"%s\" to 0x1500000 is OK.\n\n", filename);
+        run_command_list("go 0x1500000", -1, 0);
+	}else{
+		printf("Loading \"%s\" from USB failed. Continue installing OS images\n", filename);
+	}
+        
 	/* DTB */	
 	if ((filename = getenv("rescue_dtb")) == NULL) {
 		filename =(char*) CONFIG_RESCUE_FROM_USB_DTB;
