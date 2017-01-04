@@ -315,11 +315,20 @@ int boot_rescue_from_dhcp(void)
 	
 	secure_mode = rtk_get_secure_boot_type();
 
-	run_command("sata init", 0);	/* "sata init" always return 0 */
+	
+	if (sata_initialize() != 0) {
+		printf("Error, ---------------SATA init fail, try again ---------------\n");
+        printf("Error, ---------------No SATA device ---------------\n");
+        pwm_enable(SYS_LED_PWM_PORT_NUM, 0);            
+        // Ok, the hdd is having issue, change the LED to tell the end user.
+        pwm_set_freq(SYS_LED_PWM_PORT_NUM, 10);  // set the frequency to 1 HZ
+        pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
+        pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
+        return RTK_PLAT_ERR_BOOT;
+    }
 
+    // generate the partition table
 	run_command("rtkgpt gen 0716", 0);
-
-	run_command("sata init", 0);	/* "sata init" always return 0 */
 
 	/* DTB */	
 	if ((filename = getenv("rescue_dtb")) == NULL) {
@@ -4187,6 +4196,7 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 //add the boot dhcp function when rescue from usb fail	
 	if (ret != RTK_PLAT_ERR_OK) {
 		ret = boot_rescue_from_dhcp();
+        return ret;
 	}
 //adam 0729 end	
 #endif
