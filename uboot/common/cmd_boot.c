@@ -43,7 +43,7 @@
 #include <sata.h>
 #endif
 #include <rtkspi.h>
-
+ 
 #ifdef CONFIG_LZMA
 #include <lzma/LzmaTypes.h>
 #include <lzma/LzmaDec.h>
@@ -68,8 +68,26 @@ typedef struct _bootloader_message {
 
 #define DEFAULT_SN "FFFFFFFFFFFF"
 
+#define UBOOT_PINGPONG_NEW_DESIGN
+#ifdef UBOOT_PINGPONG_NEW_DESIGN
+#define msleep(a)		udelay(a * 1000)
+// Boot config file is in following format:
+// bootstate:nbr:bna
+#define BOOT_CONFIG_FILE_NAME "bootConfig"
+
+#endif
+
 DECLARE_GLOBAL_DATA_PTR;
 
+
+typedef enum{
+	BOOT_STATE_NO_OTA=0,
+	BOOT_STATE_INIT,
+	BOOT_STATE_OTA_TRIGGERED,
+	BOOT_STATE_OTA_PASSED,
+	BOOT_STATE_OTA_FAILED,
+    BOOT_STATE_UNKNOWN
+}BOOT_STATE_T;
 
 typedef enum{
 	BOOT_FROM_USB_DISABLE,
@@ -81,6 +99,23 @@ typedef enum{
 	BOOT_FROM_FLASH_NORMAL_MODE,
 	BOOT_FROM_FLASH_MANUAL_MODE
 }BOOT_FROM_FLASH_T;
+
+struct boot_config {
+    BOOT_STATE_T bState;
+    int numBootAttempts; // 1 ~ 5
+    char nextBootRegion; //A or B
+};
+
+typedef enum {
+    BOOT_CFG_STR_STATE=0,
+    BOOT_CFG_STR_NBR,
+    BOOT_CFG_STR_BNA,
+    BOOT_CFG_STR_DONE
+}BOOT_CFG_STR_T;
+
+int gUSB_MODE = 0;
+
+static struct boot_config gBootConfig = {0};
 
 #if defined(CONFIG_RTD1195) || defined(CONFIG_RTD1295)
 
@@ -315,19 +350,18 @@ int boot_rescue_from_dhcp(void)
 	
 	secure_mode = rtk_get_secure_boot_type();
 
-	
 	if (sata_initialize() != 0) {
 		printf("Error, ---------------SATA init fail, try again ---------------\n");
-        printf("Error, ---------------No SATA device ---------------\n");
-        pwm_enable(SYS_LED_PWM_PORT_NUM, 0);            
-        // Ok, the hdd is having issue, change the LED to tell the end user.
-        pwm_set_freq(SYS_LED_PWM_PORT_NUM, 10);  // set the frequency to 1 HZ
-        pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
-        pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
-        return RTK_PLAT_ERR_BOOT;
-    }
+		printf("Error, ---------------No SATA device ---------------\n");
+		pwm_enable(SYS_LED_PWM_PORT_NUM, 0);            
+		// Ok, the hdd is having issue, change the LED to tell the end user.
+		pwm_set_freq(SYS_LED_PWM_PORT_NUM, 10);  // set the frequency to 1 HZ
+		pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
+		pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
+		return RTK_PLAT_ERR_BOOT;
+	}
 
-    // generate the partition table
+	// generate the partition table
 	run_command("rtkgpt gen 0716", 0);
 
 	/* DTB */	
@@ -3182,11 +3216,11 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
     else
       strcpy(wd_sn,psn);
 
-	if(g_wdpp_flag == 'A'){
+	if(boot_mode == BOOT_NORMAL_MODE){
 	
 		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s", "emmc",version_string,wd_sn);
 
-	}else if(g_wdpp_flag == 'B'){
+	}else if(boot_mode == BOOT_RESCUE_MODE){
 	
 		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s","emmc_b",version_string,wd_sn);
 
@@ -3224,7 +3258,7 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 	extern char version_string[];
 	char cmdline[512];
 	char wd_sn[64];
-    char *psn;
+	char *psn;
     
 	if (sata_curr_device == -1) {
 		if (sata_initialize()) {
@@ -3410,21 +3444,21 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 
 
 #ifdef CONFIG_WD_AB
-    if ( (psn = getenv("serial")) == NULL )
-      strcpy(wd_sn,DEFAULT_SN);
-    else
-      strcpy(wd_sn,psn);
+	if ( (psn = getenv("serial")) == NULL )
+		strcpy(wd_sn,DEFAULT_SN);
+	else
+		strcpy(wd_sn,psn);
 
 	// Rivers: overwrite bootarg for loading A/B partition
 	// set bootarg using setenv
-	if(g_wdpp_flag == 'A'){
+	if(boot_mode == BOOT_NORMAL_MODE){
 		printf("Setting bootargs to A\n");
 
                 snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s sn=%s","sata",version_string,wd_sn);
 
 		
 	}
-	else if (g_wdpp_flag == 'B')
+	else if (boot_mode == BOOT_RESCUE_MODE)
 	{
 		printf("Setting bootargs to B\n");
 
@@ -4086,31 +4120,347 @@ void rtk_plat_do_bootr_after_mt()
 }
 #endif
 
+
+#ifdef UBOOT_PINGPONG_NEW_DESIGN
+//
+// hdd must be ready before we could mount the config partition
+//
+static int is_sata_initialized(void)
+{
+#ifdef CONFIG_BOARD_WD_PELICAN
+	// config partition is on the eMMC for Pelican
+	return 1;
+#else
+	if (sata_curr_device == -1) {
+		if (sata_initialize()) {
+			printf("Fatal Error, sata_initiailise failed, switching to USB boot!\n");
+			return 0;
+		}
+	}
+	return 1;
+#endif
+}
+
+
+static inline int is_digit(const char c)
+{
+	return ( c >= '0' && c <= '9');
+}
+
+// constuct the string and write back to config
+static int wd_write_boot_config(const struct boot_config *pbcf)
+{
+
+	char tmpbuf[128];
+	volatile unsigned int addr = 0x4000000;
+	char writeBuf[10];
+
+	memset(writeBuf, 0, sizeof(writeBuf));
+	sprintf(writeBuf, "%d:%c:%d:;",
+		pbcf->bState,
+		pbcf->nextBootRegion,
+		pbcf->numBootAttempts);
+
+	memcpy((u_char *)addr, writeBuf, sizeof(writeBuf));
+
+#if defined (CONFIG_BOARD_WD_MONARCH)    
+	sprintf(tmpbuf, "fatwrite sata 0:12 0x4000000 %s 10", BOOT_CONFIG_FILE_NAME);
+
+#elif defined(CONFIG_BOARD_WD_PELICAN)
+	sprintf(tmpbuf, "fatwrite mmc 0:1 0x4000000 %s 10", BOOT_CONFIG_FILE_NAME);
+#endif	
+	if (run_command(tmpbuf, 0) != 0) {
+		printf("%s: File %s does not exist, run \"wdpp set\" command manually\n",
+               __func__, BOOT_CONFIG_FILE_NAME);	
+		return -1;
+	}	
+
+	printf("\n[INFO]: write boot config %s\n", writeBuf);
+
+	return 0;
+
+    
+}
+
+//
+// Function to read the boot config parameter from config partition
+// Return NULL if failed
+//
+static int wd_read_boot_config(void)
+{
+	char cmdBuf[128];
+	volatile unsigned int addr = 0x4000000;
+
+	char readBuf[10];
+	memset(cmdBuf, 0, sizeof(cmdBuf));
+	memset(readBuf, 0, sizeof(readBuf));
+    
+#if defined(CONFIG_BOARD_WD_MONARCH)
+	sprintf(cmdBuf, "fatload sata 0:12 0x4000000 %s 10", BOOT_CONFIG_FILE_NAME);    
+#elif defined (CONFIG_BOARD_WD_PELICAN)
+	sprintf(cmdBuf, "fatload mmc 0:1 0x4000000 %s 10", BOOT_CONFIG_FILE_NAME);
+#endif
+
+	if (run_command(cmdBuf, 0) != 0) {
+		printf("%s: Error, File %s does not exist, exit\n",
+		__func__, BOOT_CONFIG_FILE_NAME);
+		return -1; 
+	}
+
+	// get the string
+	memcpy(readBuf, (u_char *)addr, sizeof(readBuf)); 
+
+	printf("Eric: readBuf=%s\n", readBuf);
+
+	// now parsing the string
+	char *p = readBuf;
+	char *p1 = readBuf;
+
+	BOOT_CFG_STR_T s = BOOT_CFG_STR_STATE;
+	// memset((u_char *)gBootConfig, 0, sizeof(gBootConfig));
+    
+	while(p && *p != ';' && *p != '\0') {
+		if (*p ==':') {
+			switch(s) {
+			case BOOT_CFG_STR_STATE:
+				if (is_digit(*p1)) {
+					gBootConfig.bState = (BOOT_STATE_T)(*p1 - '0');
+				}else {
+					printf("%s: Error, invalid boot state. \n", __func__);
+					return -1;
+				}
+				s = BOOT_CFG_STR_NBR;
+				break;
+			case BOOT_CFG_STR_NBR:
+				if (*p1 != 'A' || *p1 != 'B') {
+					gBootConfig.nextBootRegion = *p1;
+				s = BOOT_CFG_STR_BNA;
+				}else {
+					printf("%s: Error, invalid NBR = %c\n",__func__, *p1);
+					return -1;
+				}
+				break;
+			case BOOT_CFG_STR_BNA:
+				if (is_digit(*p1)) {
+					gBootConfig.numBootAttempts = (int)(*p1 - '0');
+				}else {
+					printf("%s: Error, invalid bna.\n", __func__);
+					return -1;
+				}
+				s = BOOT_CFG_STR_DONE;
+				break;
+			}
+		}
+		if(p == p1) {
+			p++;
+		}else {
+			p++;
+			p1++;
+		}
+	}
+
+	if (s != BOOT_CFG_STR_DONE) {
+		return -1;
+	}else {
+		printf("[Eric] bstate = %d, bna = %d, nbr = %c\n",
+		gBootConfig.bState, gBootConfig.numBootAttempts,
+		gBootConfig.nextBootRegion);
+	}
+    
+	return 0;
+}
+
+
+
+
+//
+// Switch boot region via changing the boot_mode
+static int wd_boot_cbr(void)
+{
+	char *cbr = NULL;
+	
+	cbr = getenv("cbr");
+
+	if(cbr != NULL)	{
+		if( strncmp(cbr, "A", 1 ) == 0 ){
+		// set the boot_mode
+			boot_mode = BOOT_NORMAL_MODE;		// A image
+		} else if( strncmp(cbr, "B", 1 ) == 0 )	{
+			boot_mode = BOOT_RESCUE_MODE;		// B image
+		}else {
+			printf("[FATAL ERROR] Invalid CBR(%s) from uboot env, boot USB rescue mode.", cbr);
+			gUSB_MODE = 1;
+			return -1;
+		}
+	}else {	//unknown cbr
+		printf("[FATAL ERROR] CBR not found, boot USB rescue mode.\n");
+		gUSB_MODE = 1;
+		return -1;
+	}
+
+	return 0;
+}
+
+//
+// Boot from NBR
+//
+static int wd_boot_nbr(void)
+{
+
+	if (wd_read_boot_config() != 0) {
+        	// get nbr failed for whatever reason, swtich back to cbr
+		return wd_boot_cbr();
+	}
+
+	if(gBootConfig.nextBootRegion == 'A'){
+		boot_mode = BOOT_NORMAL_MODE;		// A image
+	}else if(gBootConfig.nextBootRegion == 'B'){
+		boot_mode = BOOT_RESCUE_MODE;		// B image
+	}else{	//unknown nbr
+		printf("[FATAL ERROR] Invalid nbr(%c) from CONFIG, boot CBR\n", gBootConfig.nextBootRegion);
+		return wd_boot_cbr();
+	}
+
+	return 0;
+}
+
+//
+// update the boot state
+//
+static int wd_set_boot_state(const BOOT_STATE_T bootState)
+{
+
+	wd_read_boot_config();
+	gBootConfig.bState = bootState;
+	wd_write_boot_config(&gBootConfig);
+
+	printf("\n[INFO]: set bootState to %d\n", bootState);
+
+	return 0;
+
+}
+
+static int wd_get_bna_from_config(void)
+{
+	wd_read_boot_config();
+	
+	return gBootConfig.numBootAttempts;
+}
+
+#endif //UBOOT_PINGPONG_NEW_DESIGN
+
+
 int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	int ret = RTK_PLAT_ERR_OK;
 
-#ifdef CONFIG_WD_AB
-	extern unsigned char g_wdpp_flag;
-
-	if(run_command("wdpp get", 0) < 0){	// read flag and assign to g_wdpp_flag
-		printf("Error! Get ping pong flag failed! Booting A image\n");
-		g_wdpp_flag = 'A';
+	// make sure the HDD is ready
+	if (!is_sata_initialized()) {
+		// sata is not initialized, fail
+		// FIXME! how to handle this case?
+		// switch to USB boot?
+		return -1;
 	}
+	    
+#ifdef UBOOT_PINGPONG_NEW_DESIGN
+	    
+	int bna = -1;
+	    
+	BOOT_STATE_T bootState = BOOT_STATE_UNKNOWN;
 
+	#if 0
+	    // EY: This code has been verified on Monarch,
+	    // Pelican needs to be verified as well.
+	    ////////////////////////////////////////
+	    
+	    wd_read_boot_config();
+	    // update the boot config and write it back to config partition
+	    gBootConfig.bState = BOOT_STATE_NO_OTA;
+	    gBootConfig.numBootAttempts = 7;
+	    gBootConfig.nextBootRegion = 'B';
+	    wd_write_boot_config(&gBootConfig);
+	    //////////////////////////////////////////////////////////
+	#endif
+	    
+	    // read the boot state from config partition
+	    //
 
-	if(g_wdpp_flag == 'A' || g_wdpp_flag == 'a')
+	wd_read_boot_config();	
+	bootState = gBootConfig.bState;
+
+	switch (bootState){
+	    case BOOT_STATE_NO_OTA:
+		printf("\n[INFO]: bootState: BOOT_STATE_NO_OTA\n");
+		wd_boot_cbr();
+		break;
+	    case BOOT_STATE_INIT:
+		// initial state (first time flash)
+		printf("\n[INFO]: bootState: BOOT_STATE_INIT\n");
+		printf("[INFO]: Re-initialize uboot env entries\n");
+		setenv("cbr", "A");
+
+		if (run_command("env save", 0) != 0) {
+		    printf("Failed to initialize uboot env entries, exit\n");
+		    return -1;
+		}
+
 		boot_mode = BOOT_NORMAL_MODE;
-	else if(g_wdpp_flag == 'B' || g_wdpp_flag == 'b')
-		boot_mode = BOOT_RESCUE_MODE;
-	else
-		boot_mode = BOOT_NORMAL_MODE;
-#endif
+
+		// set bootState to BOOT_STATE_NO_OTA in CONFIG
+		// why need to write the boot state back to config???
+		//
+		wd_set_boot_state(BOOT_STATE_NO_OTA);
+
+		break;
+	    case BOOT_STATE_OTA_TRIGGERED:
+		bna = wd_get_bna_from_config();		//get Boot Next Attempt counter
+		printf("\n[INFO]: bootState: BOOT_STATE_OTA_TRIGGERED, bna = %d\n", bna);
+		if(bna == 0){
+		    // should not come here becasue bootState should be set to BOOT_STATE_OTA_FAILED by cloudcheckd
+		    wd_boot_cbr();
+		}else if((bna > 0) && (bna <= 5)) {		//boot NBR for evaluation
+		    printf("[INFO]: boot nbr for evaluation\n");
+		    wd_boot_nbr();
+		}else{
+		    printf("[ERROR]: Failed to get Boot Next Attempt(%d), boot CBR\n", bna);
+		    wd_boot_cbr();
+		}
+		break;
+	    case BOOT_STATE_OTA_PASSED:
+		printf("\n[INFO]: OTA passed, boot NBR and update CBR\n");
+		
+		wd_boot_nbr();				
+
+		if(boot_mode == BOOT_NORMAL_MODE)
+		    setenv("cbr", "A");
+		else if(boot_mode == BOOT_RESCUE_MODE)
+		    setenv("cbr", "B");					
+
+		// Set bootState to BOOT_STATE_NO_OTA for next boot
+		//
+		wd_set_boot_state(BOOT_STATE_NO_OTA);
+		
+		if (run_command("env save", 0) != 0) {
+		    printf("Failed to write cbr to uboot env, exit\n");
+		    return -1;
+		}
+				
+		break;
+	    case BOOT_STATE_OTA_FAILED:	//boot CBR regardless of CONFIG
+		printf("\n[INFO]: OTA failed, boot CBR\n");
+		wd_set_boot_state(BOOT_STATE_NO_OTA);
+		wd_boot_cbr();
+		break;
+	    default:
+		printf("\n[ERROR]: Unknown bootState(%d), boot CBR\n", bootState);
+		wd_boot_cbr();
+		break;
+		}
+	#endif	// endif CONFIG_BOARD_WD_MONARCH
+
 	/* reset boot flags */
 	boot_from_flash = BOOT_FROM_FLASH_NORMAL_MODE;
 	boot_from_usb = BOOT_FROM_USB_DISABLE;
-
-
 
 	/* parse option */
 	if (argc == 1)
@@ -4142,38 +4492,11 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	}
 
 	WATCHDOG_KICK();
-	
+
+	if(!gUSB_MODE){
 	// load fw image from SATA or EMMC 
-	ret = rtk_plat_boot_handler();
-
-#ifdef CONFIG_WD_AB    
-	if (ret != RTK_PLAT_ERR_OK) {
-
-		ret = RTK_PLAT_ERR_OK;
-
-		//boot_mode=BOOT_GOLD_MODE;
-		//@@@ WD change for A/B ping-pong
-
-		if(boot_mode == BOOT_NORMAL_MODE){
-			printf("Boot A failed, switch to rescue(B)\n");
-			boot_mode = BOOT_RESCUE_MODE;
-
-			if(run_command("wdpp set B", 0) < 0){	// read flag and assign to g_wdpp_flag
-				printf("Error! Set ping pong flag failed!\n");
-			}
-
-		}else if(boot_mode == BOOT_RESCUE_MODE){
-			printf("Boot B failed, switch to normal(A)\n");
-			boot_mode = BOOT_NORMAL_MODE;
-
-			if(run_command("wdpp set A", 0) < 0){	// read flag and assign to g_wdpp_flag
-				printf("Error! Set ping pong flag failed!\n");
-			}
-		}		
 		ret = rtk_plat_boot_handler();
 	}
-#endif
-
 
 #if 0	/** WD change: 
 	River: KAM-8762: Skip boot golden image
@@ -4186,9 +4509,8 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 #endif
 
 #ifdef CONFIG_RESCUE_FROM_USB
-	if (ret != RTK_PLAT_ERR_OK) {
+	if( gUSB_MODE || (ret != RTK_PLAT_ERR_OK))
 		ret = boot_rescue_from_usb();
-	}
 #endif /* CONFIG_RESCUE_FROM_USB */
 
 //adam 0729 start
@@ -4196,7 +4518,6 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 //add the boot dhcp function when rescue from usb fail	
 	if (ret != RTK_PLAT_ERR_OK) {
 		ret = boot_rescue_from_dhcp();
-        return ret;
 	}
 //adam 0729 end	
 #endif
