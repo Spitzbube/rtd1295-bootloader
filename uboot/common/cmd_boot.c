@@ -243,6 +243,36 @@ static unsigned long do_go_all_fw(void)
 }
 #endif 
 
+static void led_flag_error(void)
+{
+    pwm_enable(SYS_LED_PWM_PORT_NUM, 0);            
+    // Ok, the hdd is having issue, change the LED to tell the end user.
+    pwm_set_freq(SYS_LED_PWM_PORT_NUM, 10);  // set the frequency to 1 HZ
+    pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
+    pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
+}
+    
+// 
+// hdd must be ready before we could mount the config partition
+//
+static int is_sata_initialized(void)
+{
+#ifdef CONFIG_BOARD_WD_PELICAN
+	// config partition is on the eMMC for Pelican
+	return 1;
+#else
+	if (sata_curr_device == -1) {
+		if (sata_initialize() !=0) {
+            printf("Error, SATA device initialization failed!\n");
+            led_flag_error();
+			return 0;
+		}
+	}
+	return 1;
+#endif
+}
+
+
 #ifdef CONFIG_RESCUE_FROM_USB
 int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 {
@@ -350,14 +380,8 @@ int boot_rescue_from_dhcp(void)
 	
 	secure_mode = rtk_get_secure_boot_type();
 
-	if (sata_initialize() != 0) {
-		printf("Error, ---------------SATA init fail, try again ---------------\n");
-		printf("Error, ---------------No SATA device ---------------\n");
-		pwm_enable(SYS_LED_PWM_PORT_NUM, 0);            
-		// Ok, the hdd is having issue, change the LED to tell the end user.
-		pwm_set_freq(SYS_LED_PWM_PORT_NUM, 10);  // set the frequency to 1 HZ
-		pwm_set_duty_rate(SYS_LED_PWM_PORT_NUM, 50);
-		pwm_enable(SYS_LED_PWM_PORT_NUM, 1);
+    if (!is_sata_initialized()) {
+        // initialization sata failed.
 		return RTK_PLAT_ERR_BOOT;
 	}
 
@@ -4134,25 +4158,6 @@ void rtk_plat_do_bootr_after_mt()
 
 
 #ifdef UBOOT_PINGPONG_NEW_DESIGN
-//
-// hdd must be ready before we could mount the config partition
-//
-static int is_sata_initialized(void)
-{
-#ifdef CONFIG_BOARD_WD_PELICAN
-	// config partition is on the eMMC for Pelican
-	return 1;
-#else
-	if (sata_curr_device == -1) {
-		if (sata_initialize()) {
-			printf("Fatal Error, sata_initiailise failed, switching to USB boot!\n");
-			return 0;
-		}
-	}
-	return 1;
-#endif
-}
-
 
 static inline int is_digit(const char c)
 {
@@ -4222,8 +4227,6 @@ static int wd_read_boot_config(void)
 	// get the string
 	memcpy(readBuf, (u_char *)addr, sizeof(readBuf)); 
 
-	printf("Eric: readBuf=%s\n", readBuf);
-
 	// now parsing the string
 	char *p = readBuf;
 	char *p1 = readBuf;
@@ -4274,7 +4277,7 @@ static int wd_read_boot_config(void)
 	if (s != BOOT_CFG_STR_DONE) {
 		return -1;
 	}else {
-		printf("[Eric] bstate = %d, bna = %d, nbr = %c\n",
+        debug("bstate = %d, bna = %d, nbr = %c\n",
 		gBootConfig.bState, gBootConfig.numBootAttempts,
 		gBootConfig.nextBootRegion);
 	}
@@ -4282,17 +4285,12 @@ static int wd_read_boot_config(void)
 	return 0;
 }
 
-
-
-
 //
 // Switch boot region via changing the boot_mode
 static int wd_boot_cbr(void)
 {
 	char *cbr = NULL;
-	
 	cbr = getenv("cbr");
-
 	if(cbr != NULL)	{
 		if( strncmp(cbr, "A", 1 ) == 0 ){
 		// set the boot_mode
@@ -4318,12 +4316,6 @@ static int wd_boot_cbr(void)
 //
 static int wd_boot_nbr(void)
 {
-
-	if (wd_read_boot_config() != 0) {
-        	// get nbr failed for whatever reason, swtich back to cbr
-		return wd_boot_cbr();
-	}
-
 	if(gBootConfig.nextBootRegion == 'A'){
 		boot_mode = BOOT_NORMAL_MODE;		// A image
 	}else if(gBootConfig.nextBootRegion == 'B'){
@@ -4337,26 +4329,19 @@ static int wd_boot_nbr(void)
 }
 
 //
-// update the boot state
-//
-static int wd_set_boot_state(const BOOT_STATE_T bootState)
+static int update_cbr_from_nbr(void)
 {
+    // update the cbr with valid nbr only
+    if (gBootConfig.nextBootRegion == 'A' ||
+        gBootConfig.nextBootRegion == 'B') {
+        setenv("cbr", gBootConfig.nextBootRegion);
+		if (run_command("env save", 0) != 0) {
+		    printf("Failed to write cbr to uboot env, exit\n");
+		    return -1;
+		}
+    }else return -1;
 
-	wd_read_boot_config();
-	gBootConfig.bState = bootState;
-	wd_write_boot_config(&gBootConfig);
-
-	printf("\n[INFO]: set bootState to %d\n", bootState);
-
-	return 0;
-
-}
-
-static int wd_get_bna_from_config(void)
-{
-	wd_read_boot_config();
-	
-	return gBootConfig.numBootAttempts;
+    return 0;
 }
 
 #endif //UBOOT_PINGPONG_NEW_DESIGN
@@ -4365,6 +4350,11 @@ static int wd_get_bna_from_config(void)
 int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 {
 	int ret = RTK_PLAT_ERR_OK;
+
+    int err = 0;
+    
+    // flag that indicate if we need to update the boot config
+    int updateBootConfig = 0;
 
 	// make sure the HDD is ready
 	if (!is_sata_initialized()) {
@@ -4380,37 +4370,24 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 	    
 	BOOT_STATE_T bootState = BOOT_STATE_UNKNOWN;
 
-	#if 0
-	    // EY: This code has been verified on Monarch,
-	    // Pelican needs to be verified as well.
-	    ////////////////////////////////////////
-	    
-	    wd_read_boot_config();
-	    // update the boot config and write it back to config partition
-	    gBootConfig.bState = BOOT_STATE_NO_OTA;
-	    gBootConfig.numBootAttempts = 7;
-	    gBootConfig.nextBootRegion = 'B';
-	    wd_write_boot_config(&gBootConfig);
-	    //////////////////////////////////////////////////////////
-	#endif
-	    
-	    // read the boot state from config partition
-	    //
-
-	wd_read_boot_config();	
-	bootState = gBootConfig.bState;
+    // always read the bootconfig from config partition 
+    //
+	if (wd_read_boot_config() == 0) {
+        bootState = gBootConfig.bState;
+    }// else: if reading the config failed, the bootState is not changed, then boot CBR
 
 	switch (bootState){
-	    case BOOT_STATE_NO_OTA:
+    case BOOT_STATE_NO_OTA:  // no OTA boot state is clean
 		printf("\n[INFO]: bootState: BOOT_STATE_NO_OTA\n");
+        // nothing should have changed. No need to update
+        // config partition
 		wd_boot_cbr();
 		break;
-	    case BOOT_STATE_INIT:
-		// initial state (first time flash)
+    case BOOT_STATE_INIT:
+		// initial state (USB Installer will set to this state)
 		printf("\n[INFO]: bootState: BOOT_STATE_INIT\n");
 		printf("[INFO]: Re-initialize uboot env entries\n");
 		setenv("cbr", "A");
-
 		if (run_command("env save", 0) != 0) {
 		    printf("Failed to initialize uboot env entries, exit\n");
 		    return -1;
@@ -4421,14 +4398,18 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		// set bootState to BOOT_STATE_NO_OTA in CONFIG
 		// why need to write the boot state back to config???
 		//
-		wd_set_boot_state(BOOT_STATE_NO_OTA);
-
+        gBootConfig.bState = BOOT_STATE_NO_OTA;
+        // write a invalid nbr here, to make sure next OTA has the right value
+        // written to it
+        gBootConfig.nextBootRegion = 'F';
+        updateBootConfig = 1;
 		break;
-	    case BOOT_STATE_OTA_TRIGGERED:
-		bna = wd_get_bna_from_config();		//get Boot Next Attempt counter
+    case BOOT_STATE_OTA_TRIGGERED:
+		bna = gBootConfig.numBootAttempts;
 		printf("\n[INFO]: bootState: BOOT_STATE_OTA_TRIGGERED, bna = %d\n", bna);
 		if(bna == 0){
-		    // should not come here becasue bootState should be set to BOOT_STATE_OTA_FAILED by cloudcheckd
+		    // should not come here becasue bootState should be set
+            //to BOOT_STATE_OTA_FAILED by cloudcheckd
 		    wd_boot_cbr();
 		}else if((bna > 0) && (bna <= 5)) {		//boot NBR for evaluation
 		    printf("[INFO]: boot nbr for evaluation\n");
@@ -4438,37 +4419,42 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		    wd_boot_cbr();
 		}
 		break;
-	    case BOOT_STATE_OTA_PASSED:
+    case BOOT_STATE_OTA_PASSED:
 		printf("\n[INFO]: OTA passed, boot NBR and update CBR\n");
-		
-		wd_boot_nbr();				
-
-		if(boot_mode == BOOT_NORMAL_MODE)
-		    setenv("cbr", "A");
-		else if(boot_mode == BOOT_RESCUE_MODE)
-		    setenv("cbr", "B");					
-
-		// Set bootState to BOOT_STATE_NO_OTA for next boot
-		//
-		wd_set_boot_state(BOOT_STATE_NO_OTA);
-		
-		if (run_command("env save", 0) != 0) {
-		    printf("Failed to write cbr to uboot env, exit\n");
-		    return -1;
-		}
-				
-		break;
-	    case BOOT_STATE_OTA_FAILED:	//boot CBR regardless of CONFIG
-		printf("\n[INFO]: OTA failed, boot CBR\n");
-		wd_set_boot_state(BOOT_STATE_NO_OTA);
+        // Ok, the last nbr boot is sucessful, update the cbr
+        if (update_cbr_from_nbr() == 0) {
+            //
+            // Set bootState to BOOT_STATE_NO_OTA for next boot
+            //
+            gBootConfig.bState = BOOT_STATE_NO_OTA;
+            // write a invalid nbr here, to make sure next OTA has the right value
+            // written to it
+            gBootConfig.nextBootRegion = 'F';
+            updateBootConfig = 1;
+        }else {
+            printf("[ERR]: %s return failure.\n", __func__);
+        }
 		wd_boot_cbr();
 		break;
-	    default:
+    case BOOT_STATE_OTA_FAILED:	//boot CBR regardless of CONFIG
+        // FIXME! who is setting this state?
+		printf("\n[INFO]: OTA failed, boot CBR\n");
+        gBootConfig.bState = BOOT_STATE_NO_OTA;
+        // write a invalid nbr here, to make sure next OTA has the right value
+        // written to it
+        gBootConfig.nextBootRegion = 'F';
+        updateBootConfig = 1;        
+		wd_boot_cbr();
+		break;
+    default:
 		printf("\n[ERROR]: Unknown bootState(%d), boot CBR\n", bootState);
 		wd_boot_cbr();
 		break;
-		}
-	#endif	// endif CONFIG_BOARD_WD_MONARCH
+    }
+    
+    if (updateBootConfig)
+        wd_write_boot_config(&gBootConfig);
+#endif	// endif CONFIG_BOARD_WD_MONARCH
 
 	/* reset boot flags */
 	boot_from_flash = BOOT_FROM_FLASH_NORMAL_MODE;
