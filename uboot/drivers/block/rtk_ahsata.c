@@ -459,7 +459,7 @@ static int ahci_exec_ata_cmd(struct ahci_probe_ent *probe_ent,
 	writel_with_flush(1 << cmd_slot, &(port_mmio->ci));
 
 	if (waiting_for_cmd_completed((u8 *)&(port_mmio->ci),
-				10000, 0x1 << cmd_slot)) {
+				30000, 0x1 << cmd_slot)) {
 		printf("timeout exit!\n");
 		return -1;
 	}
