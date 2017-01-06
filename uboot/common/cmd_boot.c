@@ -4171,6 +4171,10 @@ static int wd_write_boot_config(const struct boot_config *pbcf)
 	char tmpbuf[128];
 	volatile unsigned int addr = 0x4000000;
 	char writeBuf[10];
+	char str_bstate[2] = {0 ,'\0'};
+	char str_nbr[2] = {0 ,'\0'};
+	char str_bna[2] = {0 ,'\0'};
+
 
 	memset(writeBuf, 0, sizeof(writeBuf));
 	sprintf(writeBuf, "%d:%c:%d:;",
@@ -4193,6 +4197,13 @@ static int wd_write_boot_config(const struct boot_config *pbcf)
 	}	
 
 	printf("\n[INFO]: write boot config %s\n", writeBuf);
+	// pass to kernel /proc/device-tree/factory but not saving in flash
+	str_bstate[0] = pbcf->bState + 48;
+	str_bna[0] = pbcf->numBootAttempts + 48;
+	str_nbr[0] = gBootConfig.nextBootRegion;
+	setenv("bootstate", str_bstate);
+	setenv("bna", str_bna);
+	setenv("nbr", str_nbr);
 
 	return 0;
 
@@ -4207,6 +4218,10 @@ static int wd_read_boot_config(void)
 {
 	char cmdBuf[128];
 	volatile unsigned int addr = 0x4000000;
+
+	char str_bstate[2] = {0 ,'\0'};
+	char str_nbr[2] = {0 ,'\0'};
+	char str_bna[2] = {0 ,'\0'};
 
 	char readBuf[10];
 	memset(cmdBuf, 0, sizeof(cmdBuf));
@@ -4277,11 +4292,19 @@ static int wd_read_boot_config(void)
 	if (s != BOOT_CFG_STR_DONE) {
 		return -1;
 	}else {
-        debug("bstate = %d, bna = %d, nbr = %c\n",
-		gBootConfig.bState, gBootConfig.numBootAttempts,
-		gBootConfig.nextBootRegion);
+		debug("bstate = %d, bna = %d, nbr = %c\n",
+			gBootConfig.bState, gBootConfig.numBootAttempts,
+			gBootConfig.nextBootRegion);
+		
+		// pass to kernel /proc/device-tree/factory but not saving in flash
+		str_bstate[0] = gBootConfig.bState + 48;
+		str_bna[0] = gBootConfig.numBootAttempts + 48;
+		str_nbr[0] = gBootConfig.nextBootRegion;
+		setenv("bootstate", str_bstate);
+		setenv("bna", str_bna);
+		setenv("nbr", str_nbr);
 	}
-    
+
 	return 0;
 }
 
