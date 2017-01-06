@@ -14,7 +14,9 @@
 *.swp
 *.patch
 *.bin
-
+*.su
+*.depend
+*.depend.*
 #
 # Top-level generic files
 #
@@ -69,4 +71,5 @@ cscope.*
 /onenand_ipl/onenand-ipl*
 /onenand_ipl/board/*/onenand*
 /onenand_ipl/board/*/*.S
-
+out
+*.exe.*

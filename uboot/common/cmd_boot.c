@@ -4331,10 +4331,13 @@ static int wd_boot_nbr(void)
 //
 static int update_cbr_from_nbr(void)
 {
+    char nbr[2] = { 0 ,'\0'};
+    
     // update the cbr with valid nbr only
     if (gBootConfig.nextBootRegion == 'A' ||
         gBootConfig.nextBootRegion == 'B') {
-        setenv("cbr", gBootConfig.nextBootRegion);
+        nbr[0] = gBootConfig.nextBootRegion;
+        setenv("cbr", nbr);
 		if (run_command("env save", 0) != 0) {
 		    printf("Failed to write cbr to uboot env, exit\n");
 		    return -1;
