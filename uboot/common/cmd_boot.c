@@ -368,7 +368,7 @@ int rtk_decrypt_rescue_from_usb(char* filename, unsigned int target)
 
 //adam 0729 start 
 //add a boot rescue function from dhcp tftp
-
+#define CURRENT_GPT_VER 3
 #ifdef CONFIG_RESCUE_FROM_DHCP
 int boot_rescue_from_dhcp(void)
 {
@@ -386,8 +386,14 @@ int boot_rescue_from_dhcp(void)
 	}
 
 	// generate the partition table
-	run_command("rtkgpt gen 0716", 0);
-
+    // ey: gpt table should be visioned instead of by date
+	// generate the partition table
+    run_command("rtkgpt gen V3", 0);
+    char gpt_ver_str[8];
+    sprintf(gpt_ver_str, "%d", CURRENT_GPT_VER);
+    setenv("gpt_ver", gpt_ver_str);
+    run_command("env save", 0);
+    
 	/* DTB */	
 	if ((filename = getenv("rescue_dtb")) == NULL) {
 		filename =(char*) CONFIG_RESCUE_FROM_USB_DTB;
@@ -4389,7 +4395,26 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		// switch to USB boot?
 		return -1;
 	}
-	    
+
+    // reading the gpt partition to make sure the
+    // partition table is current, otherwise, regenerates
+    // the partition table then reboot
+#if defined (CONFIG_BOARD_WD_MONARCH)
+    char *gpt_ver = getenv("gpt_ver");
+    int ngpt_ver = gpt_ver ? simple_strtoul (gpt_ver, NULL, 10) : 0;
+    printf("[Info] getting gpt_ver env and gpt version = %d\n", ngpt_ver);
+    char gpt_ver_str[8];
+    if (ngpt_ver < CURRENT_GPT_VER) {
+        printf("[Info] Current gpt (%d) is not out of date. need to update to %d\n",
+               ngpt_ver, CURRENT_GPT_VER);
+        // generating GPU 
+        run_command("rtkgpt gen V3", 0);
+        sprintf(gpt_ver_str, "%d", CURRENT_GPT_VER);
+        setenv("gpt_ver", gpt_ver_str);
+        run_command("env save", 0);
+    }
+#endif //CONFIG_BOARD_WD_MONARCH
+    
 #ifdef UBOOT_PINGPONG_NEW_DESIGN
 	    
 	int bna = -1;
