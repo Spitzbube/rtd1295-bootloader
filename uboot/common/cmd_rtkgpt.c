@@ -211,7 +211,7 @@ void fill_GPT_PTES_0624(gpt_entry * pte_curr, unsigned long long disk_size, unsi
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "USER");pte_curr++;
 }
 
-void fill_GPT_PTES_0716(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
+static void fill_GPT_PTES_0716(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
 {
     unsigned long long blk_size;
     int gpt_idx;
@@ -315,6 +315,116 @@ void fill_GPT_PTES_0716(gpt_entry * pte_curr, unsigned long long disk_size, unsi
     fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "DISKVOLUME1");pte_curr++;
 }
 
+static void fill_GPT_PTES_V3(gpt_entry * pte_curr, unsigned long long disk_size, unsigned long long start_lba)
+{
+    unsigned long long blk_size;
+    int gpt_idx;
+    gpt_idx = 0;
+
+    // GPT PTE0 
+    blk_size = 2014ULL;
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "FW_TABLE");pte_curr++;
+    // --------------------------
+    // GPT PTE1 KERNEL A
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "KERNEL_A");pte_curr++;
+    // GPT PTE2 ROOTFS A
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "ROOTFS_A");pte_curr++;
+    // GPT PTE3 ROOTFS RESCUE
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "ROOTFS_B");pte_curr++;
+    // GPT PTE4  FDT A
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "FDT_A");pte_curr++;
+    // GPT PTE5 FDT RESCUE
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "FDT_B");pte_curr++;
+    // GPT PTE6
+    start_lba += blk_size;
+    blk_size = ((4ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "AFW_A");pte_curr++;
+    // --------------------------
+    // GPT PTE7 
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "KERNEL_B");pte_curr++;
+    // GPT PTE8 ROOTFS B
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "ROOTFS_GOLD");pte_curr++;
+    // GPT PTE9 FDT B
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "FDT_GOLD");pte_curr++;
+    // GPT PTE10
+    start_lba += blk_size;
+    blk_size = ((4ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "AFW_B");pte_curr++;
+    // --------------------------
+    // GPT PTE11
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BOOTCODE32");pte_curr++;
+    // GPT PTE12
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BOOTCODE64");pte_curr++;
+    // GPT PTE13
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BL31");pte_curr++;
+    // GPT PTE14
+    start_lba += blk_size;
+    blk_size = ((1ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "BL32");pte_curr++;
+    // GPT PTE15
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "KERNEL_GOLD");pte_curr++;
+    // GPT PTE16
+    start_lba += blk_size;
+    blk_size = ((4ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "AFW_GOLD");pte_curr++;
+    // GPT PTE17 CONFIG
+    start_lba += blk_size;
+    blk_size = ((32ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "CONFIG");pte_curr++;
+    // --------------------------
+    // GPT PTE18 SYSTEM A
+    start_lba += blk_size;
+    blk_size = ((800ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "SYSTEM_A");pte_curr++;
+    // --------------------------
+    // GPT PTE19 SYSTEM B
+    start_lba += blk_size;
+    blk_size = ((800ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "SYSTEM_B");pte_curr++;
+    // GPT PTE20
+    start_lba += blk_size;
+    blk_size = ((800ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "CACHE");pte_curr++;
+    // GPT PTE21
+    start_lba += blk_size;
+    blk_size = ((2048ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "DATA");pte_curr++;
+    
+    // GPT PTE22 reservered 2G swap partition
+    start_lba += blk_size;
+    blk_size = ((2048ULL<<20)>>9);
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "SWAP");pte_curr++;
+    
+    // GPT PTE23
+    start_lba += blk_size;
+    blk_size = (disk_size-4)-start_lba;
+    fill_one_pte(pte_curr, gpt_idx++, start_lba, (start_lba+blk_size-1), "DISKVOLUME1");pte_curr++;
+}
+
 unsigned int rtkgpt_gen(int gpt_ver)
 {
     int dev, i;
@@ -399,7 +509,9 @@ unsigned int rtkgpt_gen(int gpt_ver)
         fill_GPT_PTES_0624(pte, disk_size, 34);
     else if( gpt_ver == 0x0716 )
     	fill_GPT_PTES_0716(pte, disk_size, 34);
-
+    else if (gpt_ver == 0x3)
+        fill_GPT_PTES_V3(pte, disk_size, 34);
+             
     // update crc32
     pte_crc32 = crc32(0, pte, pad_count);
 
@@ -452,13 +564,14 @@ void run_rtkgpt_gen(int gpt_ver)
     unsigned int ret_val;
     
     switch( gpt_ver ) {
-    	case 0x0624:
-        case 0x0716:
-    	    ret_val = rtkgpt_gen(gpt_ver);
-    	    break;
-    	default:
-            printf("Please give gpt ver. 0624 or 0716. curr input is %08x\n", gpt_ver );
-    	    ret_val = -1;
+    case 0x0624:
+    case 0x0716:
+    case 0x3:
+        ret_val = rtkgpt_gen(gpt_ver);
+        break;
+    default:
+        printf("Please give gpt ver. 0624 or 0716, V3. curr input is %08x\n", gpt_ver );
+        ret_val = -1;
     }
     printf("ret val = 0x%08x(%s)\n", ret_val, ret_val == 0 ? "OK" : "FAIL" );
 }
@@ -644,9 +757,10 @@ int do_rtkgpt(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
             if( argc > 2 ) {
                 if( strncmp( argv[2], "0624", 4 ) == 0  ) {
                     gpt_ver = 0x0624;
-                }
-                else if( strncmp( argv[2], "0716", 4 ) == 0  ) {
+                }else if( strncmp( argv[2], "0716", 4 ) == 0  ) {
                     gpt_ver = 0x0716;
+                }else if ( strncmp( argv[2], "V3", 2 ) == 0  ) {
+                    gpt_ver = 0x3;
                 }
             }
             if( argc > 3 ) {
@@ -691,6 +805,6 @@ int do_rtkgpt(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 U_BOOT_CMD(
     rtkgpt, 5, 0,   do_rtkgpt,
     "rtkgpt utility",
-    "\n(1)rtkgpt gen [0624|0716] [debug]"
+    "\n(1)rtkgpt gen [0624|0716|V3] [debug]"
     "\n(2)rtkgpt fwtable [debug]"
 );
