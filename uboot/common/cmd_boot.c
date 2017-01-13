@@ -86,7 +86,8 @@ typedef enum{
 	BOOT_STATE_OTA_TRIGGERED,
 	BOOT_STATE_OTA_PASSED,
 	BOOT_STATE_OTA_FAILED,
-    BOOT_STATE_UNKNOWN
+	BOOT_STATE_RECOVERY,
+	BOOT_STATE_UNKNOWN
 }BOOT_STATE_T;
 
 typedef enum{
@@ -3269,6 +3270,14 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s","emmc_b",version_string,wd_sn);
 
 		setenv("bootargs", cmdline);
+	}else if(boot_mode == BOOT_GOLD_MODE){
+
+		printf("Booting golden image, use default bootarg\n");
+	
+	}else{
+	
+		printf("[ERROR]: Unknouwn boot_mode\n");
+	
 	}
 		
 
@@ -3509,6 +3518,15 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 
                 snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s sn=%s","sata_b",version_string,wd_sn);
 		setenv("bootargs", cmdline);	
+	
+	}else if(boot_mode == BOOT_GOLD_MODE){
+
+		printf("Booting golden image, use default bootarg\n");
+	
+	}else{
+	
+		printf("[ERROR]: Unknouwn boot_mode\n");
+	
 	}
 
 	
@@ -4499,6 +4517,12 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
         updateBootConfig = 1;        
 		wd_boot_cbr();
 		break;
+
+   case BOOT_STATE_RECOVERY:
+	printf("\n[INFO]: Boot golden image\n");
+	boot_mode = BOOT_GOLD_MODE;
+	break;
+
     default:
 		printf("\n[ERROR]: Unknown bootState(%d), boot CBR\n", bootState);
 		wd_boot_cbr();
