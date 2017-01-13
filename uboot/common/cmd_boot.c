@@ -86,7 +86,8 @@ typedef enum{
 	BOOT_STATE_OTA_TRIGGERED,
 	BOOT_STATE_OTA_PASSED,
 	BOOT_STATE_OTA_FAILED,
-    BOOT_STATE_UNKNOWN
+	BOOT_STATE_RECOVERY,
+	BOOT_STATE_UNKNOWN
 }BOOT_STATE_T;
 
 typedef enum{
@@ -3262,14 +3263,25 @@ int rtk_plat_prepare_fw_image_from_eMMC(void)
 	
 		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s", "emmc",version_string,wd_sn);
 
+		setenv("bootargs", cmdline);
+
 	}else if(boot_mode == BOOT_RESCUE_MODE){
 	
 		snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=pelican androidboot.storage=%s androidboot.selinux=permissive androidboot.heapsize=192m androidboot.heapgrowthlimit=128m ver=%s sn=%s","emmc_b",version_string,wd_sn);
 
+		setenv("bootargs", cmdline);
+	}else if(boot_mode == BOOT_GOLD_MODE){
+
+		printf("Booting golden image, use default bootarg\n");
+	
+	}else{
+	
+		printf("[ERROR]: Unknouwn boot_mode\n");
+	
 	}
 		
 
-	setenv("bootargs", cmdline);
+
 	
 #endif
 
@@ -3497,7 +3509,7 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 		printf("Setting bootargs to A\n");
 
                 snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s sn=%s","sata",version_string,wd_sn);
-
+		setenv("bootargs", cmdline);
 		
 	}
 	else if (boot_mode == BOOT_RESCUE_MODE)
@@ -3505,9 +3517,17 @@ int rtk_plat_prepare_fw_image_from_SATA(void)
 		printf("Setting bootargs to B\n");
 
                 snprintf(cmdline, sizeof(cmdline), "earlycon=uart8250,mmio32,0x98007800 console=ttyS0,115200 init=/init androidboot.hardware=monarch androidboot.heapgrowthlimit=128m androidboot.heapsize=192m androidboot.storage=%s androidboot.selinux=permissive ver=%s sn=%s","sata_b",version_string,wd_sn);
-	}
+		setenv("bootargs", cmdline);	
+	
+	}else if(boot_mode == BOOT_GOLD_MODE){
 
-	setenv("bootargs", cmdline);
+		printf("Booting golden image, use default bootarg\n");
+	
+	}else{
+	
+		printf("[ERROR]: Unknouwn boot_mode\n");
+	
+	}
 
 	
 #endif
@@ -4488,7 +4508,6 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		wd_boot_cbr();
 		break;
     case BOOT_STATE_OTA_FAILED:	//boot CBR regardless of CONFIG
-        // FIXME! who is setting this state?
 		printf("\n[INFO]: OTA failed, boot CBR\n");
         gBootConfig.bState = BOOT_STATE_NO_OTA;
         // write a invalid nbr here, to make sure next OTA has the right value
@@ -4497,6 +4516,17 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
         updateBootConfig = 1;        
 		wd_boot_cbr();
 		break;
+   case BOOT_STATE_RECOVERY:
+       printf("\n[INFO]: Boot golden image\n");
+       boot_mode = BOOT_GOLD_MODE;
+       // The boot parameter is changed to following after factory reset in the recovery image:
+       // 1. BOOT_STATE_RECOVERY -> BOOT_STATE_NO_OTA
+       // 2. nbr set to 'F'
+       // 3. bna set to 0
+       // once the factory reset task is finished, reboot the device, since the cbr is not changed,
+       // and boot state is BOOT_STATE_RECOVERY, the device should boot with cbr directly
+	break;
+
     default:
 		printf("\n[ERROR]: Unknown bootState(%d), boot CBR\n", bootState);
 		wd_boot_cbr();
