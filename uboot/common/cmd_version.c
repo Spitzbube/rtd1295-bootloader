@@ -28,7 +28,11 @@
 
 //const char __weak version_string[] = U_BOOT_VERSION_STRING;
 
-const char version_string[] = "4.1.0";
+/**
+  4.1.0 New implementation for firmware upate
+  4.1.1 Added code to boot into golden image
+ **/
+const char version_string[] = "4.1.1";
 
 #ifdef CONFIG_CMD_VERSION
 int do_version(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])

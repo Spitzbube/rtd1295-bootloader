@@ -4508,7 +4508,6 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		wd_boot_cbr();
 		break;
     case BOOT_STATE_OTA_FAILED:	//boot CBR regardless of CONFIG
-        // FIXME! who is setting this state?
 		printf("\n[INFO]: OTA failed, boot CBR\n");
         gBootConfig.bState = BOOT_STATE_NO_OTA;
         // write a invalid nbr here, to make sure next OTA has the right value
@@ -4517,10 +4516,15 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
         updateBootConfig = 1;        
 		wd_boot_cbr();
 		break;
-
    case BOOT_STATE_RECOVERY:
-	printf("\n[INFO]: Boot golden image\n");
-	boot_mode = BOOT_GOLD_MODE;
+       printf("\n[INFO]: Boot golden image\n");
+       boot_mode = BOOT_GOLD_MODE;
+       // The boot parameter is changed to following after factory reset in the recovery image:
+       // 1. BOOT_STATE_RECOVERY -> BOOT_STATE_NO_OTA
+       // 2. nbr set to 'F'
+       // 3. bna set to 0
+       // once the factory reset task is finished, reboot the device, since the cbr is not changed,
+       // and boot state is BOOT_STATE_RECOVERY, the device should boot with cbr directly
 	break;
 
     default:
