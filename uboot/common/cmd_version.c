@@ -31,8 +31,9 @@
 /**
   4.1.0 New implementation for firmware upate
   4.1.1 Added code to boot into golden image
+  4.1.2 KAM-12726 SATA Init failed in uboot
  **/
-const char version_string[] = "4.1.1";
+const char version_string[] = "4.1.2";
 
 #ifdef CONFIG_CMD_VERSION
 int do_version(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
