@@ -135,7 +135,7 @@ static int ahci_setup_oobr(struct ahci_probe_ent *probe_ent,
 static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 {
 	u32 tmp, cap_save, num_ports;
-	int i, j, timeout = 1000;
+	int i, j, timeout = 1000, retry;
 	struct sata_port_regs *port_mmio = NULL;
 	struct sata_host_regs *host_mmio =
 		(struct sata_host_regs *)probe_ent->mmio_base;
@@ -280,10 +280,16 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 		writel(DEF_PORT_IRQ, &(port_mmio->ie));
 
 		/* register linkup ports */
-		tmp = readl(&(port_mmio->ssts));
-		debug("Port %d status: 0x%x\n", i, tmp);
-		if ((tmp & SATA_PORT_SSTS_DET_MASK) == 0x03)
-			probe_ent->link_port_map |= (0x01 << i);
+		for(retry=0; retry<100; retry++) {
+			tmp = readl(&(port_mmio->ssts));
+			debug("Port %d status: 0x%x\n", i, tmp);
+			if ((tmp & SATA_PORT_SSTS_DET_MASK) == 0x03) {
+				probe_ent->link_port_map |= (0x01 << i);
+				break;
+			} else if(i!=0)
+				break;
+			mdelay(50);
+		}
 	}
 
 	tmp = readl(&(host_mmio->ghc));
@@ -449,13 +455,15 @@ static int ahci_exec_ata_cmd(struct ahci_probe_ent *probe_ent,
 	}
 
 	memcpy((u8 *)(pp->cmd_tbl), cfis, sizeof(struct sata_fis_h2d));
-	if (buf && buf_len)
+	if (buf && buf_len) {
+		flush_cache(buf, (ATA_ID_WORDS * 2));
 		sg_count = ahci_fill_sg(probe_ent, port, buf, buf_len);
+	}
 	opts = (sizeof(struct sata_fis_h2d) >> 2) | (sg_count << 16);
 	if (is_write)
 		opts |= 0x40;
 	ahci_fill_cmd_slot(pp, cmd_slot, opts);
-
+	flush_cache(pp->cmd_slot, AHCI_PORT_PRIV_DMA_SZ);
 	writel_with_flush(1 << cmd_slot, &(port_mmio->ci));
 
 	if (waiting_for_cmd_completed((u8 *)&(port_mmio->ci),
@@ -1182,7 +1190,7 @@ static void config_phy(unsigned int port, unsigned int rx_sens)
 	wr_reg(0x72100911, SATA_MDIO_CTR);
 	wr_reg(0x72104911, SATA_MDIO_CTR);
 	wr_reg(0x72108911, SATA_MDIO_CTR);
-	wr_reg(0x27750311, SATA_MDIO_CTR);
+	wr_reg(0x27710311, SATA_MDIO_CTR);
 	wr_reg(0x27684311, SATA_MDIO_CTR);
 	wr_reg(0x27648311, SATA_MDIO_CTR);
 		
@@ -1205,10 +1213,6 @@ static void config_phy(unsigned int port, unsigned int rx_sens)
 	wr_reg(0x487a2111, SATA_MDIO_CTR);
 	wr_reg(0x487a6111, SATA_MDIO_CTR);
 	wr_reg(0x487aa111, SATA_MDIO_CTR);
-	
-	wr_reg(0x40000c11, SATA_MDIO_CTR);
-	wr_reg(0x40004c11, SATA_MDIO_CTR);
-	wr_reg(0x40008c11, SATA_MDIO_CTR);
 	
 	wr_reg(0x00271711, SATA_MDIO_CTR);
 	wr_reg(0x00275711, SATA_MDIO_CTR);
