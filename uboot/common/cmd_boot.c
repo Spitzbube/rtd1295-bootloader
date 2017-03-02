@@ -56,8 +56,6 @@
 #include <asm/arch/factorylib.h>
 #define RECOVERY_FILE_IN_FACTORY    FACTORY_HEADER_FILE_NAME"recovery"
 
-#define DUBUG_FW_DESC_TABLE
-
 typedef struct _bootloader_message {
     char command[32];
     char status[32];
@@ -4417,10 +4415,6 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
 		// switch to USB boot?
 		return -1;
 	}
-
-    printf("#######################\n");
-    printf("## UBOOT OTA testing ##\n");
-    printf("#######################\n");
 
     // reading the gpt partition to make sure the
     // partition table is current, otherwise, regenerates
