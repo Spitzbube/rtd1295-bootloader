@@ -4478,33 +4478,36 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
     case BOOT_STATE_OTA_TRIGGERED:
 		bna = gBootConfig.numBootAttempts;
 		printf("\n[INFO]: bootState: BOOT_STATE_OTA_TRIGGERED, bna = %d\n", bna);
-		if(bna == 0){
-		    // should not come here becasue bootState should be set
-            //to BOOT_STATE_OTA_FAILED by cloudcheckd
-		    wd_boot_cbr();
-		}else if((bna > 0) && (bna <= 5)) {		//boot NBR for evaluation
+		if((bna > 0) && (bna <= 5)) {		//boot NBR for evaluation
 		    printf("[INFO]: boot nbr for evaluation\n");
 		    wd_boot_nbr();
 		}else{
+            // this is the case wheren bna == 0 or bna > 5
+            // in either case, we fall back to CBR, but need to reset the boot state as well,
+            // so to allow OTA happen.
 		    printf("[ERROR]: Failed to get Boot Next Attempt(%d), boot CBR\n", bna);
+            gBootConfig.bState = BOOT_STATE_NO_OTA;
+            // write a invalid nbr here, to make sure next OTA has the right value
+            // written to it
+            gBootConfig.nextBootRegion = 'F';
+            updateBootConfig = 1;
 		    wd_boot_cbr();
 		}
 		break;
     case BOOT_STATE_OTA_PASSED:
 		printf("\n[INFO]: OTA passed, boot NBR and update CBR\n");
         // Ok, the last nbr boot is sucessful, update the cbr
-        if (update_cbr_from_nbr() == 0) {
-            //
-            // Set bootState to BOOT_STATE_NO_OTA for next boot
-            //
-            gBootConfig.bState = BOOT_STATE_NO_OTA;
-            // write a invalid nbr here, to make sure next OTA has the right value
-            // written to it
-            gBootConfig.nextBootRegion = 'F';
-            updateBootConfig = 1;
-        }else {
+        if (update_cbr_from_nbr() == -1) {
             printf("[ERR]: %s return failure.\n", __func__);
         }
+        //
+        // Set bootState to BOOT_STATE_NO_OTA for next boot
+        //
+        gBootConfig.bState = BOOT_STATE_NO_OTA;
+        // write a invalid nbr here, to make sure next OTA has the right value
+        // written to it
+        gBootConfig.nextBootRegion = 'F';
+        updateBootConfig = 1;
 		wd_boot_cbr();
 		break;
     case BOOT_STATE_OTA_FAILED:	//boot CBR regardless of CONFIG
@@ -4530,6 +4533,9 @@ int rtk_plat_do_bootr(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
     default:
 		printf("\n[ERROR]: Unknown bootState(%d), boot CBR\n", bootState);
 		wd_boot_cbr();
+        gBootConfig.bState = BOOT_STATE_NO_OTA;
+        gBootConfig.nextBootRegion = 'F';
+        updateBootConfig = 1;        
 		break;
     }
     
