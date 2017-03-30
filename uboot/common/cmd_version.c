@@ -33,8 +33,9 @@
   4.1.1 Added code to boot into golden image
   4.1.2 KAM-12726 SATA Init failed in uboot
   4.1.3 Reset the bootstate after update_cbr has failed.
- **/
-const char version_string[] = "4.1.3";
+  4.1.4 Changed the default FAN speed to 20% 
+**/
+const char version_string[] = "4.1.4";
 
 #ifdef CONFIG_CMD_VERSION
 int do_version(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])

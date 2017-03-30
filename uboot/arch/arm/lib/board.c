@@ -919,7 +919,8 @@ void board_init_r(gd_t *id, ulong dest_addr)
     pwm_enable(SYS_LED_PWM_PORT_NUM,1);
 #ifdef CONFIG_BOARD_WD_PELICAN
     // for pelican, turn on the FAN
-    pwm_set_duty_rate(FAN_PWM_PORT_NUM, 100);  // set the FAN speed to 100%
+    //pwm_set_duty_rate(FAN_PWM_PORT_NUM, 100);  // set the FAN speed to 100%
+    pwm_set_duty_rate(FAN_PWM_PORT_NUM, 20);  // set the FAN speed to 100%
     pwm_enable(FAN_PWM_PORT_NUM, 1);
 #endif    
     /**
