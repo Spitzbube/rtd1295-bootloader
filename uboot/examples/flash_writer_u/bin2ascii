@@ -1,5 +1,5 @@
 #! /usr/bin/perl -w
-if( defined(@ARGV) )
+if( (@ARGV) )
 {
 	foreach $arg (@ARGV) {
 		($type, $file) = split(/=/, $arg);
@@ -316,7 +316,7 @@ if( defined(@ARGV) )
     }
     print "\nhasharray_end:\n.word 0\n";
 	
-	if(defined $hasharray64)
+	if($hasharray64)
 	{
 	    open BINARY, $hasharray64 or die $!;
     
@@ -377,7 +377,7 @@ if( defined(@ARGV) )
         print "\nhasharray64_end:\n.word 0\n";
     }
     
-    if(defined $signature)
+    if($signature)
     {
     	open BINARY, $signature or die $!;
 
@@ -436,7 +436,7 @@ if( defined(@ARGV) )
     }
 
 	#open BINARY, "bootcode2_u-boot.bin" or die $!;
-    if(defined $bootcode2_boot_hasharray)
+    if($bootcode2_boot_hasharray)
     {
     	open BINARY, $bootcode2_boot_hasharray or die $!;
 		$size_uboot2 = -s BINARY;
@@ -502,7 +502,7 @@ if( defined(@ARGV) )
         print "\nbootcode2_boot_hasharray_end:\n.word 0\n";
 	}
     
-    if(defined $bootcode2_boot_signature)
+    if($bootcode2_boot_signature)
     {
     	open BINARY, $bootcode2_boot_signature or die $!;
 
@@ -559,7 +559,7 @@ if( defined(@ARGV) )
     }
 
 =start disable_boot3
-    if(defined $bootcode3_boot_hasharray)
+    if($bootcode3_boot_hasharray)
     {
 	    open BINARY, $bootcode3_boot_hasharray or die $!;
 	
@@ -611,7 +611,7 @@ if( defined(@ARGV) )
         print "\nbootcode3_boot_hasharray_end:\n.word 0\n";
 	}   
     
-    if(defined $bootcode3_boot_signature)
+    if($bootcode3_boot_signature)
     {
     	open BINARY, $bootcode3_boot_signature or die $!;
 
@@ -668,7 +668,7 @@ if( defined(@ARGV) )
     }
 =end disable_boot3
 =cut
-    if(defined $ecb_array)
+    if($ecb_array)
     {
 	    open BINARY, $ecb_array or die $!;
 	
@@ -730,7 +730,7 @@ if( defined(@ARGV) )
         print "\necbarray_end:\n.word 0\n";
     }    
 
-    if(defined $linux_rescue)
+    if($linux_rescue)
     {
         open BINARY, $linux_rescue or die $!;
         $current = 0;
@@ -776,7 +776,7 @@ if( defined(@ARGV) )
         print "\nlinux_rescue_hasharray_end:\n.word 0\n";
     }
     
-    if(defined $linux_rescue_signature)
+    if($linux_rescue_signature)
     {
         open BINARY, $linux_rescue_signature or die $!;
         $current = 0;
@@ -821,7 +821,7 @@ if( defined(@ARGV) )
         print "\nlinux_rescue_signature_end:\n.word 0\n";
     }
     
-    if(defined $fsbl)
+    if($fsbl)
     {
         open BINARY, $fsbl or die $!;
         $current = 0;
@@ -866,7 +866,7 @@ if( defined(@ARGV) )
         print "\nfsbl_end:\n.word 0\n";
     }
 
-    if(defined $fsbl_signature)
+    if($fsbl_signature)
     {
         open BINARY, $fsbl_signature or die $!;
         $current = 0;
@@ -911,7 +911,7 @@ if( defined(@ARGV) )
         print "\nfsbl_signature_end:\n.word 0\n";
     }
 
-    if(defined $fsbl_os)
+    if($fsbl_os)
     {
         open BINARY, $fsbl_os or die $!;
         $current = 0;
@@ -956,7 +956,7 @@ if( defined(@ARGV) )
         print "\nfsbl_os_end:\n.word 0\n";
     }
 
-    if(defined $fsbl_os_signature)
+    if($fsbl_os_signature)
     {
         open BINARY, $fsbl_os_signature or die $!;
         $current = 0;
@@ -1001,7 +1001,7 @@ if( defined(@ARGV) )
         print "\nfsbl_os_signature_end:\n.word 0\n";
     }
 	
-    if(defined $bl31)
+    if($bl31)
     {
         open BINARY, $bl31 or die $!;
         $current = 0;
@@ -1046,7 +1046,7 @@ if( defined(@ARGV) )
         print "\nbl31_end:\n.word 0\n";
     }
 
-    if(defined $bl31_signature)
+    if($bl31_signature)
     {
         open BINARY, $bl31_signature or die $!;
         $current = 0;
@@ -1091,7 +1091,7 @@ if( defined(@ARGV) )
         print "\nbl31_signature_end:\n.word 0\n";
     }
 
-    if(defined $rsa_pub)
+    if($rsa_pub)
     {
         open BINARY, $rsa_pub or die $!;
         $current = 0;
@@ -1136,7 +1136,7 @@ if( defined(@ARGV) )
         print "\nrsa_pub_end:\n.word 0\n";
     }
 
-    if(defined $Kpublic_fw)
+    if($Kpublic_fw)
     {
         open BINARY, $Kpublic_fw or die $!;
         $current = 0;
@@ -1181,7 +1181,7 @@ if( defined(@ARGV) )
         print "\nKpublic_fw_end:\n.word 0\n";
     }
 
-    if(defined $Kpublic_tee)
+    if($Kpublic_tee)
     {
         open BINARY, $Kpublic_tee or die $!;
         $current = 0;
@@ -1226,7 +1226,7 @@ if( defined(@ARGV) )
         print "\nKpublic_tee_end:\n.word 0\n";
     }
 
-    if(defined $Kpublic_fw_signature)
+    if($Kpublic_fw_signature)
     {
         open BINARY, $Kpublic_fw_signature or die $!;
         $current = 0;
@@ -1271,7 +1271,7 @@ if( defined(@ARGV) )
         print "\nKpublic_fw_signature_end:\n.word 0\n";
     }
 
-    if(defined $Kpublic_tee_signature)
+    if($Kpublic_tee_signature)
     {
         open BINARY, $Kpublic_tee_signature or die $!;
         $current = 0;
@@ -1316,7 +1316,7 @@ if( defined(@ARGV) )
         print "\nKpublic_tee_signature_end:\n.word 0\n";
     }
 
-    if(defined $cbc_rescue)
+    if($cbc_rescue)
     {
         open BINARY, $cbc_rescue or die $!;
         $current = 0;
@@ -1351,7 +1351,7 @@ if( defined(@ARGV) )
     }
     
 
-    if(defined $hwsetting_sig_image)
+    if($hwsetting_sig_image)
     {
         open BINARY, $hwsetting_sig_image or die $!;
     
@@ -1406,7 +1406,7 @@ if( defined(@ARGV) )
         print "\nhwsetting_sig_image_end:\n.word 0\n";
     }
 
-    if(defined $dcas_key_sig_image)
+    if($dcas_key_sig_image)
     {
         open BINARY, $dcas_key_sig_image or die $!;
         $current = 0;
@@ -1459,7 +1459,7 @@ if( defined(@ARGV) )
         print "\ndcas_key_sig_image_end:\n.word 0\n";
     }
 
-    if(defined $logo)
+    if($logo)
     {
         open BINARY, $logo or die $!;
         $current = 0;
@@ -1503,7 +1503,7 @@ if( defined(@ARGV) )
         print "\nlogo_end:\n.word 0\n";
     }
 
-    if(defined $logo2)
+    if($logo2)
     {
         open BINARY, $logo2 or die $!;
         $current = 0;
@@ -1547,7 +1547,7 @@ if( defined(@ARGV) )
         print "\nlogo2_end:\n.word 0\n";
     }
     
-    if(defined $logo3)
+    if($logo3)
     {
         open BINARY, $logo3 or die $!;
         $current = 0;
@@ -1591,7 +1591,7 @@ if( defined(@ARGV) )
         print "\nlogo3_end:\n.word 0\n";
     }
     
-    if(defined $logo4)
+    if($logo4)
     {
         open BINARY, $logo4 or die $!;
         $current = 0;
@@ -1634,7 +1634,7 @@ if( defined(@ARGV) )
         print ".data\n.globl logo4\n.globl logo4_end\nlogo4:\n.word \\\n";
         print "\nlogo4_end:\n.word 0\n";
     }
-    if(defined $logo5)
+    if($logo5)
     {
         open BINARY, $logo5 or die $!;
         $current = 0;
@@ -1677,7 +1677,7 @@ if( defined(@ARGV) )
         print ".data\n.globl logo5\n.globl logo5_end\nlogo5:\n.word \\\n";
         print "\nlogo5_end:\n.word 0\n";
     }
-    if(defined $logo6)
+    if($logo6)
     {
         open BINARY, $logo6 or die $!;
         $current = 0;
@@ -1720,7 +1720,7 @@ if( defined(@ARGV) )
         print ".data\n.globl logo6\n.globl logo6_end\nlogo6:\n.word \\\n";
         print "\nlogo6_end:\n.word 0\n";
     }
-    if(defined $logo7)
+    if($logo7)
     {
         open BINARY, $logo7 or die $!;
         $current = 0;
@@ -1764,7 +1764,7 @@ if( defined(@ARGV) )
         print "\nlogo7_end:\n.word 0\n";
     }
     
-    if(defined $logo8)
+    if($logo8)
     {
         open BINARY, $logo8 or die $!;
         $current = 0;

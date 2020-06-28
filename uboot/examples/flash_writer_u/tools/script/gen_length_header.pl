@@ -9,7 +9,7 @@
 #------------------
 # check argument
 #------------------
-if( !defined(@ARGV) )
+if( !(@ARGV) )
 {
 	die "\nUsage:\n\tgen_length_header.pl <input_file> <output_length_header>\n";
 }

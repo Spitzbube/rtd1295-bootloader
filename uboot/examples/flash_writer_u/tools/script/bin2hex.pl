@@ -20,7 +20,7 @@
 #------------------
 # check argument
 #------------------
-if( !defined(@ARGV) )
+if( !(@ARGV) )
 {
 	die "\nUsage:\n\tbin2hex.pl <input_binary> <output_hex>\n";
 }

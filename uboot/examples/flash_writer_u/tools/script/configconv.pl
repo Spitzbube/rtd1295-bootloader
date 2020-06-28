@@ -47,61 +47,61 @@ print "Input Config File     : "  . substr( $ARGV[1], rindex($ARGV[1], "/") + 1)
 open (CONFIG_FILE2, "$ARGV[2]");
 print "Input Logo1 Info File : "  . substr( $ARGV[2], rindex($ARGV[2], "/") + 1) . "\n";
 
-if(defined $ARGV[3])
+if($ARGV[3])
 {
 	open (CONFIG_FILE3, "$ARGV[3]");
 	print "Input Logo2 Info File : "  . substr( $ARGV[3], rindex($ARGV[3], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[4])
+if($ARGV[4])
 {
 	open (CONFIG_FILE4, "$ARGV[4]");
 	print "Input Logo3 Info File : "  . substr( $ARGV[4], rindex($ARGV[4], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[5])
+if($ARGV[5])
 {
 	open (CONFIG_FILE5, "$ARGV[5]");
 	print "Input Logo4 Info File : "  . substr( $ARGV[5], rindex($ARGV[5], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[6])
+if($ARGV[6])
 {
 	open (CONFIG_FILE6, "$ARGV[6]");
 	print "Input Logo5 Info File : "  . substr( $ARGV[6], rindex($ARGV[6], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[7])
+if ($ARGV[7])
 {
 	open (CONFIG_FILE7, "$ARGV[7]");
 	print "Input Logo6 Info File : "  . substr( $ARGV[7], rindex($ARGV[7], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[8])
+if($ARGV[8])
 {
 	open (CONFIG_FILE8, "$ARGV[8]");
 	print "Input Logo7 Info File : "  . substr( $ARGV[8], rindex($ARGV[8], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[9])
+if($ARGV[9])
 {
 	open (CONFIG_FILE9, "$ARGV[9]");
 	print "Input Logo8 Info File : "  . substr( $ARGV[9], rindex($ARGV[9], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[10])
+if($ARGV[10])
 {
 	open (CONFIG_FILE10, "$ARGV[10]");
 	print "Input RSA Info File : "  . substr( $ARGV[10], rindex($ARGV[10], "/") + 1) . "\n";
 }
 
-if(defined $ARGV[11])
+if($ARGV[11])
 {
 	open (CONFIG_FILE11, "$ARGV[11]");
 	print "Input RSA0 Info File : "  . substr( $ARGV[11], rindex($ARGV[11], "/") + 1) . "\n";
 }
 
-#if(defined $ARGV[11])
+#if($ARGV[11])
 #{
 #	open (CONFIG_FILE11, "$ARGV[11]");
 #	print "Input AES Info File : "  . substr( $ARGV[11], rindex($ARGV[11], "/") + 1) . "\n";
@@ -343,45 +343,45 @@ print HEADER_FILE $file_end;
 close (HEADER_FILE);
 close (CONFIG_FILE1);
 close (CONFIG_FILE2);
-if(defined $ARGV[3])
+if($ARGV[3])
 {
 	close (CONFIG_FILE3);
 }
-if(defined $ARGV[4])
+if($ARGV[4])
 {
 	close (CONFIG_FILE4);
 }
-if(defined $ARGV[5])
+if($ARGV[5])
 {
 	close (CONFIG_FILE5);
 }
 
-if(defined $ARGV[6])
+if($ARGV[6])
 {
 	close (CONFIG_FILE6);
 }
 
-if(defined $ARGV[7])
+if($ARGV[7])
 {
 	close (CONFIG_FILE7);
 }
 
-if(defined $ARGV[8])
+if($ARGV[8])
 {
 	close (CONFIG_FILE8);
 }
 
-if(defined $ARGV[9])
+if($ARGV[9])
 {
 	close (CONFIG_FILE9);
 }
 
-if(defined $ARGV[10])
+if($ARGV[10])
 {
 	close (CONFIG_FILE10);
 }
 
-if(defined $ARGV[11])
+if($ARGV[11])
 {
 	close (CONFIG_FILE11);
 }
@@ -390,7 +390,7 @@ print "convert config file to header file: done \n";
 
 
 
-#while (defined($textd = <WORDLIST>)){
+#while (($textd = <WORDLIST>)){
 #	if($textd[0] ne "#')
 #		print "$textd";
 #}

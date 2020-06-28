@@ -23,7 +23,7 @@
 #	length of input hex string must be even number
 #
 ################################################################################
-if( !defined(@ARGV) ) {
+if( !(@ARGV) ) {
 	print "Usage:\n\t ./str2bin.pl [input_string] > [output_binary]\n";
 	exit;
 }

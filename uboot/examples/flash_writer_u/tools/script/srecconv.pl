@@ -106,7 +106,7 @@ GetOptions("ES:s"   => \$srec_endian,
 	   "O:s"    => \$addr_offset,
 	   "v"      => \$verbose);
 
-if (!defined ($ARGV[0])) {
+if (!($ARGV[0])) {
     print $help;
     exit -1;
 }
@@ -172,7 +172,7 @@ while ($line = <IFILE>)
 		$val = $val << (8*(3-$addr01));
 	    }
 
-	    if (defined($data_array[$addr32]))
+	    if (($data_array[$addr32]))
 	    {
 		$data_array[$addr32] = $data_array[$addr32] | $val;
 	    }
@@ -233,7 +233,7 @@ $block16   = 0;
 for ($addr=0; $addr < @data_array; $addr=$addr+4)
 {
 
-    next if (!defined($data_array[$addr]));
+    next if (!($data_array[$addr]));
 
     if ($addr !=  $prev_addr+4)
     {
@@ -296,7 +296,7 @@ $prev_addr = -256;
 
 for ($addr=0; $addr < @data_array; $addr=$addr+4)
 {
-    next if (!defined($data_array[$addr]));
+    next if (!($data_array[$addr]));
 
     if (($addr !=  $prev_addr+4) && $prev_addr > 0)
     {
