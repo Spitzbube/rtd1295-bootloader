@@ -43,8 +43,10 @@ unsigned int spi_flash_max_erase_size;
 
 static void spi_switch_read_mode(void)
 {
+    sync();
     rtd_outl(SB2_SFC_OPCODE, 0x00000003); //switch flash to read mode
     rtd_outl(SB2_SFC_CTL, 0x00000018); //command cycle
+    sync();
 }
 
 static void rtkspi_hexdump( const char * str, unsigned int start_address, unsigned int length )
@@ -156,11 +158,12 @@ int rtkspi_identify( void )
     //remove this, due to we already set this register at hw-setting
     //rtd_outl(0xb801a808,0x0101000f);   //lowering frequency, setup freq divided no
 
-    rtd_outl(SB2_SFC_CE,0x00090101);   //setup control edge
+    rtd_outl(SB2_SFC_CE,0x00071307);   //setup control edge
 
     // read Manufacture & device ID
     rtd_outl(SB2_SFC_OPCODE,0x0000009f);
     rtd_outl(SB2_SFC_CTL,0x00000010);
+    sync();
 
     temp_id = rtd_inl(SPI_RBUS_BASE_ADDR);
     id = rtkspi_swap_endian(temp_id);
@@ -179,6 +182,7 @@ int rtkspi_identify( void )
                 /* read extended device ID */
                 rtd_outl(SB2_SFC_OPCODE,0x0000009f);
                 rtd_outl(SB2_SFC_CTL,0x00000013);
+                sync();
 
                 temp_id = rtd_inl(SPI_RBUS_BASE_ADDR);
                 id = rtkspi_swap_endian(temp_id);
@@ -212,6 +216,7 @@ int rtkspi_identify( void )
     {
         rtd_outl(SB2_SFC_OPCODE,0x00000090);  //read id
         rtd_outl(SB2_SFC_CTL,0x00000010);  //issue command
+        sync();
         id = rtd_inl(SPI_RBUS_BASE_ADDR);
         id >>= 16;
 
@@ -225,6 +230,7 @@ int rtkspi_identify( void )
                     /* read extended device ID */
                     rtd_outl(SB2_SFC_OPCODE,0x00000090);
                     rtd_outl(SB2_SFC_CTL,0x0000001b);
+                    sync();
 
                     temp_id = rtd_inl(SPI_RBUS_BASE_ADDR);
                     id = rtkspi_swap_endian(temp_id);
@@ -261,18 +267,21 @@ void rtkspi_init_regs( void )
 
     // need to init again ( ROM code had set up this ? )
     // configure serial flash controller
-    rtd_outl(SB2_SFC_CE,0x00090101);   // setup control edge
+    rtd_outl(SB2_SFC_CE,0x00071307);   // setup control edge
 	mdelay(100);//printf("****** %s %d\n", __FUNCTION__, __LINE__);
     rtd_outl(SB2_SFC_WP,0x00000000);    // disable hardware potection
     // enable write status register
     rtd_outl(SB2_SFC_OPCODE,0x00000050);
     rtd_outl(SB2_SFC_CTL,0x00000000);
+    sync();
+
     tmp = rtd_inb(SPI_RBUS_BASE_ADDR);
     rtd_outb(SPI_RBUS_BASE_ADDR, 0x0);
     // write status register , no memory protection
     rtd_outl(SB2_SFC_OPCODE,0x00000001);
     rtd_outl(SB2_SFC_CTL,0x00000010);
     rtd_outb(SPI_RBUS_BASE_ADDR, 0x0);
+    sync();
 }
 
 void rtkspi_init( void )
@@ -383,11 +392,12 @@ void rtkspi_write8( unsigned int target_address, unsigned int source_address, un
     //add by angus
     rtd_outl(SB2_SFC_EN_WR,     0x00000106);
     rtd_outl(SB2_SFC_WAIT_WR,   0x00000105);
-    rtd_outl(SB2_SFC_CE,        0x00ffffff);
+    rtd_outl(SB2_SFC_CE,        0x00071307);
 
     //issue write command
     rtd_outl(SB2_SFC_OPCODE,    0x00000002);
     rtd_outl(SB2_SFC_CTL,       0x00000018);
+    sync();
 
     mdelay(2); // must do this or rbus will be hanged
 
@@ -405,6 +415,8 @@ void rtkspi_write8( unsigned int target_address, unsigned int source_address, un
     }
 
     spi_switch_read_mode();
+
+    rtd_inb(SPI_RBUS_BASE_ADDR);    // workaground for last byte not be written
 }
 
 int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
@@ -440,6 +452,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
     //disable auto-prog
 	rtd_outl(SB2_SFC_EN_WR,    0x00000006);
 	rtd_outl(SB2_SFC_WAIT_WR,    0x00000005);
+    sync();
 
 	curr_address = start_address;
 
@@ -460,6 +473,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
         rtd_outl(SB2_SFC_OPCODE,0x00000006);
         mdelay(1); // work around for GD25Q80C_08Mbit
         rtd_outl(SB2_SFC_CTL,0x00000000);
+        sync();
 
         tmp_sts = rtd_inb(curr_address);
 
@@ -468,6 +482,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
             {
                 rtd_outl(SB2_SFC_OPCODE,0x000000d8);
                 rtd_outl(SB2_SFC_CTL,0x00000008);
+                sync();
                 tmp_sts = rtd_inb(curr_address);
                 break;
             }
@@ -475,6 +490,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
             {
                 rtd_outl(SB2_SFC_OPCODE,0x000000d8);
             	rtd_outl(SB2_SFC_CTL,0x00000008);
+                sync();
             	tmp_sts = rtd_inb(curr_address);
                 break;
             }
@@ -482,6 +498,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
             {
             	rtd_outl(SB2_SFC_OPCODE,0x00000052);
                 rtd_outl(SB2_SFC_CTL,0x00000008);
+                sync();
                 tmp_sts = rtd_inb(curr_address);
                 break;
             }
@@ -494,6 +511,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
                     rtd_outl(SB2_SFC_OPCODE,0x00000020);
                 }
                 rtd_outl(SB2_SFC_CTL,0x00000008);
+                sync();
                 tmp_sts = rtd_inb(curr_address);
                 break;
             }
@@ -502,6 +520,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
 			//enable auto-prog
 			rtd_outl(SB2_SFC_EN_WR,    0x00000106);
         	rtd_outl(SB2_SFC_WAIT_WR,    0x00000105);
+            sync();
             return -1;
 		}
 		while(0);
@@ -518,6 +537,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
             tmp_cnt++;
             rtd_outl(SB2_SFC_OPCODE,0x00000005);
             rtd_outl(SB2_SFC_CTL,0x00000010);
+            sync();
             tmp_sts = rtd_inb(curr_address);
         } while(tmp_sts&0x1);
 
@@ -529,6 +549,7 @@ int rtkspi_erase( unsigned int spi_offset_address, unsigned int byte_length )
 	//enable auto-prog
 	rtd_outl(SB2_SFC_EN_WR,    0x00000106);
     rtd_outl(SB2_SFC_WAIT_WR,    0x00000105);
+    sync();
 
     spi_switch_read_mode();
 

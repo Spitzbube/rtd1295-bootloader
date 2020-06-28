@@ -34,8 +34,11 @@
   4.1.2 KAM-12726 SATA Init failed in uboot
   4.1.3 Reset the bootstate after update_cbr has failed.
   4.1.4 Changed the default FAN speed to 20% 
+  4.2.1 Update hwsetting of RTD1295(Monarch) and RTD1296(Pelican), sata driver, spi driver
+  4.2.2 KAM200-789/KAM-29619: SATA device initialize failed
 **/
-const char version_string[] = "4.1.4";
+const char version_string[] = "4.2.2";
+const char version_string_prefix[] = "[WD_UBOOT]4.2.2";
 
 #ifdef CONFIG_CMD_VERSION
 int do_version(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])

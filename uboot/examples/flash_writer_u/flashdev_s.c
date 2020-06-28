@@ -12,9 +12,7 @@
 
 void _sync(void)
 {
-	asm("DMB");
-	rtd_inl(0x1801a020);
-	asm("DMB");
+    sync();
 }
 
 
@@ -23,6 +21,7 @@ void spi_switch_read_mode(void)
 	_sync();
     rtd_outl(SB2_SFC_OPCODE, 0x00000003); //switch flash to read mode
     rtd_outl(SB2_SFC_CTL, 0x00000018); //command cycle
+	_sync();
 }
 
 void spi_hexdump( const char * str, unsigned int start_address, unsigned int length )
@@ -321,11 +320,12 @@ int do_write_s(void *dev,
         //add by angus
         rtd_outl(SB2_SFC_EN_WR,    0x00000106);
         rtd_outl(SB2_SFC_WAIT_WR,    0x00000105);
-        rtd_outl(SB2_SFC_CE,    0x00ffffff);
+        rtd_outl(SB2_SFC_CE,    0x00071307);
 
         //issue write command
         rtd_outl(SB2_SFC_OPCODE,  0x00000002);
         rtd_outl(SB2_SFC_CTL,  0x00000018);
+		sync();
 
 #if 0 //wilma add+  0812
         // if dest address is not on 256 byte boundary, use byte program until reach boundary
@@ -410,7 +410,7 @@ int do_identify_s(void **dev)
     //remove this, due to we already set this register at hw-setting
     //rtd_outl(0xb801a808,0x0101000f);   //lowering frequency, setup freq divided no
 
-    rtd_outl(SB2_SFC_CE,0x00090101);   //setup control edge
+    rtd_outl(SB2_SFC_CE,0x00071307);   //setup control edge
 
     // read Manufacture & device ID
     rtd_outl(SB2_SFC_OPCODE,0x0000009f);
@@ -567,7 +567,7 @@ int do_init_s(void *dev)
 
     // configure serial flash controller
 
-    rtd_outl(SB2_SFC_CE,0x00090101);   // setup control edge
+    rtd_outl(SB2_SFC_CE,0x00071307);   // setup control edge
 
     rtd_outl(SB2_SFC_WP,0x00000000);    // disable hardware potection
 

@@ -40,6 +40,8 @@
 
 #define SSCEN 0
 
+extern void start_link(int port);
+
 struct sata_port_regs {
 	u32 clb;
 	u32 clbu;
@@ -140,6 +142,7 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 	struct sata_host_regs *host_mmio =
 		(struct sata_host_regs *)probe_ent->mmio_base;
 //	int clk = mxc_get_clock(MXC_SATA_CLK);
+	int link_ok;
 
 	cap_save = readl(&(host_mmio->cap));
 	cap_save |= SATA_HOST_CAP_SSS;
@@ -186,6 +189,7 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 		probe_ent->cap, probe_ent->port_map, probe_ent->n_ports);
 
 	for (i = 0; i < probe_ent->n_ports; i++) {
+		start_link(i);
 		probe_ent->port[i].port_mmio =
 			ahci_port_base((u32)host_mmio, i);
 		port_mmio =
@@ -278,18 +282,35 @@ static int ahci_host_init(struct ahci_probe_ent *probe_ent)
 
 		/* set irq mask (enables interrupts) */
 		writel(DEF_PORT_IRQ, &(port_mmio->ie));
+		link_ok = 0;
 
 		/* register linkup ports */
-		for(retry=0; retry<100; retry++) {
+//		for(retry=0; retry<100; retry++) {
+		for(retry=0; retry<15; retry++) {
 			tmp = readl(&(port_mmio->ssts));
 			debug("Port %d status: 0x%x\n", i, tmp);
 			if ((tmp & SATA_PORT_SSTS_DET_MASK) == 0x03) {
 				probe_ent->link_port_map |= (0x01 << i);
+				link_ok = 1;
 				break;
 			} else if(i!=0)
 				break;
-			mdelay(50);
+                        /* port reset */
+                        tmp = readl(&(port_mmio->sctl));
+                        tmp &= ~0x1;
+                        writel(tmp, &(port_mmio->sctl));
+                        tmp |= 0x1;
+                        writel(tmp, &(port_mmio->sctl));
+                        tmp &= ~0x1;
+                        writel(tmp, &(port_mmio->sctl));
+                        mdelay(20);
 		}
+               if(link_ok==0 && i==0)
+               {
+                       printf("link fail, power off sata & reset\n");
+                       setGPIO(CONFIG_PORT0_POWER_PIN, 0);
+                       do_reset(NULL, 0, 0, NULL);
+               }
 	}
 
 	tmp = readl(&(host_mmio->ghc));
@@ -456,7 +477,8 @@ static int ahci_exec_ata_cmd(struct ahci_probe_ent *probe_ent,
 
 	memcpy((u8 *)(pp->cmd_tbl), cfis, sizeof(struct sata_fis_h2d));
 	if (buf && buf_len) {
-		flush_cache(buf, (ATA_ID_WORDS * 2));
+		//flush_cache(buf, (ATA_ID_WORDS * 2));
+		flush_cache(buf, buf_len);
 		sg_count = ahci_fill_sg(probe_ent, port, buf, buf_len);
 	}
 	opts = (sizeof(struct sata_fis_h2d) >> 2) | (sg_count << 16);
@@ -1282,6 +1304,19 @@ static int send_oob(unsigned int port)
 	return 0;
 }
 
+void start_link(int port)
+{
+        unsigned int reg;
+
+       if(port == 0) {
+               printf("start link port %d\n", port);
+               reg = rtd_inl(SOFT_RESET1);
+               reg = reg | 1<<10;
+               rtd_outl(SOFT_RESET1, reg);
+               send_oob(port);
+       }
+}
+
 void sata_init(int port)
 {
 	int ret, gpio;
@@ -1305,10 +1340,10 @@ void sata_init(int port)
 	config_mac(port);
 	config_phy(port, 0);
 
-	reg = rtd_inl(SOFT_RESET1);
-	reg = reg | 1<<10;
-	rtd_outl(SOFT_RESET1, reg);
-	send_oob(port);
+//	reg = rtd_inl(SOFT_RESET1);
+//	reg = reg | 1<<10;
+//	rtd_outl(SOFT_RESET1, reg);
+//	send_oob(port);
 
 //	phy_link_check(port);
 #endif
